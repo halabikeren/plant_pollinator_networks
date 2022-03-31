@@ -107,13 +107,27 @@ WFO.remember()
                     are_bad)
   
     #Replace the taxonRank, family, genus, specificEpithet, and scientificName to NA for the bad_match
-    bad_match$taxonRank = NA
-    bad_match$family = NA
-    bad_match$genus = NA
-    bad_match$specificEpithet = NA
-    bad_match$scientificName = NA
-    
-    
+    if (!("taxonRank" %in% colnames(bad_match)))
+      {
+      bad_match$taxonRank = NA
+      }
+    if (!("family" %in% colnames(bad_match)))
+      {
+      bad_match$family = NA
+      }
+    if (!("genus" %in% colnames(bad_match)))
+      {
+      bad_match$genus = NA
+      }
+    if (!("specificEpithet" %in% colnames(bad_match)))
+      {
+      bad_match$specificEpithet = NA
+      }
+    if (!("scientificName" %in% colnames(bad_match)))
+      {
+      bad_match$scientificName = NA
+      }
+
 #Step 6: Filter good matches by taxonomic rank (check the unique terms in the results to determine what you want to keep)
   #Remove data for those that DO NOT have the following rank
     #1) species
@@ -121,11 +135,7 @@ WFO.remember()
     #3) SPECIES
     #4) VARIETY
     #5) SUBSPECIES
-    if (!("taxonRank" %in% colnames(good_match)))
-    {
-      good_match$taxonRank = NA
-    }
-    good_match$taxonRank[is.na(good_match$taxonRank)] = "NAN"
+    good_match$taxonRank[is.na(good_match$taxonRank)] = "NA"
     good_match[good_match$taxonRank != "species" &
                good_match$taxonRank != "Species" &
                good_match$taxonRank != "SPECIES" &
