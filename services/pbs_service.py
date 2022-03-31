@@ -1,7 +1,7 @@
 import logging
 import os
 import re
-import typing as t
+from typing import List
 import getpass
 import subprocess
 import shutil
@@ -61,20 +61,8 @@ class PBSService:
         return curr_jobs_num
 
     @staticmethod
-    def execute_job_array(
-            work_dir: str,
-            output_dir: str,
-            jobs_commands: t.List[t.List[str]],
-            max_parallel_jobs: int = 1900,
-    ):
-        # set env: tree should be identical between input dir, work dir and output dir
-        os.makedirs(work_dir, exist_ok=True)
-        os.makedirs(output_dir, exist_ok=True)
-
-        # traverse input dir and for each create job file and job output dir with command that pushes output to
-        # output file
-        logger.info(f"# input paths to execute commands on = {len(jobs_commands)}")
-        job_paths, job_output_paths = [], []
+    def _generate_jobs(jobs_commands: List[List[str]], work_dir: str, output_dir: str) -> List[str]:
+        jobs_paths, job_output_paths = [], []
         for i in range(len(jobs_commands)):
             job_path = f"{work_dir}/{i}.sh"
             job_name = f"{i}.sh"
@@ -84,37 +72,53 @@ class PBSService:
                 job_name=job_name,
                 job_output_dir=job_output_path,
                 commands=[
-                             os.environ.get(
-                                 "conda_act_cmd",
-                                 "source /groups/itay_mayrose/halabikeren/miniconda3/etc/profile.d/conda.sh; conda activate ppn")
+                             os.environ.get("conda_act_cmd", "")
                          ] + jobs_commands[i],
             )
-            job_paths.append(job_path)
+            jobs_paths.append(job_path)
             job_output_paths.append(job_output_path)
+        logger.info(f"# jobs to submit = {len(jobs_paths)}")
+        return jobs_paths
 
-        logger.info(f"# jobs to submit = {len(job_paths)}")
-
-        # submit all the jobs, while maintaining the limit number on parallel jobs
+    @staticmethod
+    def _submit_jobs(jobs_paths: List[str], max_parallel_jobs: int = 1900):
         job_index = 0
-        job_ids = []
-        while job_index < len(job_paths):
+        jobs_ids = []
+        while job_index < len(jobs_paths):
             while PBSService.compute_curr_jobs_num() > max_parallel_jobs:
                 sleep(2 * 60)
             try:
-                res = subprocess.check_output(['qsub', f'{job_paths[job_index]}'])
-                job_ids.append(re.search("(\d+)\.power\d", str(res)).group(1))
+                res = subprocess.check_output(['qsub', f'{jobs_paths[job_index]}'])
+                jobs_ids.append(re.search("(\d+)\.power\d", str(res)).group(1))
                 job_index += 1
             except Exception as e:
                 logger.error(f"failed to submit job at index {job_index} due to error {e}")
                 exit(1)
             if job_index % 500 == 0:
                 logger.info(f"submitted {job_index} jobs thus far")
+        return jobs_ids
 
-        # wait for jobs to finish
-        jobs_complete = np.all(os.system(f"stat -f {job_id}") != 0 for job_id in job_ids)
+    @staticmethod
+    def _wait_for_jobs(jobs_ids: List[str]):
+        jobs_complete = np.all(os.system(f"stat -f {job_id}") != 0 for job_id in jobs_ids)
         while not jobs_complete:
             sleep(2 * 60)
-            jobs_complete = np.all(os.system(f"stat -f {job_id}") != 0 for job_id in job_ids)
+            jobs_complete = np.all(os.system(f"stat -f {job_id}") != 0 for job_id in jobs_ids)
+
+    @staticmethod
+    def execute_job_array(
+            work_dir: str,
+            output_dir: str,
+            jobs_commands: List[List[str]],
+            max_parallel_jobs: int = 1900,
+    ):
+        os.makedirs(work_dir, exist_ok=True)
+        os.makedirs(output_dir, exist_ok=True)
+        logger.info(f"# input paths to execute commands on = {len(jobs_commands)}")
+
+        jobs_paths = PBSService._generate_jobs(jobs_commands=jobs_commands, work_dir=work_dir, output_dir=output_dir)
+        jobs_ids = PBSService._submit_jobs(jobs_paths=jobs_paths, max_parallel_jobs=max_parallel_jobs)
+        PBSService._wait_for_jobs(jobs_ids=jobs_ids)
 
         # remove work dir
         shutil.rmtree(work_dir, ignore_errors=True)
