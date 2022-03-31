@@ -22,7 +22,7 @@ class PBSService:
             job_path,
             job_name: str,
             job_output_dir: str,
-            commands: t.List[str],
+            commands: List[str],
             queue: str = "itaym",
             priority: int = 0,
             cpus_num: int = 1,
@@ -116,9 +116,10 @@ class PBSService:
         os.makedirs(output_dir, exist_ok=True)
         logger.info(f"# input paths to execute commands on = {len(jobs_commands)}")
 
-        jobs_paths = PBSService._generate_jobs(jobs_commands=jobs_commands, work_dir=work_dir, output_dir=output_dir)
-        jobs_ids = PBSService._submit_jobs(jobs_paths=jobs_paths, max_parallel_jobs=max_parallel_jobs)
-        PBSService._wait_for_jobs(jobs_ids=jobs_ids)
+        if len(jobs_commands) > 0:
+            jobs_paths = PBSService._generate_jobs(jobs_commands=jobs_commands, work_dir=work_dir, output_dir=output_dir)
+            jobs_ids = PBSService._submit_jobs(jobs_paths=jobs_paths, max_parallel_jobs=max_parallel_jobs)
+            PBSService._wait_for_jobs(jobs_ids=jobs_ids)
 
         # remove work dir
         shutil.rmtree(work_dir, ignore_errors=True)
