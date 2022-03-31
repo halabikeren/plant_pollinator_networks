@@ -48,7 +48,7 @@ def resolve_names(input_path: str, name_col: str, output_path: str, log_path: st
         force=True,  # run over root logger settings to enable simultaneous writing to both stdout and file handler
     )
 
-    names = pd.read_csv(input_path)[name_col].unique().to_list()
+    names = pd.read_csv(input_path)[name_col].unique().tolist()
     name_resolver = NameResolver(method=method)
     name_resolver.resolve(names=names, output_path=output_path)
 
