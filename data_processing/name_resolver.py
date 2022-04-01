@@ -1,7 +1,12 @@
-import logging
+import shutil
+import sys
 import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+import glob
+import logging
 from enum import Enum
-from typing import List, Union
+from typing import List
 import numpy as np
 import pandas as pd
 from taxon_names_resolver import Resolver
@@ -22,15 +27,14 @@ name_resolution_result_fields = ["query", "matched_name", "has_mismatches", "sco
 
 
 class NameResolver:
-
     def __init__(self, method: NameResolutionMethod = "gnr", aux_dir: str = os.getcwd()):
         self.method = method
         self.aux_dir = aux_dir
 
     def _set_env(self) -> tuple[str, str, str]:
-        input_dir = f"{self.aux_dir}/query_names/"
-        output_dir = f"{self.aux_dir}/resolved_names/"
-        work_dir = f"{self.aux_dir}/name_resolution_jobs/"
+        input_dir = f"{self.aux_dir}/{self.method}_query_names/"
+        output_dir = f"{self.aux_dir}/{self.method}_resolved_names/"
+        work_dir = f"{self.aux_dir}/{self.method}_name_resolution_jobs/"
         os.makedirs(input_dir, exist_ok=True)
         os.makedirs(output_dir, exist_ok=True)
         os.makedirs(work_dir, exist_ok=True)
@@ -38,7 +42,7 @@ class NameResolver:
         return input_dir, output_dir, work_dir
 
     @staticmethod
-    def _get_input_batches(items: List[str], write_dir: str, batch_size: int = 20):
+    def _get_input_batches(items: List[str], write_dir: str, batch_size: int = 200):
         input_batches = [items[i: i + batch_size] for i in range(0, len(items), batch_size)]
         for i in range(len(input_batches)):
             input_path = f"{write_dir}/batch_{i}.csv"
@@ -54,11 +58,9 @@ class NameResolver:
             batch_output_dir = f"{output_dir}{path.split('.')[0]}"
             os.makedirs(batch_output_dir, exist_ok=True)
             output_path = f"'{batch_output_dir}/output.csv'"
-            parent_path = f"'{os.path.abspath(os.curdir)}'"
             if not os.path.exists(f"{batch_output_dir}/output.csv"):
-                command = f'''python -c "import sys;sys.path.append({parent_path});from data_processing' 
-                          import NameResolver;NameResolver.exec_{self.method}(' 
-                          input_path={input_path}, output_path={output_path})"'''
+                func_name = f"exec_{self.method}"
+                command = f"python {os.path.abspath(__file__)} {func_name} {input_path} {output_path}"
                 commands = [
                     f"cd {batch_output_dir}",
                     command
@@ -69,38 +71,42 @@ class NameResolver:
 
     @staticmethod
     def _unite_batch_data(read_dir: str, output_path: str):
-        dfs = [pd.read_csv(f"{read_dir}/{path}") for path in os.listdir(read_dir)]
+        dfs_paths = glob.glob(read_dir + f"**/*csv", recursive=True)
+        dfs = [pd.read_csv(path) for path in dfs_paths]
         df = pd.concat(dfs)[name_resolution_result_fields]
         df.to_csv(output_path)
 
-    def resolve(self, names: List[str], output_path: str, batch_size: int = 20):
+    def resolve(self, names: List[str], output_path: str, batch_size: int = 200):
         input_dir, output_dir, work_dir = self._set_env()
         self._get_input_batches(items=names, write_dir=input_dir, batch_size=batch_size)
         self._exec_name_resolution(input_dir=input_dir, output_dir=output_dir, work_dir=work_dir)
         self._unite_batch_data(read_dir=output_dir, output_path=output_path)
+        shutil.rmtree(input_dir, ignore_errors=True)
+        shutil.rmtree(output_dir, ignore_errors=True)
 
     @staticmethod
-    def _exec_tnrs(input_path: str, output_path: str):
+    def exec_tnrs(input_path: str, output_path: str):
         names = pd.read_csv(input_path).iloc[:, 1].to_list()
         ot = OTWebServiceWrapper(api_endpoint='production')
         response = ot.tnrs_match_names(names=names, do_approximate_matching=True, include_suppressed=True)
         dfs = []
         for result in response.response_dict['results']:
             if len(result['matches']) > 0:
-                sub_df = [pd.json_normalize(match) for match in result['matches']]
+                sub_df = pd.concat([pd.json_normalize(match) for match in result['matches']])
                 dfs.append(sub_df)
         df = pd.concat(dfs)
         df.rename(columns={
             "search_string": "query",
             "is_approximate_match": "has_mismatches",
-            "taxon_tax_sources": "name_sources"
+            "taxon.tax_sources": "name_sources",
+            "taxon.rank": "taxon_rank"
         }, inplace=True)
         df.sort_values(["query", "score"], ascending=[True, False], inplace=True)  # select matches with the best score
         df.drop_duplicates(subset=["query"], keep='first', inplace=True)
         df.to_csv(output_path)
 
     @staticmethod
-    def _exec_wfo(input_path: str, output_path: str):
+    def exec_wfo(input_path: str, output_path: str):
         res = os.system(
             f"Rscript --vanilla {os.path.dirname(__file__)}/wfo_name_resolution.R --input_path={input_path} --output_path={output_path}")
         df = pd.read_csv(output_path).rename(
@@ -114,7 +120,7 @@ class NameResolver:
         df.to_csv()
 
     @staticmethod
-    def _exec_gnr(input_path: str, output_path: str):
+    def exec_gnr(input_path: str, output_path: str):
         resolver = Resolver(input_path)
         resolver.main()  # to run the search
         resolver.write()  # to output the csv file
@@ -125,3 +131,9 @@ class NameResolver:
         df["taxon_rank"] = np.nan
         df["has_mismatches"] = np.where(["query"] != df["matched_name"], True, False)
         df.to_csv(output_path)
+
+
+if __name__ == '__main__':
+    func_to_call = sys.argv[1]
+    func = getattr(NameResolver, func_to_call)
+    func(*sys.argv[2:])
