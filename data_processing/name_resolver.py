@@ -129,7 +129,7 @@ class NameResolver:
             columns={"query_name": "query", "data_source_title": "name_sources", "name_string": "matched_name"},
             inplace=True)
         df["taxon_rank"] = np.nan
-        df["has_mismatches"] = np.where(["query"] != df["matched_name"], True, False)
+        df["has_mismatches"] = np.where(df["query"] != df["matched_name"], True, False)
         df.to_csv(output_path)
 
 
