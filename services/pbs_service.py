@@ -100,10 +100,10 @@ class PBSService:
 
     @staticmethod
     def _wait_for_jobs(jobs_ids: List[str]):
-        jobs_complete = np.all(os.system(f"stat -f {job_id}") != 0 for job_id in jobs_ids)
+        jobs_complete = np.all([os.system(f"qstat -f {job_id} > /dev/null 2>&1") != 0 for job_id in jobs_ids])
         while not jobs_complete:
             sleep(2 * 60)
-            jobs_complete = np.all(os.system(f"stat -f {job_id}") != 0 for job_id in jobs_ids)
+            jobs_complete = np.all([os.system(f"qstat -f {job_id} > /dev/null 2>&1") != 0 for job_id in jobs_ids])
 
     @staticmethod
     def execute_job_array(
