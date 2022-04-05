@@ -81,7 +81,7 @@ class PBSService:
         return jobs_paths
 
     @staticmethod
-    def _submit_jobs(jobs_paths: List[str], max_parallel_jobs: int = 1900):
+    def _submit_jobs(jobs_paths: List[str], max_parallel_jobs: int = 30):
         job_index = 0
         jobs_ids = []
         while job_index < len(jobs_paths):
@@ -110,7 +110,7 @@ class PBSService:
             work_dir: str,
             output_dir: str,
             jobs_commands: List[List[str]],
-            max_parallel_jobs: int = 1900,
+            max_parallel_jobs: int = 30,
     ):
         os.makedirs(work_dir, exist_ok=True)
         os.makedirs(output_dir, exist_ok=True)

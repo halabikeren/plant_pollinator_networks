@@ -46,7 +46,14 @@ from data_processing.name_resolver import NameResolutionMethod, NameResolver
     required=False,
     default="World Flora Online consortium",
 )
-def resolve_names(input_path: str, name_col: str, output_path: str, log_path: str, method: NameResolutionMethod, gnr_data_source: Optional[str]):
+@click.option(
+    "--batch_size",
+    help="size of batches to run name resolution on",
+    type=int,
+    required=False,
+    default=20,
+)
+def resolve_names(input_path: str, name_col: str, output_path: str, log_path: str, method: NameResolutionMethod, gnr_data_source: Optional[str], batch_size: int):
     # initialize the logger
     logging.basicConfig(
         level=logging.INFO,
@@ -57,7 +64,7 @@ def resolve_names(input_path: str, name_col: str, output_path: str, log_path: st
 
     names = pd.read_csv(input_path)[name_col].unique().tolist()
     name_resolver = NameResolver(method=method)
-    name_resolver.resolve(names=names, output_path=output_path, gnr_data_source=gnr_data_source)
+    name_resolver.resolve(names=names, output_path=output_path, batch_size=batch_size, gnr_data_source=gnr_data_source)
 
 
 if __name__ == '__main__':
