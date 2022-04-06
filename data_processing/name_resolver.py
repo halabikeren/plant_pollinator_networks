@@ -143,6 +143,7 @@ class NameResolver:
         df["taxon_rank"] = df["classification_path_ranks"].apply(lambda rank: rank.split("|")[-1] if pd.notna(rank) else np.nan)
         df["orig_status"] = df["matched_name"].apply(lambda name: "SYNONYM" if pd.notna(name) else "ACCEPTED")
         df["matched_name"].fillna(value=df["canonical_form"].to_dict(), inplace=True)
+        df["matched_name"].fillna(value=df["name_string"].to_dict(), inplace=True)
         df["has_mismatches"] = np.where(df["query"] != df["matched_name"], True, False)
         df["author"] = np.nan
         df.to_csv(output_path)
