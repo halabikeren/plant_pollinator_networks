@@ -129,7 +129,7 @@ class NameResolver:
         if not os.path.exists(base_output_path):
             orig_dir = os.getcwd()
             os.chdir(os.path.dirname(output_path))
-            if gnr_data_source:
+            if gnr_data_source is not None:
                 resolver = Resolver(input_path, datasource=[gnr_data_source])
             else:
                 resolver = Resolver(input_path)
