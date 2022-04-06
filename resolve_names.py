@@ -44,7 +44,7 @@ from data_processing.name_resolver import NameResolutionMethod, NameResolver
     help="data source to use for GNR",
     type=str,
     required=False,
-    default="World Flora Online consortium",
+    default=None, #"World Flora Online consortium",
 )
 @click.option(
     "--batch_size",
