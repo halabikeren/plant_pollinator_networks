@@ -1,6 +1,8 @@
 import shutil
 import sys
 import os
+import time
+
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 import glob
@@ -28,9 +30,9 @@ class NameResolver:
         self.aux_dir = aux_dir
 
     def _set_env(self) -> tuple[str, str, str]:
-        input_dir = f"{self.aux_dir}/{self.method}_query_names/"
-        output_dir = f"{self.aux_dir}/{self.method}_resolved_names/"
-        work_dir = f"{self.aux_dir}/{self.method}_name_resolution_jobs/"
+        input_dir = f"{self.aux_dir}/{self.method}_query_names_{time.time()}/"
+        output_dir = f"{self.aux_dir}/{self.method}_resolved_names_{time.time()}/"
+        work_dir = f"{self.aux_dir}/{self.method}_name_resolution_jobs_{time.time()}/"
         os.makedirs(input_dir, exist_ok=True)
         os.makedirs(output_dir, exist_ok=True)
         os.makedirs(work_dir, exist_ok=True)
@@ -45,7 +47,7 @@ class NameResolver:
             pd.Series(input_batches[i]).to_csv(input_path, header=["species_name"], index=False)
         logger.info(f"generated {len(input_batches)} input batches of size {batch_size}")
 
-    def _exec_name_resolution(self, input_dir: str, output_dir: str, work_dir: str, gnr_data_source: Optional[str] = None):
+    def _exec_name_resolution(self, input_dir: str, output_dir: str, work_dir: str, gnr_data_sources: Optional[str] = None, tnrs_data_source: Optional[str] = None, max_jobs_in_parallel: int = 30):
         job_commands = []
         num_batches = 0
         for path in os.listdir(input_dir):
@@ -57,14 +59,16 @@ class NameResolver:
             if not os.path.exists(f"{batch_output_dir}/output.csv"):
                 func_name = f"exec_{self.method}"
                 command = f"python {os.path.abspath(__file__)} {func_name} {input_path} {output_path}"
-                if self.method == NameResolutionMethod.GNR and gnr_data_source is not None:
-                    command += f" '{gnr_data_source}'"
+                if self.method == NameResolutionMethod.GNR and gnr_data_sources is not None:
+                    command += f" '{gnr_data_sources}'"
+                elif self.method == NameResolutionMethod.TNRS and tnrs_data_source is not None:
+                    command += f" '{tnrs_data_source}'"
                 commands = [
                     f"cd {batch_output_dir}",
                     command
                 ]
                 job_commands.append(commands)
-        PBSService.execute_job_array(work_dir=work_dir, output_dir=output_dir, jobs_commands=job_commands)
+        PBSService.execute_job_array(work_dir=work_dir, output_dir=output_dir, jobs_commands=job_commands, max_parallel_jobs=max_jobs_in_parallel)
         logger.info(f"completed name resolution on {num_batches} batches, will now merge results")
 
     @staticmethod
@@ -74,20 +78,20 @@ class NameResolver:
         df = pd.concat(dfs)
         df.to_csv(output_path)
 
-    def resolve(self, names: List[str], output_path: str, batch_size: int = 20, gnr_data_source: Optional[str] = None):
+    def resolve(self, names: List[str], output_path: str, batch_size: int = 20, gnr_data_sources: Optional[str] = None, tnrs_data_source: Optional[str] = None, max_jobs_in_parallel: int = 30):
         input_dir, output_dir, work_dir = self._set_env()
         self._get_input_batches(items=names, write_dir=input_dir, batch_size=batch_size)
-        self._exec_name_resolution(input_dir=input_dir, output_dir=output_dir, work_dir=work_dir, gnr_data_source=gnr_data_source)
+        self._exec_name_resolution(input_dir=input_dir, output_dir=output_dir, work_dir=work_dir, gnr_data_sources=gnr_data_sources, tnrs_data_source=tnrs_data_source, max_jobs_in_parallel=max_jobs_in_parallel)
         self._unite_batch_data(read_dir=output_dir, output_path=output_path)
         shutil.rmtree(input_dir, ignore_errors=True)
         shutil.rmtree(output_dir, ignore_errors=True)
 
     @staticmethod
-    def exec_tnrs(input_path: str, output_path: str):
+    def exec_tnrs(input_path: str, output_path: str, data_source: Optional[str] = None):
         if not os.path.exists(output_path):
             names = pd.read_csv(input_path).iloc[:, 0].to_list()
             ot = OTWebServiceWrapper(api_endpoint='production')
-            response = ot.tnrs_match_names(names=names, do_approximate_matching=True, include_suppressed=True)
+            response = ot.tnrs_match_names(names=names, do_approximate_matching=True, include_suppressed=True, data_source=data_source)
             dfs = []
             for result in response.response_dict['results']:
                 if len(result['matches']) > 0:
@@ -118,19 +122,19 @@ class NameResolver:
                      "taxonRank": "taxon_rank",
                      "references": "name_sources",
                      "scientificNameAuthorship": "author",
-                     "taxonomicStatus": "orig_status"})
+                     "Old.status": "orig_status"})
         df["score"] = 1 - (df["Fuzzy.dist"] / 100)
         df.dropna(subset=["query"], inplace=True)
         df.to_csv(output_path)
 
     @staticmethod
-    def exec_gnr(input_path: str, output_path: str, gnr_data_source: Optional[str] = None):
+    def exec_gnr(input_path: str, output_path: str, gnr_data_sources: Optional[str] = None):
         base_output_path = f"{os.path.dirname(output_path)}/resolved_names/search_results.csv"
         if not os.path.exists(base_output_path):
             orig_dir = os.getcwd()
             os.chdir(os.path.dirname(output_path))
-            if gnr_data_source is not None:
-                resolver = Resolver(input_path, datasource=[gnr_data_source])
+            if gnr_data_sources is not None:
+                resolver = Resolver(input_path, datasource=gnr_data_sources.split(","))
             else:
                 resolver = Resolver(input_path)
             resolver.main()  # to run the search
@@ -141,6 +145,8 @@ class NameResolver:
             columns={"query_name": "query", "data_source_title": "name_sources", "current_name_string": "matched_name"},
             inplace=True)
         df["taxon_rank"] = df["classification_path_ranks"].apply(lambda rank: rank.split("|")[-1] if pd.notna(rank) else np.nan)
+        df.taxon_rank = df.taxon_rank.replace(
+            {'spec.': 'species', 'gen.': 'genus', 'f.': 'form', 'var.': 'variety'})
         df["orig_status"] = df["matched_name"].apply(lambda name: "SYNONYM" if pd.notna(name) else "ACCEPTED")
         df["matched_name"].fillna(value=df["canonical_form"].to_dict(), inplace=True)
         df["matched_name"].fillna(value=df["name_string"].to_dict(), inplace=True)
