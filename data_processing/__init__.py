@@ -1,1 +1,1 @@
-from .name_resolver import *
+from .name_resolution import *
