@@ -46,7 +46,7 @@ WFO.remember()
  input_path = opt$input_path
  output_path = opt$output_path
 
-#Load names to check
+#Load names
   names_df = data.frame(read.csv(input_path))
   colnames(names_df)[1] <- "spec.name"
   names_df$spec.name <- tolower(names_df$spec.name)
