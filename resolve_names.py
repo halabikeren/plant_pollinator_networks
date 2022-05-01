@@ -3,7 +3,7 @@ import sys
 from typing import Optional
 import click
 import pandas as pd
-from data_processing.name_resolver import NameResolutionMethod, NameResolver
+from data_processing.name_resolution.name_resolver import NameResolutionMethod, NameResolver
 
 logger = logging.getLogger(__name__)
 

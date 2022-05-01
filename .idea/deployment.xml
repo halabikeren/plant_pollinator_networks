@@ -2,6 +2,13 @@
 <project version="4">
   <component name="PublishConfigData" autoUpload="Always" serverName="halabikeren@power9login.tau.ac.il:22" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
+      <paths name="halabikeren@hpcssd.tau.ac.il:22">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="halabikeren@hpcssd.tau.ac.il:22 (2)">
         <serverdata>
           <mappings>
