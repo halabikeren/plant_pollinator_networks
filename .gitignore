@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# specific data files
+data_processing/WFO_Backbone.zip
+data_processing/classification.txt
+data_processing/eml.xml
+.idea/dataSources.xml
+data_processing/references.txt
+data_processing/networs_extraction/.DS_Store
