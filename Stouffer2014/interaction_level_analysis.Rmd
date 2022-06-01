@@ -1,0 +1,32 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(bipartite)
+source("utils.R")
+```
+
+```{r}
+networks_dir = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/raw_CSVs/networks/"
+species_classification_path = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/prepare_input_data/species_classification.csv"
+
+networks_paths = list.files(networks_dir)
+interaction_features = data.frame(matrix(ncol = 5, nrow = 0))
+colnames(interaction_features) = c("network", "plant", "pollinator", "plant_dependance_on_pollinator", "pollinator_dependance_on_plant")
+for (network_path in networks_paths)
+{
+  network_interaction_features = get_interaction_features(paste(networks_dir,network_path, sep=""))
+  interaction_features = rbind(interaction_features, network_interaction_features)
+}
+write.csv(interaction_features, "interaction_features.csv", row.names = TRUE)
+```
+```{r}
+species_classification = read_csv(species_classification_path, show_col_types = FALSE)
+interaction_features_by_type = interaction_features %>% left_join(species_classification, by=c("network" = "network", "plant" = "species"))
+plant_pespective_model <- glm(interaction_features_by_type$plant_dependance_on_pollinator ~ interaction_features_by_type$is_exotic, family=binomial(link="identity"))
+pollinator_pespective_model <- glm.fit(interaction_features_by_type$is_exotic, interaction_features_by_type$pollinator_dependance_on_plant, family=binomial(link="identity"))
+```
+
