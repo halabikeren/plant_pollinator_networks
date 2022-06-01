@@ -6,3 +6,5 @@ taxon_names_resolver==1.0.7
 flatten_json==0.1.13
 pydantic==1.9.0
 python-dotenv==0.20.0
+click~=8.1.2
+matplotlib~=3.5.1
