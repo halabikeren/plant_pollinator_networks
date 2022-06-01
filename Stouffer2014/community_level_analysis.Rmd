@@ -3,39 +3,33 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
 ```{r}
 library(tidyverse)
 library(bipartite)
-
-get_community_level_indices <- function(network_path)
-{
-  network <- read_csv(file = network_path)
-  plant_richness = nrow(network)
-  pollinator_richness = ncol(network)-1 # last column is exotic classification
-  total_species_richness = plant_richness + pollinator_richness
-  richness_ratio = pollinator_richness/plant_richness
-  c(plant_richness, pollinator_richness, total_species_richness, richness_ratio)
-}
-
-networks_dir = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/raw_CSVs/networks/"
-networks_paths = list.files(networks_dir)
-community_level_values = data.frame(matrix(ncol = 5, nrow = 0))
-colnames(community_level_values) = c("network_path", "plant_richness", "pollinator_richness", "total_species_richness", "richness_ratio")
-for (network_path in networks_paths)
-{
-  network_features = get_community_level_indices(paste(networks_dir,network_path, sep=""))
-  community_level_values[nrow(community_level_values) + 1,] = c(c(network_path),network_features)
-}
-write.csv(community_level_values, "community_level_values.csv", row.names = TRUE)
-
+source("utils.R")
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+```{r}
+networks_dir = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/raw_CSVs/networks/"
+networks_classification_path = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/prepare_input_data/network_classification.csv"
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+networks_paths = list.files(networks_dir)
+community_features = data.frame(matrix(ncol = 5, nrow = 0))
+colnames(community_features) = c("network", "plant_richness", "pollinator_richness", "total_species_richness", "richness_ratio")
+for (network_path in networks_paths)
+{
+  features = get_community_features(paste(networks_dir,network_path, sep=""))
+  community_features[nrow(community_features) + 1,] = c(c(network_path),features)
+}
+write.csv(community_features, "community_features.csv", row.names = TRUE)
+```
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r}
+networks_classfication = read_csv(networks_classification_path, show_col_types = FALSE)
+networks_data_by_type = community_features %>% inner_join(networks_classfication, by="network")
+kruskal.test(plant_richness~is_exotic, data=networks_data_by_type)
+kruskal.test(pollinator_richness~is_exotic, data=networks_data_by_type)
+kruskal.test(total_species_richness~is_exotic, data=networks_data_by_type)
+kruskal.test(richness_ratio~is_exotic, data=networks_data_by_type)
+```

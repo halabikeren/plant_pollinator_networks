@@ -1,0 +1,42 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(bipartite)
+source("utils.R")
+```
+
+
+```{r}
+# parse input
+
+networks_dir = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/raw_CSVs/networks/"
+networks_classification_path = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/prepare_input_data/network_classification.csv"
+
+networks_paths = list.files(networks_dir)
+network_features = data.frame(matrix(ncol = 6, nrow = 0))
+colnames(network_features) = c("network", "connectance", "avg_plant_inter", "avg_pollinator_inter", "NODF", "relative_NODF")
+for (network_path in networks_paths)
+{
+  features = get_network_features(paste(networks_dir,network_path, sep=""))
+  network_features[nrow(network_features) + 1,] = c(c(network_path),features)
+}
+write.csv(network_features, "network_features.csv", row.names = TRUE)
+
+```
+
+
+```{r}
+
+# perform tests
+networks_classfication = read_csv(networks_classification_path)
+networks_data_by_type = network_features %>% inner_join(networks_classfication, by="network")
+kruskal.test(connectance~is_exotic, data=networks_data_by_type)
+kruskal.test(avg_plant_inter~is_exotic, data=networks_data_by_type)
+kruskal.test(avg_pollinator_inter~is_exotic, data=networks_data_by_type)
+kruskal.test(NODF~is_exotic, data=networks_data_by_type)
+kruskal.test(relative_NODF~is_exotic, data=networks_data_by_type)
+``
