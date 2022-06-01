@@ -12,7 +12,7 @@ source("utils.R")
 
 ```{r}
 networks_dir = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/raw_CSVs/networks/"
-networks_classification_path = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/prepare_input_data/network_classification.csv"
+species_classification_path = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/prepare_input_data/species_classification.csv"
 
 networks_paths = list.files(networks_dir)
 species_features = data.frame(matrix(ncol = 4, nrow = 0))
@@ -26,9 +26,9 @@ write.csv(species_features, "plant_species_features.csv", row.names = TRUE)
 ```
 
 ```{r}
-networks_classfication = read_csv(networks_classification_path, show_col_types = FALSE)
-networks_data_by_type = species_features %>% inner_join(networks_classfication, by="network")
-kruskal.test(plant_richness~rank, data=networks_data_by_type)
-kruskal.test(plant_richness~nestedness_contribution, data=networks_data_by_type)
+species_classification = read_csv(species_classification_path, show_col_types = FALSE)
+species_data_by_type = species_features %>% inner_join(species_classification, by=c("network" = "network", "species" = "species"))
+kruskal.test(rank~is_exotic, data=species_data_by_type)
+kruskal.test(nestedness_contribution~is_exotic, data=species_data_by_type)
 ```
 

@@ -79,31 +79,58 @@ get_network_features <- function(network_path, nsim=1000)
   return(newtwork_features)
 }
 
+get_plant_nestedness_contribution <- function (web, nsimul = 99) 
+{
+  web <- ifelse(web > 0, 1, 0)
+  if (is.null(rownames(web))) 
+    rownames(web) <- paste0("L", seq.int(nrow(web)))
+  lower.out <- data.frame(row.names = rownames(web))
+  lower.out$nestedcontribution <- NA
+  if (any(dim(web) < 2)) {
+    warning("Your web is too small for a meaningful computation of nestedcontrrank (and probably other indices)!")
+  }
+  else {
+    nested.orig <- vegan::nestednodf(web)$statistic["NODF"]
+    for (i in rownames(web)) {
+      message(i)
+      probs <- (rowSums(web)[i]/ncol(web) + colSums(web)/nrow(web))/2
+      nested.null <- sapply(1:nsimul, function(x) {
+        web.null <- web
+        web.null[i, ] <- rbinom(ncol(web), 1, probs)
+        vegan::nestednodf(web.null)$statistic["NODF"]
+      })
+      lower.out[i, "nestedcontribution"] <- (nested.orig - 
+                                               mean(nested.null))/sd(nested.null)
+    }
+  }
+  return(lower.out)
+}
+
+
 get_species_features <- function(network_path, nsim=1000)
 {
   network <- process_network(network_path)
   species_features = data.frame(matrix(ncol = 4, nrow = nrow(network)))
   colnames(species_features) = c("network", "species", "rank", "nestedness_contribution")
-  species_features$network = network_path
+  species_features$network = basename(network_path)
   species_features$species = rownames(network)
   species_features$rank = rank(rowSums(network), ties.method="average")-1
   species_features$rank = species_features$rank / max(species_features$rank)
-  species_features$nestedness_contribution = unlist(nestedcontribution(network, nsimul=nsim)['lower level'], use.names=FALSE)
+  species_features$nestedness_contribution = unlist(get_plant_nestedness_contribution(network, nsimul=nsim), use.names=FALSE)
   return(species_features)
 }
 
 get_interaction_features <- function(network_path, nsim=1000)
 {
   network <- process_network(network_path)
-  interaction_features = data.frame(matrix(ncol = 6, nrow = nrow(network)*ncol(network)))
-  colnames(interaction_features) = c("network", "plant", "pollinator", "plant_dependance_on_pollinator", "pollinator_dependance_on_plant", "preference")
+  interaction_features = data.frame(matrix(ncol = 5, nrow = nrow(network)*ncol(network)))
+  colnames(interaction_features) = c("network", "plant", "pollinator", "plant_dependance_on_pollinator", "pollinator_dependance_on_plant")
   plant_dependence_values = network/rowSums(network)
   pollinator_dependence_values = t(t(network)/colSums(network))
-  interaction_features$network = network_path
+  interaction_features$network = basename(network_path)
   interaction_features$plant = rep(rownames(network), ncol(network))
   interaction_features$pollinator = rep(colnames(network), each=nrow(network))
   interaction_features$plant_dependance_on_pollinator = as.vector(plant_dependence_values)
   interaction_features$pollinator_dependance_on_plant = as.vector(pollinator_dependence_values)
-  interaction_features$preference = 
   return(interaction_features)
 }
