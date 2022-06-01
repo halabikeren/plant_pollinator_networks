@@ -26,7 +26,7 @@ class ResolvedNamesCurator:
     def __init__(self,
                  unresolved_names_path: str,
                  resolved_names_paths: list[str],
-                 selection_method: SelectionMethod,
+                 selection_method: SelectionMethod = SelectionMethod.BEST,
                  reference_resolved_names: Optional[pd.DataFrame] = None,
                  reference_unresolved_names: Optional[pd.DataFrame] = None,
                  work_dir: Optional[str] = None,
