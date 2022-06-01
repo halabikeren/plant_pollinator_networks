@@ -77,7 +77,7 @@ def resolve_names(input_path: str, name_col: str, output_path: str, log_path: st
         force=True,  # run over root logger settings to enable simultaneous writing to both stdout and file handler
     )
 
-    names = pd.read_csv(input_path)[name_col].str.capitalize().unique().tolist()
+    names = pd.read_csv(input_path)[name_col].tolist()
     name_resolver = NameResolver(method=method)
     name_resolver.resolve(names=names, output_path=output_path, batch_size=batch_size, gnr_data_sources=gnr_data_sources, tnrs_data_source=tnrs_data_source, max_jobs_in_parallel=max_jobs_in_parallel)
 
