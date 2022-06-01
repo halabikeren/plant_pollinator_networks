@@ -1,6 +1,5 @@
 import os
 import sys
-from typing import List
 import click
 import numpy as np
 import pandas as pd
@@ -25,12 +24,13 @@ def get_rank_data(db_connection: sqlite3.Connection, kingdom_id: int) -> pd.Data
     return ranks_data
 
 
-def get_taxonomic_data(db_connection: sqlite3.Connection, kingdom_id: int, names: List[str]):
+def get_taxonomic_data(db_connection: sqlite3.Connection, kingdom_id: int, names: list[str]):
     taxonomic_units_quey = f"SELECT * FROM taxonomic_units WHERE kingdom_id IS {kingdom_id}"
     taxonomic_units_data = pd.read_sql_query(taxonomic_units_quey, db_connection)
     taxonomic_units_data.complete_name = taxonomic_units_data.complete_name.str.lower()
     relevant_taxonomic_data = taxonomic_units_data.loc[taxonomic_units_data.complete_name.isin(names)]
-    logger.info(f"% names covered by db taxonomic data = {np.round(relevant_taxonomic_data.shape[0]/len(names)*100, 2)}%")
+    if len(names) > 0:
+        logger.info(f"% names covered by db taxonomic data = {np.round(relevant_taxonomic_data.shape[0]/len(names)*100, 2)}%")
     return relevant_taxonomic_data
 
 

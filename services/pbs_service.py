@@ -22,7 +22,7 @@ class PBSService:
             job_path,
             job_name: str,
             job_output_dir: str,
-            commands: List[str],
+            commands: list[str],
             queue: str = "itaym",
             priority: int = 0,
             cpus_num: int = 1,
@@ -61,7 +61,7 @@ class PBSService:
         return curr_jobs_num
 
     @staticmethod
-    def _generate_jobs(jobs_commands: List[List[str]], work_dir: str, output_dir: str) -> List[str]:
+    def _generate_jobs(jobs_commands: list[list[str]], work_dir: str, output_dir: str) -> list[str]:
         jobs_paths, job_output_paths = [], []
         for i in range(len(jobs_commands)):
             job_path = f"{work_dir}/{i}.sh"
@@ -81,7 +81,7 @@ class PBSService:
         return jobs_paths
 
     @staticmethod
-    def _submit_jobs(jobs_paths: List[str], max_parallel_jobs: int = 30):
+    def _submit_jobs(jobs_paths: list[str], max_parallel_jobs: int = 30):
         job_index = 0
         jobs_ids = []
         while job_index < len(jobs_paths):
@@ -99,17 +99,22 @@ class PBSService:
         return jobs_ids
 
     @staticmethod
-    def _wait_for_jobs(jobs_ids: List[str]):
+    def _wait_for_jobs(jobs_ids: list[str]):
         jobs_complete = np.all([os.system(f"qstat -f {job_id} > /dev/null 2>&1") != 0 for job_id in jobs_ids])
         while not jobs_complete:
             sleep(2 * 60)
             jobs_complete = np.all([os.system(f"qstat -f {job_id} > /dev/null 2>&1") != 0 for job_id in jobs_ids])
 
     @staticmethod
+    def execute_jobs(jobs_paths: list[str], max_parallel_jobs: int = 30):
+        jobs_ids = PBSService._submit_jobs(jobs_paths=jobs_paths, max_parallel_jobs=max_parallel_jobs)
+        PBSService._wait_for_jobs(jobs_ids=jobs_ids)
+    
+    @staticmethod
     def execute_job_array(
             work_dir: str,
             output_dir: str,
-            jobs_commands: List[List[str]],
+            jobs_commands: List[list[str]],
             max_parallel_jobs: int = 30,
     ):
         os.makedirs(work_dir, exist_ok=True)
@@ -118,8 +123,7 @@ class PBSService:
 
         if len(jobs_commands) > 0:
             jobs_paths = PBSService._generate_jobs(jobs_commands=jobs_commands, work_dir=work_dir, output_dir=output_dir)
-            jobs_ids = PBSService._submit_jobs(jobs_paths=jobs_paths, max_parallel_jobs=max_parallel_jobs)
-            PBSService._wait_for_jobs(jobs_ids=jobs_ids)
+            PBSService.execute_jobs(jobs_paths=jobs_paths, max_parallel_jobs=max_parallel_jobs)
 
         # remove work dir
-        shutil.rmtree(work_dir, ignore_errors=True)
+        # shutil.rmtree(work_dir, ignore_errors=True)
