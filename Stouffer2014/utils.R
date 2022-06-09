@@ -107,16 +107,17 @@ get_plant_nestedness_contribution <- function (web, nsimul = 99)
 }
 
 
-get_species_features <- function(network_path, nsim=1000)
+get_species_features <- function(network_path, nsim=1) #1000)
 {
   network <- process_network(network_path)
   species_features = data.frame(matrix(ncol = 4, nrow = nrow(network)))
-  colnames(species_features) = c("network", "species", "rank", "nestedness_contribution")
+  colnames(species_features) = c("network", "species", "ranked_degree", "ranked_nestedness_contribution")
   species_features$network = basename(network_path)
   species_features$species = rownames(network)
-  species_features$rank = rank(rowSums(network), ties.method="average")-1
-  species_features$rank = species_features$rank / max(species_features$rank)
-  species_features$nestedness_contribution = unlist(get_plant_nestedness_contribution(network, nsimul=nsim), use.names=FALSE)
+  species_features$ranked_degree = rank(rowSums(network), ties.method="average")-1
+  species_features$ranked_degree = species_features$ranked_degree / max(species_features$ranked_degree)
+  species_features$ranked_nestedness_contribution = rank(unlist(get_plant_nestedness_contribution(network, nsimul=nsim), use.names=FALSE))-1
+  species_features$ranked_nestedness_contribution = species_features$ranked_nestedness_contribution / max(species_features$ranked_nestedness_contribution)
   return(species_features)
 }
 
@@ -133,4 +134,20 @@ get_interaction_features <- function(network_path, nsim=1000)
   interaction_features$plant_dependance_on_pollinator = as.vector(plant_dependence_values)
   interaction_features$pollinator_dependance_on_plant = as.vector(pollinator_dependence_values)
   return(interaction_features)
+}
+
+
+get_pollinator_features <- function(network_path)
+{
+  network <- process_network(network_path)
+  pollinator_features = data.frame(matrix(ncol = 5, nrow = ncol(network)))
+  colnames(interaction_features) = c("network","pollinator", "ranked_degree", "ranked_nestedness_contribution", "exotic_tendency")
+  pollinator_features$network = basename(network_path)
+  pollinator_features$species = colnames(network)
+  pollinator_features$ranked_degree = rank(colSums(network), ties.method="average")-1
+  pollinator_features$ranked_degree = pollinator_features$ranked_degree / max(pollinator_features$ranked_degree)
+  pollinator_features$ranked_nestedness_contribution = rank(unlist(get_pollinator_nestedness_contribution(network, nsimul=nsim), use.names=FALSE))-1
+  pollinator_features$ranked_nestedness_contribution = pollinator_features$ranked_nestedness_contribution / max(pollinator_features$ranked_nestedness_contribution)
+  #pollinator_features$exotic_tendency
+  
 }

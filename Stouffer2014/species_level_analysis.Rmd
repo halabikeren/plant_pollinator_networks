@@ -16,7 +16,7 @@ species_classification_path = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer20
 
 networks_paths = list.files(networks_dir)
 species_features = data.frame(matrix(ncol = 4, nrow = 0))
-colnames(species_features) = c("network", "species", "rank", "nestedness_contribution")
+colnames(species_features) = c("network", "species", "ranked_degree", "ranked_nestedness_contribution")
 for (network_path in networks_paths)
 {
   network_species_features = get_species_features(paste(networks_dir,network_path, sep=""))
@@ -28,7 +28,7 @@ write.csv(species_features, "plant_species_features.csv", row.names = TRUE)
 ```{r}
 species_classification = read_csv(species_classification_path, show_col_types = FALSE)
 species_data_by_type = species_features %>% inner_join(species_classification, by=c("network" = "network", "species" = "species"))
-kruskal.test(rank~is_exotic, data=species_data_by_type)
-kruskal.test(nestedness_contribution~is_exotic, data=species_data_by_type)
+kruskal.test(ranked_degree~is_exotic, data=species_data_by_type)
+kruskal.test(ranked_nestedness_contribution~is_exotic, data=species_data_by_type)
 ```
 
