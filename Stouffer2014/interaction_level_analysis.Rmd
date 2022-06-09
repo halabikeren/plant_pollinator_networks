@@ -21,12 +21,17 @@ for (network_path in networks_paths)
   network_interaction_features = get_interaction_features(paste(networks_dir,network_path, sep=""))
   interaction_features = rbind(interaction_features, network_interaction_features)
 }
+interaction_features = interaction_features %>% filter(plant_dependance_on_pollinator > 0 | pollinator_dependance_on_plant > 0)
 write.csv(interaction_features, "interaction_features.csv", row.names = TRUE)
 ```
+
+
 ```{r}
 species_classification = read_csv(species_classification_path, show_col_types = FALSE)
 interaction_features_by_type = interaction_features %>% left_join(species_classification, by=c("network" = "network", "plant" = "species"))
-plant_pespective_model <- glm(interaction_features_by_type$plant_dependance_on_pollinator ~ interaction_features_by_type$is_exotic, family=binomial(link="identity"))
-pollinator_pespective_model <- glm.fit(interaction_features_by_type$is_exotic, interaction_features_by_type$pollinator_dependance_on_plant, family=binomial(link="identity"))
+# plant_pespective_model <- glm(interaction_features_by_type$plant_dependance_on_pollinator ~ interaction_features_by_type$is_exotic, family=binomial(link="logit")) # as per stouffer's clarification
+# pollinator_pespective_model <- glm.fit(interaction_features_by_type$is_exotic, # interaction_features_by_type$pollinator_dependance_on_plant, family=binomial(link="identity"))
+wilcox.test(interaction_features_by_type$plant_dependance_on_pollinator~interaction_features_by_type$is_exotic)
+wilcox.test(interaction_features_by_type$pollinator_dependance_on_plant~interaction_features_by_type$is_exotic)
 ```
 
