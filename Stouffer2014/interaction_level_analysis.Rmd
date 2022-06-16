@@ -14,8 +14,8 @@ networks_dir = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/raw_CSVs/net
 species_classification_path = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/prepare_input_data/species_classification.csv"
 
 networks_paths = list.files(networks_dir)
-interaction_features = data.frame(matrix(ncol = 5, nrow = 0))
-colnames(interaction_features) = c("network", "plant", "pollinator", "plant_dependance_on_pollinator", "pollinator_dependance_on_plant")
+interaction_features = data.frame(matrix(ncol = 7, nrow = 0))
+colnames(interaction_features) = c("network", "plant", "pollinator", "plant_dependance_on_pollinator", "plant_interactions_num", "pollinator_dependance_on_plant", "pollinator_interactions_num")
 for (network_path in networks_paths)
 {
   network_interaction_features = get_interaction_features(paste(networks_dir,network_path, sep=""))
@@ -29,9 +29,11 @@ write.csv(interaction_features, "interaction_features.csv", row.names = TRUE)
 ```{r}
 species_classification = read_csv(species_classification_path, show_col_types = FALSE)
 interaction_features_by_type = interaction_features %>% left_join(species_classification, by=c("network" = "network", "plant" = "species"))
-# plant_pespective_model <- glm(interaction_features_by_type$plant_dependance_on_pollinator ~ interaction_features_by_type$is_exotic, family=binomial(link="logit")) # as per stouffer's clarification
-# pollinator_pespective_model <- glm.fit(interaction_features_by_type$is_exotic, # interaction_features_by_type$pollinator_dependance_on_plant, family=binomial(link="identity"))
-wilcox.test(interaction_features_by_type$plant_dependance_on_pollinator~interaction_features_by_type$is_exotic)
-wilcox.test(interaction_features_by_type$pollinator_dependance_on_plant~interaction_features_by_type$is_exotic)
+
+plant_pespective_model <- glm(interaction_features_by_type$plant_dependance_on_pollinator ~ interaction_features_by_type$is_exotic, family=binomial(link="logit"), weights=interaction_features_by_type$plant_interactions_num) # as per stouffer's clarification
+summary(plant_pespective_model)
+
+pollinator_pespective_model <- glm(interaction_features_by_type$pollinator_dependance_on_plant ~ interaction_features_by_type$is_exotic, family=binomial(link="logit"), weights=interaction_features_by_type$pollinator_interactions_num) # as per stouffer's clarification
+summary(pollinator_pespective_model)
 ```
 
