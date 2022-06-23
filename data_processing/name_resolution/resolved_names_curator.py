@@ -327,6 +327,62 @@ class ResolvedNamesCurator:
         resolved_names["resolved_species_name"] = resolved_names.resolved_name.apply(lambda name: species_name_regex.search(name).group(1) if pd.notna(name) else name)
         resolved_names.to_csv(output_path, index=False)
 
+    @staticmethod
+    def fix_name(original_name):
+        original_name = ResolvedNamesCurator.treat_hybrids(original_name)
+        original_name = ResolvedNamesCurator.remove_parentheses(original_name)
+        lst_words = re.split("[\s]+", original_name)
+        if len(lst_words) > 2:
+            index_of_special_word = None
+            if "var." in lst_words:
+                index_of_special_word = lst_words.index("var.")
+                lst_words = lst_words[:index_of_special_word+2]
+            elif "subsp." in lst_words:
+                    index_of_special_word = lst_words.index("subsp.")
+                    lst_words = lst_words[:index_of_special_word + 2]
+            else:
+                if " f. " in original_name:
+                    index_of_special_word = lst_words.index("f.")
+                    lst_words = lst_words[:index_of_special_word + 2]
+            if index_of_special_word is None:
+                lst_words = lst_words[:2]
+            else:
+                words_to_remove = lst_words.copy()
+                if index_of_special_word > 2:
+                    for i in range(2, index_of_special_word):
+                        lst_words.remove(words_to_remove[i])
+        corrected_species_name = " ".join(lst_words)
+        return corrected_species_name
+
+    @staticmethod
+    def remove_parentheses(name):
+        # find the most distant left and right parentheses
+        substrings = []
+        dic_parentheses = {}
+        for i in range(len(name)):
+            if name[i] == "(":
+                if not ("(" in dic_parentheses):
+                    dic_parentheses["("] = (i,1)
+                else:
+                    dic_parentheses["("] = (dic_parentheses["("][0], dic_parentheses["("][1]+1)
+            if name[i] == ")":
+                if not ("(" in dic_parentheses):
+                    continue
+                if not (")" in dic_parentheses):
+                    dic_parentheses[")"] = (i, 1)
+                else:
+                    dic_parentheses[")"] = (i, dic_parentheses[")"][1] + 1)
+                if dic_parentheses["("][1] == dic_parentheses[")"][1]:
+                    substrings.append(name[dic_parentheses["("][0]: dic_parentheses[")"][0]+1])
+                    dic_parentheses = {}
+        for substring in substrings:
+            name = name.replace(substring, "", 1)
+        return name
+
+    @staticmethod
+    def treat_hybrids(original_name):
+        return original_name.replace(chr(215), "")
+
 
 if __name__ == '__main__':
 

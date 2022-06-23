@@ -1,0 +1,16 @@
+,plant_name,Aedes impiger,Aedes nigripes,Botanophila profuga,Bradysia sp1 M_PL_052,Clossiana chariclea,Colias hecla,Dasyhelea sp1 M_PL_052,Delia fabricii,Delia platura ,Dolichopus groenlandicus,Drymeia groenlandica,Eupeodes curtus,Eupeodes luniger,Eupithesia sobrinata,Eurois occulta,Forcipomyia sp1 M_PL_052,Helophilus borealis,Helophilus groenlandicus,Hymenoptera sp1 M_PL_052,Hymenoptera sp2 M_PL_052,Lasiestra leucocycla,Nowickia sp1 M_PL_052,Nysius groenlandicus,Oedemagena tarandi,Paregle audacula,Pegoplata tundrica,Periscepsia stylata,Phaonia pallidisquama,Platycheirus hyperboreus,Platycheirus lundbecki,Platycheirus varipes,Ramphomyia nigrita,Smittia sp1 M_PL_052,Sphaerophoria scripta,Spilogona sanctpauli,Stenomacrus sp1 M_PL_052,Syngrapha borea,Syngrapha u-aureum,Thysanoptera sp1 M_PL_052,is_exotic
+0,campanula gieseckiana,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False
+1,cerastium alpinum,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,0,1,0,1,0,0,0,1,1,1,1,1,0,0,0,0,False
+2,dryas integrifolia,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,1,0,0,0,1,False
+3,epilobium latifolium,0,0,0,0,0,1,0,0,0,0,0,1,1,0,1,0,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,False
+4,ledum palustre,0,1,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,False
+5,papaver radicatum,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,False
+6,pedicularis lapponica,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,False
+7,polygonum viviparum,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,False
+8,pyrola grandiflora,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,False
+9,rhododendron lapponicum,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,False
+10,salix glauca,0,1,0,1,0,0,0,1,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,0,1,1,1,1,0,1,0,0,False
+11,saxifraga triscupidata,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,False
+12,stellaria longiceps,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,False
+13,tofieldia pusilla,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,False
+14,vaccinium uliginosum,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False

@@ -1,0 +1,32 @@
+,plant_name,Agraulis vanillae,Allosmaitia piplea,Anartia jatrophae,Anolis oculatus,Apis mellifera,Appias drusilla,Ascia monuste,Coereba flaveola ,Cyanophaia bicolor,Dryas iulia,Electrostrymon angerona,Eulampis holosericeus,Eulampis jugularis,Hemiargus hanno,Janonia evarete,Loxigilla noctis,Marpesia petreus,Orthorhyncus cristatus,Phoebis sp1 M_PL_041,Polygonus sp1 M_PL_041,Pyrgus oileus,Unidentified sp1 M_PL_041,Unidentified sp10 M_PL_041,Unidentified sp11 M_PL_041,Unidentified sp12 M_PL_041,Unidentified sp13 M_PL_041,Unidentified sp15 M_PL_041,Unidentified sp16 M_PL_041,Unidentified sp17 M_PL_041,Unidentified sp18 M_PL_041,Unidentified sp19 M_PL_041,Unidentified sp2 M_PL_041,Unidentified sp20 M_PL_041,Unidentified sp3 M_PL_041,Unidentified sp4 M_PL_041,Unidentified sp5 M_PL_041,Unidentified sp6 M_PL_041,Unidentified sp7 M_PL_041,Unidentified sp8 M_PL_041,Unidentified sp9 M_PL_041,Urbanus sp1 M_PL_041,Wasmannia auropunctata,Xylocopa sp1 M_PL_041,is_exotic
+0,byrsonima spicata,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False
+1,calliandra tergemina,0,0,0,0,1,0,1,1,0,0,0,0,1,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,False
+2,centrosema virginianum,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False
+3,chamaecrista glandulosa,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,21,0,0,0,0,0,0,0,0,0,3,0,0,1,0,14,0,0,0,0,0,1,False
+4,coccoloba sp1 m_pl_041,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,False
+5,cordia martinicensis,1,4,0,0,14,12,11,1,0,1,8,0,0,0,6,0,4,33,3,10,0,13,1,0,0,0,0,0,0,0,0,28,3,0,20,9,0,9,0,1,1,0,27,False
+6,cordia sp1 m_pl_041,1,0,0,0,5,2,0,1,0,2,0,4,0,0,0,0,0,28,1,1,0,14,0,0,0,0,0,0,0,4,0,0,0,0,0,1,0,0,0,0,0,0,0,False
+7,cornutia pyramidata,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,35,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,False
+8,croton flavens,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,46,0,0,0,0,False
+9,daphnopsis americana,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False
+10,desmodium adscendens,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,False
+11,gonzalagunia hirsuta,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,0,False
+12,guettarda scabra,0,0,0,0,0,0,0,8,2,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False
+13,ipomoea tiliacea,0,0,0,0,1,0,0,1,0,0,0,0,3,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False
+14,lantana camara,5,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,False
+15,lantana involucrata,0,0,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,3,0,0,0,0,0,0,0,0,1,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,False
+16,ludwigia octovalvis,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,3,0,False
+17,miconia striata,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,False
+18,mimosa casta,0,0,0,0,26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,False
+19,odontonema nitidum,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False
+20,oxalis barrelieri,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False
+21,oxalis frutescens,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False
+22,palicourea crocea ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False
+23,sida rhombifolia,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,2,0,False
+24,spermacoce assurgens,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,3,0,False
+25,stigmaphyllon diversifolium,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,False
+26,tetrazygia angustifolia,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False
+27,unidentified sp21 m_pl_041,0,3,0,0,3,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,2,0,0,5,0,14,17,2,0,1,0,0,0,0,0,False
+28,vernonia sp1 m_pl_041,0,0,0,0,6,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,3,0,0,0,0,0,0,0,0,3,0,15,3,1,2,5,0,0,3,0,1,False
+29,wedelia calycina,0,0,0,0,10,4,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,2,7,0,6,0,1,3,1,2,0,3,0,0,False
+30,wedelia trilobata,0,0,1,0,1,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,False
