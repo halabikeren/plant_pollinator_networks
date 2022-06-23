@@ -3,7 +3,7 @@ import sys
 import os
 import time
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+sys.path.append((os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 from services.pbs_service import PBSService
 
 import glob
@@ -16,6 +16,9 @@ from taxon_names_resolver import Resolver
 from opentree import OTWebServiceWrapper
 
 logger = logging.getLogger(__name__)
+
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 
 class NameResolutionMethod(str, Enum):
@@ -65,6 +68,7 @@ class NameResolver:
                     command += f" '{tnrs_data_source}'"
                 commands = [
                     f"cd {batch_output_dir}",
+                    os.environ.get("CONDA_ACT_CMD", ""),
                     command
                 ]
                 job_commands.append(commands)
