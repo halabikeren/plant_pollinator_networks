@@ -17,8 +17,8 @@ species_classification_path = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer20
 networks_paths = list.files(networks_dir)
 species_features = data.frame(matrix(ncol = 4, nrow = 0))
 colnames(species_features) = c("network", "species", "rank", "nestedness_contribution")
-for (network_path in networks_paths)
-{
+x <- foreach(i = 1:length(networks_paths)) %dopar% {
+  network_path = networks_paths[i]
   network_species_features = get_species_features(paste(networks_dir,network_path, sep=""))
   species_features = rbind(species_features, network_species_features)
 }

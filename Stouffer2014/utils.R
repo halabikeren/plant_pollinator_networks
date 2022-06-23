@@ -1,11 +1,12 @@
 library(tidyverse)
 library(bipartite)
+library(matrixStats)
 
 process_network <- function(network_path)
 {
   network <- read_csv(file = network_path, show_col_types = FALSE)
   network$is_exotic = NULL
-  network = network %>% select(., -"...1") %>% column_to_rownames(., var = "plant_name")
+  network = network %>% column_to_rownames(., var = "plant_name")
   network = 1*(network >= 1)
   return(network)
 }
@@ -79,7 +80,7 @@ get_network_features <- function(network_path, nsim=1000)
   return(newtwork_features)
 }
 
-get_plant_nestedness_contribution <- function (web, nsimul = 99) 
+get_plant_nestedness_contribution <- function (web, nsimul = 1000) 
 {
   web <- ifelse(web > 0, 1, 0)
   if (is.null(rownames(web))) 
@@ -107,7 +108,34 @@ get_plant_nestedness_contribution <- function (web, nsimul = 99)
 }
 
 
-get_species_features <- function(network_path, nsim=1) #1000)
+get_pollinator_nestedness_contribution <- function (web, nsimul = 1000) 
+{
+  web <- ifelse(web > 0, 1, 0)
+  if (is.null(colnames(web))) 
+    colnames(web) <- paste0("H", seq.int(ncol(web)))
+  higher.out <- data.frame(row.names = colnames(web))
+  higher.out$nestedcontribution <- NA
+  if (any(dim(web) < 2)) {
+    warning("Your web is too small for a meaningful computation of nestedcontrrank (and probably other indices)!")
+  }
+  else {
+    nested.orig <- vegan::nestednodf(web)$statistic["NODF"]
+    for (i in colnames(web)) {
+      message(i)
+      probs <- (rowSums(web)/ncol(web) + colSums(web)[i]/nrow(web))/2
+      nested.null <- sapply(1:nsimul, function(x) {
+        web.null <- web
+        web.null[, i] <- rbinom(nrow(web), 1, probs)
+        vegan::nestednodf(web.null)$statistic["NODF"]
+      })
+      higher.out[i, "nestedcontribution"] <- (nested.orig - 
+                                                mean(nested.null))/sd(nested.null)
+    }
+  }
+  return(higher.out)
+}
+
+get_species_features <- function(network_path, nsim=1000)
 {
   network <- process_network(network_path)
   species_features = data.frame(matrix(ncol = 4, nrow = nrow(network)))
@@ -139,17 +167,43 @@ get_interaction_features <- function(network_path, nsim=1000)
 }
 
 
-get_pollinator_features <- function(network_path)
+get_tendency <- function(network, classification, nsim=100)
 {
-  network <- process_network(network_path)
+  network = as_tibble(network, rownames=NA)
+  species = colnames(network)
+  exotic_plant_species = c(classification %>% filter(is_exotic == TRUE) %>% pull(species))
+  num_interactions = colSums(network) # vector of number per pollinator
+  only_exotic_network = network %>% filter(row.names(network) %in% exotic_plant_species)
+  num_interactions_with_exotic = colSums(only_exotic_network)
+  empirical_exotic_tendencies = num_interactions_with_exotic/num_interactions
+  null_networks = r2dtable(r=rowSums(network), c=colSums(network), n=nsim)
+  null_networks_tendencies = c()
+  for (null_network in null_networks) {
+    null_network = as_tibble(null_network, rownames=NA)
+    rownames(null_network) = rownames(network)
+    colnames(null_network) = colnames(network)
+    num_interactions = colSums(null_network)
+    only_exotic_network = null_network %>% filter(row.names(null_network) %in% exotic_plant_species)
+    num_interactions_with_exotic = colSums(only_exotic_network)
+    null_exotic_tendencies = num_interactions_with_exotic/num_interactions
+    null_networks_tendencies = rbind(null_networks_tendencies, null_exotic_tendencies)
+  }
+  return((empirical_exotic_tendencies-colMeans(null_networks_tendencies))/colSds(null_networks_tendencies))
+}
+
+get_pollinator_features <- function(network_path, plant_species_classification_path, nsim = 1000)
+{
+  network = process_network(network_path)
+  plant_classification = read_csv(plant_species_classification_path, show_col_types = FALSE)
   pollinator_features = data.frame(matrix(ncol = 5, nrow = ncol(network)))
-  colnames(interaction_features) = c("network","pollinator", "ranked_degree", "ranked_nestedness_contribution", "exotic_tendency")
+  colnames(pollinator_features) = c("network","pollinator", "ranked_degree", "ranked_nestedness_contribution", "exotic_tendency")
   pollinator_features$network = basename(network_path)
   pollinator_features$species = colnames(network)
   pollinator_features$ranked_degree = rank(colSums(network), ties.method="average")-1
   pollinator_features$ranked_degree = pollinator_features$ranked_degree / max(pollinator_features$ranked_degree)
-  pollinator_features$ranked_nestedness_contribution = rank(unlist(get_pollinator_nestedness_contribution(network, nsimul=nsim), use.names=FALSE))-1
+  nestedness_contribution = get_pollinator_nestedness_contribution(network, nsimul=1000)
+  pollinator_features$ranked_nestedness_contribution = rank(unlist(nestedness_contribution, use.names=FALSE))-1
   pollinator_features$ranked_nestedness_contribution = pollinator_features$ranked_nestedness_contribution / max(pollinator_features$ranked_nestedness_contribution)
-  #pollinator_features$exotic_tendency
-  
+  pollinator_features$exotic_tendency = get_tendency(network, plant_classification, nsim=100)
+  return (pollinator_features)
 }

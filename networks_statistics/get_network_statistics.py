@@ -35,7 +35,8 @@ def extract_folder_networks(network_folder,source,network_type):
 
 
 def main():
-    networks_folder_path = '/Users/noa/Workspace/networks'
+    # networks_folder_path = '/Users/noa/Workspace/networks'
+    networks_folder_path = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/networks/"
     name_resolution_file = os.path.join(networks_folder_path,'processed_resolved_names.csv')
     name_resolution = pd.read_csv(name_resolution_file)
     networks_edgelists_path = "All_networks_edgelists.csv"
@@ -57,7 +58,7 @@ def main():
     all_networks_edgelists["Plant"] = all_networks_edgelists["Plant"].str.lower().str.replace("_"," ")
 
     all_networks_edgelists = pd.merge(all_networks_edgelists, name_resolution, how='left', left_on=['Plant'],
-                                   right_on=['query'])
+                                   right_on=['original_name'])
     all_networks_edgelists = all_networks_edgelists[["source","network_type","network_path","Plant", "matched_name", "genus", "family", "Pollinator", "Value"]]
 
     all_networks_edgelists = all_networks_edgelists.astype(
@@ -65,7 +66,7 @@ def main():
     all_networks_edgelists[["matched_name", "genus", "family", "Pollinator","Plant","network_path","network_type","source"]] = all_networks_edgelists[
          ["matched_name", "genus", "family", "Pollinator","Plant","network_path","network_type","source"]].fillna('unknown')
 
-    all_networks_edgelists.to_csv("All_networks_edgelists_named.csv")
+    all_networks_edgelists.to_csv(f"{os.getcwd()}/All_networks_edgelists_named.csv")
     #unique_plants = (all_networks_edgelists[["Plant","matched_name"]]).drop_duplicates()
     #print(f"Percentage of known plants: {np.mean(all_networks_edgelists['matched_name']!='unknown')}")
 
