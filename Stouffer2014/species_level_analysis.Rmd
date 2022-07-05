@@ -9,9 +9,8 @@ library(bipartite)
 source("utils.R")
 ```
 
-
 ```{r}
-networks_dir = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/raw_CSVs/networks/"
+networks_dir = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/data/raw_CSVs/networks/"
 species_classification_path = "G:/My Drive/PhD/plant_pollinator_inter/Stouffer2014/prepare_input_data/species_classification.csv"
 
 networks_paths = list.files(networks_dir)
@@ -22,13 +21,16 @@ x <- foreach(i = 1:length(networks_paths)) %dopar% {
   network_species_features = get_species_features(paste(networks_dir,network_path, sep=""))
   species_features = rbind(species_features, network_species_features)
 }
-write.csv(species_features, "plant_species_features.csv", row.names = TRUE)
+write.csv(species_features, "./data/plant_species_features.csv", row.names = TRUE)
 ```
 
+
+
 ```{r}
+species_features = read_csv("./data/plant_species_features.csv", show_col_types = FALSE)
 species_classification = read_csv(species_classification_path, show_col_types = FALSE)
 species_data_by_type = species_features %>% inner_join(species_classification, by=c("network" = "network", "species" = "species"))
-kruskal.test(rank~is_exotic, data=species_data_by_type)
-kruskal.test(nestedness_contribution~is_exotic, data=species_data_by_type)
+kruskal.test(ranked_degree~is_exotic, data=species_data_by_type)
+kruskal.test(ranked_nestedness_contribution~is_exotic, data=species_data_by_type)
 ```
 

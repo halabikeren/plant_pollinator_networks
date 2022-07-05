@@ -19,7 +19,8 @@ for (network_path in networks_paths)
 {
   if (network_path == "M_PL_038.csv")
   {
-    network_pollinator_features = get_pollinator_features(paste(networks_dir,network_path, sep=""), species_classification_path)
+    network = process_network(paste(networks_dir,network_path, sep=""))
+    network_pollinator_features = get_pollinator_features(network, species_classification_path)
     pollinator_features = rbind(pollinator_features, network_pollinator_features)
   }
 }
@@ -27,5 +28,6 @@ write.csv(pollinator_features, "pollinator_species_features.csv", row.names = TR
 ```
 ```{r}
 # pending for Stouffer: do we need to work with the empirical tendencies as "p" or to consider the null tendencies as well somehow?
+pollinator_features = read_csv("./data/pollinator_species_features.csv", show_col_types = FALSE)
 ```
 
