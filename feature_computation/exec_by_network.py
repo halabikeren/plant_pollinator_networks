@@ -74,17 +74,28 @@ def exec_by_network(networks_dir: str,
         if "reference" not in network_path:
             input_path = f"{networks_dir}{network_path}"
             output_path = f"{output_dir}{network_path.replace('.csv', '_features.csv')}"
-            commands = [os.environ.get("CONDA_ACT_CMD", ""), f"Rscript --vanilla {script_path} {input_path} {output_path}"]
+            script_exec_cmd = f"Rscript --vanilla {script_path} {input_path} {output_path}"
+            if script_path.endswith(".py"):
+                output_path = output_path = f"{output_dir}{network_path.replace('.csv', '_features/')}"
+                script_exec_cmd = f"python {script_path} --input_path={input_path} --output_dir={output_path} "
+            commands = [os.environ.get("CONDA_ACT_CMD", ""), script_exec_cmd]
             networks_commands.append(commands)
 
     logger.info(f"executing feature computation across {len(networks_commands)} networks")
-    PBSService.execute_job_array(work_dir=f"{work_dir}jobs/",
+    res = PBSService.execute_job_array(work_dir=f"{work_dir}jobs/",
                                  output_dir=f"{work_dir}jobs_output/",
                                  jobs_commands=networks_commands,
+                                 ram_gb_size=1,
                                  max_parallel_jobs=max_jobs_in_parallel)
     
-    features = pd.concat([pd.read_csv(f"{output_dir}{path}") for path in os.listdir(output_dir)])
-    features.to_csv(features_path, index=False)
+    if script_path.endswith(".py"):
+        network_features = pd.concat([pd.read_csv(f"{output_dir}{path}/network_features.csv") for path in os.listdir(output_dir) if os.path.exists(f"{output_dir}{path}/network_features.csv")])
+        network_features.to_csv(f"{features_path}/network_features.csv", index=False)
+        plant_features = pd.concat([pd.read_csv(f"{output_dir}{path}/plant_features.csv") for path in os.listdir(output_dir) if os.path.exists(f"{output_dir}{path}/plant_features.csv")])
+        plant_features.to_csv(f"{features_path}/plant_features.csv", index=False)
+    else:
+        features = pd.concat([pd.read_csv(f"{output_dir}{path}") for path in os.listdir(output_dir)])
+        features.to_csv(features_path, index=False)
         
 if __name__ == '__main__':
     exec_by_network()

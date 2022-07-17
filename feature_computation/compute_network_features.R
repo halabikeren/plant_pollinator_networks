@@ -14,10 +14,10 @@ output_path = args[2]
 
 start_time <- Sys.time()
 network_features = data.frame(matrix(ncol = 6, nrow = 0))
-colnames(network_features) = c("network", "connectance", "avg_plant_inter", "avg_pollinator_inter", "NODF", "relative_NODF")network_commmunity_features = features = get_community_features(input_path)
+colnames(network_features) = c("network", "connectance", "avg_plant_inter", "avg_pollinator_inter", "NODF", "relative_NODF")
 features = get_network_features(input_path)
 network_features[nrow(network_features) + 1,] = c(c(basename(input_path)), features)
-write.csv(community_features, output_path, row.names = TRUE)
+write.csv(network_features, output_path, row.names = TRUE)
 end_time <- Sys.time()
 duration = end_time - start_time
 print(str_glue("duration = {duration}"))
