@@ -6,8 +6,10 @@ import numpy as np
 
 def extract_single_network_edgelist(network_path):
     print(network_path)
-    ep_network = pd.read_csv(network_path)
-    ep_network.columns.values[0] = "Plant"
+    ep_network = pd.read_csv(network_path, encoding= 'unicode_escape')
+    ep_network.rename(columns={"plant/pollinator": "Plant"}, inplace=True)
+    if "Plant" not in ep_network.columns:
+        ep_network.rename(columns={ep_network.columns.tolist()[0]: "Plant"}, inplace=True)
 
     ep_network_edgelist = ep_network.melt(id_vars=["Plant"],
                                           var_name="Pollinator",
@@ -25,7 +27,7 @@ def extract_folder_networks(network_folder,source,network_type):
     networks_files = [os.path.join(network_folder, f) for f in os.listdir(network_folder) if
                              os.path.isfile(os.path.join(network_folder, f))]
     for i,network_path in enumerate(networks_files):
-        if not "reference" in network_path:
+        if not "reference" in network_path and network_path.endswith(".csv"):
             curr_network_edgelist = extract_single_network_edgelist(network_path)
             curr_network_edgelist["source"] = source
             curr_network_edgelist["network_type"] = network_type
@@ -35,13 +37,12 @@ def extract_folder_networks(network_folder,source,network_type):
 
 
 def main():
-    # networks_folder_path = '/Users/noa/Workspace/networks'
     networks_folder_path = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/networks/"
-    name_resolution_file = os.path.join(networks_folder_path,'processed_resolved_names.csv')
+    name_resolution_file = os.path.join(networks_folder_path,'processed_resolved_plant_names.csv')
     name_resolution = pd.read_csv(name_resolution_file)
     networks_edgelists_path = "All_networks_edgelists.csv"
     if not os.path.exists(networks_edgelists_path):
-        network_sources_folders = {o:os.path.join(networks_folder_path, o) for o in os.listdir(networks_folder_path) if os.path.isdir(os.path.join(networks_folder_path, o))}
+        network_sources_folders = {o:os.path.join(networks_folder_path, o) for o in os.listdir(networks_folder_path) if os.path.isdir(os.path.join(networks_folder_path, o)) and "." not in o}
         print(network_sources_folders)
         all_networks_edgelists = pd.DataFrame()
         for source in network_sources_folders:
