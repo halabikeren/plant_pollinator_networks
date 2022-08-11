@@ -13,10 +13,11 @@ input_path = args[1]
 output_path = args[2]
 
 start_time <- Sys.time()
-network_features = data.frame(matrix(ncol = 6, nrow = 0))
-colnames(network_features) = c("network", "connectance", "avg_plant_inter", "avg_pollinator_inter", "NODF", "relative_NODF")
-features = get_network_features(input_path)
-network_features[nrow(network_features) + 1,] = c(c(basename(input_path)), features)
+null_sim_features_path = str_replace(output_path, ".csv", "_across_null_networks.csv")
+features = get_network_features(input_path, null_sim_features_path, nsim=3)
+features["network"] = basename(input_path)
+network_features = t(data.frame(Reduce(rbind, features)))
+colnames(network_features) = names(features)
 write.csv(network_features, output_path, row.names = TRUE)
 end_time <- Sys.time()
 duration = end_time - start_time
