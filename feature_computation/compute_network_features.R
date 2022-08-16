@@ -14,7 +14,7 @@ output_path = args[2]
 
 start_time <- Sys.time()
 null_sim_features_path = str_replace(output_path, ".csv", "_across_null_networks.csv")
-features = get_network_features(input_path, null_sim_features_path, nsim=3)
+features = get_network_features(input_path, null_sim_features_path, nsim=1000)
 features["network"] = basename(input_path)
 network_features = t(data.frame(Reduce(rbind, features)))
 colnames(network_features) = names(features)
