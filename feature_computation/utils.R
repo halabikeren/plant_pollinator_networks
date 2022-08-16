@@ -38,25 +38,6 @@ get_interaction_based_features <- function(network)
   return(res)
 }
 
-sample_networks <- function(network, nsim)
-{
-  row_probs = matrix(rowSums(network)/ncol(network), nrow=nrow(network), ncol=ncol(network))
-  col_probs = matrix(colSums(network)/nrow(network), nrow=nrow(network), ncol=ncol(network), byrow=TRUE)
-  cell_probs = (row_probs + col_probs)/2
-
-  num_ones = matrix(0, nrow=nrow(network), ncol=ncol(network))
-
-  for (i in 1:nsim)
-  {
-    null_network = matrix(NA, ncol=ncol(network), nrow=nrow(network))
-    null_network[] <- rbinom(n=ncol(network)*nrow(network), size=1, prob = cell_probs)
-    num_ones = num_ones + null_network
-
-  }
-  sampled_probs = num_ones/nsim
-  return(list(cell_probs, sampled_probs))
-}
-
 
 get_feature_values <- function(networks_features, feature_name)
 {
@@ -77,7 +58,7 @@ get_network_features <- function(network_path, null_sim_features_path, nsim=1000
   
   null_networks = r2dtable(n=nsim, r=rowSums(network), c=colSums(network))
   null_networks_features = list()
-  null_networks_features_df = data.frame()
+  null_networks_features_dfs = list()
 
   for (i in 1:nsim)
   {
@@ -86,9 +67,10 @@ get_network_features <- function(network_path, null_sim_features_path, nsim=1000
     null_network_features[["network_index"]] = i
     df = t(data.frame(Reduce(rbind, null_network_features)))
     colnames(df) = names(null_network_features)
-    null_networks_features_df = rbind(null_networks_features_df, df)
+    null_networks_features_dfs[[i]] = df
     
   }
+  null_networks_features_df = do.call(rbind, null_networks_features_dfs)
   null_networks_features_df["observed_network"] = basename(network_path)
   write.csv(null_networks_features_df, null_sim_features_path, row.names = TRUE)
   
@@ -105,7 +87,7 @@ get_network_features <- function(network_path, null_sim_features_path, nsim=1000
   features_names = names(network_features)
   for (i in 1:length(features_names))
   {
-    if (!features_names[i] %in% non_transformable_feature_names & !is.na(network_features[features_names[i]]))
+    if ((!features_names[i] %in% non_transformable_feature_names) & (!is.na(network_features[features_names[i]])))
     {
       null_network_values = get_feature_values(networks_features=null_networks_features, feature_name=features_names[i])
       network_features[paste("delta_transformed_", features_names[i])] = network_features[features_names[i]] - mean(null_network_values)
@@ -141,11 +123,9 @@ get_plant_nestedness_contribution <- function (web, nsimul = 1000)
   return(lower.out)
 }
 
-
 # switch with group level - higher
 get_pollinator_nestedness_contribution <- function (web, nsimul = 1000) 
 {
-  web <- ifelse(web > 0, 1, 0)
   if (is.null(colnames(web))) 
     colnames(web) <- paste0("H", seq.int(ncol(web)))
   higher.out <- data.frame(row.names = colnames(web)) # higher - columns, pollinators
@@ -170,17 +150,60 @@ get_pollinator_nestedness_contribution <- function (web, nsimul = 1000)
   return(higher.out)
 }
 
-# switch with group level - higher
-get_species_features <- function(network_path, nsim=1000)
+
+# switch with group level - lower
+get_species_features <- function(network_path, null_sim_features_path, nsim=1000, level="lower")
 {
   network <- process_network(network_path)
   network[is.na(network)] <- 0
-  species_features = data.frame(matrix(ncol = 4, nrow = nrow(network)))
-  colnames(species_features) = c("network", "species", "ranked_degree", "ranked_nestedness_contribution")
-  species_features$network = basename(network_path)
-  species_features$species = rownames(network)
-  species_features$ranked_degree = min_max_scale(rank(rowSums(network), ties.method="average"))
-  species_features$ranked_nestedness_contribution = min_max_scale(rank(unlist(get_plant_nestedness_contribution(network, nsimul=nsim), use.names=FALSE)))
+  is_weighted = any(network > 1)
+  
+  if (level == "lower")
+  {
+    row_names = rownames(network)
+  } else {
+    row_names = colnames(network)
+  }
+  
+  null_networks = r2dtable(n=nsim, r=rowSums(network), c=colSums(network))
+  null_species_features = list()
+  null_species_features_dfs = list()
+  for (i in 1:nsim)
+  {
+    null_features = data.frame(specieslevel(web=null_networks[[i]], level=level))
+    null_species_features[[i]] = null_features
+    null_features[["network_index"]] = i
+    df = data.frame(null_features)
+    row.names(df) = row_names
+    colnames(df) = names(null_features)
+    null_species_features_dfs[[i]] = df
+  }
+  null_species_features_df = do.call(rbind, null_species_features_dfs)
+  null_species_features_df["observed_network"] = basename(network_path)
+  write.csv(null_species_features_df, null_sim_features_path, row.names = TRUE)
+  
+  species_features = data.frame(specieslevel(web=network, level=level))
+  row.names(species_features) = row_names
+  if (level == "lower")
+  {
+    species_features["nestedness_contribution"] = get_plant_nestedness_contribution(web=network, nsimul=nsim) 
+  } else {
+    species_features["nestedness_contribution"] = get_pollinator_nestedness_contribution(web=network, nsimul=nsim)
+  }
+  
+  # delta transform using null features
+  non_transformable_feature_names = list("degree", 
+                                         "normalized.degree",
+                                         "nestedness_contribution") 
+  features_names = names(species_features)
+  for (i in 1:length(features_names))
+  {
+    if ((!features_names[i] %in% non_transformable_feature_names) & (!is.na(species_features[features_names[i]])))
+    {
+      null_network_values = get_feature_values(networks_features=null_species_features, feature_name=features_names[i])
+      species_features[paste("delta_transformed_", features_names[i])] = species_features[features_names[i]] - mean(null_network_values)
+    }
+  }
   return(species_features)
 }
 
