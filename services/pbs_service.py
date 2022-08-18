@@ -1,11 +1,14 @@
 import logging
 import os
+import socket
 import re
 from typing import List
 import getpass
 import subprocess
 import shutil
 from time import sleep
+
+from typing import Optional
 
 import numpy as np
 
@@ -14,7 +17,6 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 logger = logging.getLogger(__name__)
-
 
 class PBSService:
     @staticmethod
@@ -28,6 +30,7 @@ class PBSService:
             cpus_num: int = 1,
             ram_gb_size: int = 4,
     ) -> int:
+        logger.info(f"submitting jobs to queue {queue}")
         os.makedirs(os.path.dirname(job_path), exist_ok=True)
         os.makedirs(os.path.dirname(job_output_dir), exist_ok=True)
         commands_str = "\n".join(commands)
@@ -61,20 +64,22 @@ class PBSService:
         return curr_jobs_num
 
     @staticmethod
-    def _generate_jobs(jobs_commands: list[list[str]], work_dir: str, output_dir: str, ram_gb_size: int = 4) -> list[str]:
+    def _generate_jobs(jobs_commands: list[list[str]], work_dir: str, output_dir: str, ram_gb_size: int = 4, queue: str = "itaym") -> list[str]:
         jobs_paths, job_output_paths = [], []
         for i in range(len(jobs_commands)):
             job_path = f"{work_dir}/{i}.sh"
             job_name = f"{i}.sh"
             job_output_path = f"{output_dir}/{i}.out"
             PBSService.create_job_file(
+    
                 job_path=job_path,
                 job_name=job_name,
                 job_output_dir=job_output_path,
                 commands=[
                              os.environ.get("conda_act_cmd", "")
                          ] + jobs_commands[i],
-                ram_gb_size=ram_gb_size
+                ram_gb_size=ram_gb_size,
+                queue=queue,
             )
             jobs_paths.append(job_path)
             job_output_paths.append(job_output_path)
@@ -118,13 +123,14 @@ class PBSService:
             jobs_commands: List[list[str]],
             ram_gb_size: int = 4, # mem size per for in gb
             max_parallel_jobs: int = 30,
+            queue: str = "itaym",
     ):
         os.makedirs(work_dir, exist_ok=True)
         os.makedirs(output_dir, exist_ok=True)
         logger.info(f"# input paths to execute commands on = {len(jobs_commands)}")
 
         if len(jobs_commands) > 0:
-            jobs_paths = PBSService._generate_jobs(jobs_commands=jobs_commands, work_dir=work_dir, output_dir=output_dir, ram_gb_size=ram_gb_size)
+            jobs_paths = PBSService._generate_jobs(jobs_commands=jobs_commands, work_dir=work_dir, output_dir=output_dir, ram_gb_size=ram_gb_size, queue=queue)
             PBSService.execute_jobs(jobs_paths=jobs_paths, max_parallel_jobs=max_parallel_jobs)
 
         # remove work dir
