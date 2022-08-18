@@ -52,12 +52,20 @@ load_dotenv(find_dotenv())
     required=False,
     default=1900, # for API request, this limitation will prevent too many simultaneous requests issue
 )
+@click.option(
+    "--queue",
+    help="queue to submit jobs to",
+    type=str,
+    required=False,
+    default="itaym",
+)
 def exec_by_network(networks_dir: str,
                     script_path: str,
                     work_dir: str,
                     features_path: str,
                     log_path: str,
-                    max_jobs_in_parallel: int):
+                    max_jobs_in_parallel: int,
+                    queue: str):
 
     logging.basicConfig(
         level=logging.INFO,
@@ -76,17 +84,19 @@ def exec_by_network(networks_dir: str,
             output_path = f"{output_dir}{network_path.replace('.csv', '_features.csv')}"
             script_exec_cmd = f"Rscript --vanilla {script_path} {input_path} {output_path}"
             if script_path.endswith(".py"):
-                output_path = output_path = f"{output_dir}{network_path.replace('.csv', '_features/')}"
-                script_exec_cmd = f"python {script_path} --input_path={input_path} --output_dir={output_path} "
-            commands = [os.environ.get("CONDA_ACT_CMD", ""), script_exec_cmd]
-            networks_commands.append(commands)
+                output_path = f"{output_dir}{network_path.replace('.csv', '_features/')}"
+                script_exec_cmd = f"python {script_path} --input_path={input_path} --output_dir={output_path}"
+            if not os.path.exists(output_path):
+                commands = [os.environ.get("CONDA_ACT_CMD", ""), script_exec_cmd]
+                networks_commands.append(commands)
 
     logger.info(f"executing feature computation across {len(networks_commands)} networks")
     res = PBSService.execute_job_array(work_dir=f"{work_dir}jobs/",
                                  output_dir=f"{work_dir}jobs_output/",
                                  jobs_commands=networks_commands,
                                  ram_gb_size=1,
-                                 max_parallel_jobs=max_jobs_in_parallel)
+                                 max_parallel_jobs=max_jobs_in_parallel,
+                                 queue=queue)
     
     if script_path.endswith(".py"):
         network_features = pd.concat([pd.read_csv(f"{output_dir}{path}/network_features.csv") for path in os.listdir(output_dir) if os.path.exists(f"{output_dir}{path}/network_features.csv")])
