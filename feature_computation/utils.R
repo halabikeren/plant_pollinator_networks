@@ -208,7 +208,6 @@ get_species_features <- function(network_path, null_sim_features_path, nsim=1000
 }
 
 
-
 get_interaction_features <- function(network_path, nsim=1000)
 {
   network <- process_network(network_path)
@@ -252,4 +251,170 @@ get_pollinator_features <- function(network, plant_species_classification_path, 
   pollinator_features$ranked_nestedness_contribution = min_max_scale(rank(unlist(nestedness_contribution, use.names=FALSE)))
   pollinator_features$exotic_tendency = get_exotic_tendency(network, plant_classification)
   return (pollinator_features)
+}
+
+
+simulate_species_extinction <- function(network, nsim=1000,  survival_threshold = 0.5, level = "lower")
+{
+  species = rownames(network)
+  if (level == "higher")
+  {
+    species = colnames(network)
+  }
+  Rstats_by_sp = list()
+  
+  for (i in (1:length(species)))
+  {
+    sp = species[i]
+    Rvalues<-NULL
+    triggertally<-NULL
+    cascadelength<-NULL
+    c=1
+    trigmat<-matrix(nrow=nsim, ncol=ncol(network))
+    j=0
+    plantsurvivorsC<-matrix(nrow=nsim, ncol=ncol(network))
+    exttimesC<-matrix(nrow=nsim, ncol=ncol(network))
+    
+    for(k in 1:nsim){
+      mymat<-network                                                      # make copy of original matrix to work on
+      PLANT<-colSums(mymat)                                               # save plant degrees
+      POL<-rowSums(mymat)                                                 # save pollinator degrees
+      survivors<-NULL                                                     # create survivors to save pollinator counts
+      plantdeaths<-NULL                                                   # create survivors to save plant counts
+      pastplantdeaths<-NULL
+      
+      ntriggerhat<-NULL
+      i=0
+      j=j+1 
+      ttally=0
+      
+      while(sum(colSums(mymat))>0){
+        
+        if(length(ntriggerhat)>0){
+          ntriggerhat<-sample(ntriggerhat)
+          cascadelength[c]<-length(ntriggerhat)
+          c=c+1
+          for (m in 1:length(ntriggerhat)){      
+            ntrigger<-sp
+            mymat[,ntrigger]<-0
+            pastplantdeaths<-c(pastplantdeaths,ntrigger)
+            i=i+1
+            v.ext<-which(((POL-rowSums(mymat))/POL)>=survival_threshold)                   # check pollinators
+            mymat[v.ext,]<-0                                                               # make pollinators extinct
+            survivors[i]<-length(which(rowSums(mymat)>0))
+            trigmat[j,i]<-1
+            plantsurvivorsC[j,i]<-length(which(colSums(mymat)==0))
+            exttimesC[k,i]<-ntrigger
+          }
+        }
+        else{
+          rtrigger<-sp # the first primary extinction is of the species of interest
+          mymat[,rtrigger]<-0
+          pastplantdeaths<-c(pastplantdeaths,rtrigger)
+          i=i+1
+          v.ext<-which(((POL-rowSums(mymat))/POL)>=survival_threshold)                   # check pollinators
+          mymat[v.ext,]<-0                                                               # make pollinators extinct
+          survivors[i]<-length(which(rowSums(mymat)>0))                                  # save number of survivors
+          ttally<-ttally+1
+          trigmat[j,i]<-0
+          plantsurvivorsC[j,i]<-length(which(colSums(mymat)==0))
+          exttimesC[k,i]<-rtrigger
+        }
+        
+        p.ext<-which(((PLANT-colSums(mymat))/PLANT)>=survival_threshold)
+        ntriggerhat<-c(setdiff(names(p.ext),pastplantdeaths),setdiff(pastplantdeaths,names(p.ext)))                                                 
+        
+      }
+      
+      triggertally[k]<-ttally
+      survivorsx<-c(nrow(mymat),survivors)
+      Rvalues[k]<-sum(survivorsx)/(ncol(mymat)*nrow(mymat))
+    }
+    
+    Rstats = c("mean": mean(Rvalues),
+               "median": medain(Rvalues),
+               "min": min(Rvalues),
+               "max": max(Rvalues),
+               "var": var(Rvalues),
+               "std": sd(Rvalues))
+    Rstats_by_sp[[sp]] = Rstats
+  }
+  return(Rstats_by_sp)
+}
+
+simulate_network_extinction <- function(network, nsim = 1000, survival_threshold = 0.5)
+{
+  Rvalues<-NULL
+  triggertally<-NULL
+  cascadelength<-NULL
+  c=1
+  trigmat<-matrix(nrow=nsim, ncol=ncol(network))
+  j=0
+  plantsurvivorsC<-matrix(nrow=nsim, ncol=ncol(network))
+  exttimesC<-matrix(nrow=nsim, ncol=ncol(network))
+  
+  for(k in 1:nsim){
+    mymat<-network                                                      # make copy of original matrix to work on
+    PLANT<-colSums(mymat)                                               # save plant degrees
+    POL<-rowSums(mymat)                                                 # save pollinator degrees
+    survivors<-NULL                                                     # create survivors to save pollinator counts
+    plantdeaths<-NULL                                                   # create survivors to save plant counts
+    triggerhat<-colnames(mymat)                                         # create hat with plant names to pick from
+    pastplantdeaths<-NULL
+    
+    ntriggerhat<-NULL
+    i=0
+    j=j+1 
+    ttally=0
+    
+    while(sum(colSums(mymat))>0){
+      
+      if(length(ntriggerhat)>0){
+        ntriggerhat<-sample(ntriggerhat)
+        cascadelength[c]<-length(ntriggerhat)
+        c=c+1
+        for (m in 1:length(ntriggerhat)){      
+          ntrigger<-ntriggerhat[m]
+          mymat[,ntrigger]<-0
+          pastplantdeaths<-c(pastplantdeaths,ntrigger)
+          i=i+1
+          v.ext<-which(((POL-rowSums(mymat))/POL)>=survival_threshold)                   # check pollinators
+          mymat[v.ext,]<-0                                                               # make pollinators extinct
+          survivors[i]<-length(which(rowSums(mymat)>0))
+          trigmat[j,i]<-1
+          plantsurvivorsC[j,i]<-length(which(colSums(mymat)==0))
+          exttimesC[k,i]<-ntrigger
+        }
+      }
+      else{
+        rtrigger<-sample((names(colSums(mymat)[(colSums(mymat))>0])),1)
+        mymat[,rtrigger]<-0
+        pastplantdeaths<-c(pastplantdeaths,rtrigger)
+        i=i+1
+        v.ext<-which(((POL-rowSums(mymat))/POL)>=survival_threshold)                   # check pollinators
+        mymat[v.ext,]<-0                                                               # make pollinators extinct
+        survivors[i]<-length(which(rowSums(mymat)>0))                                  # save number of survivors
+        ttally<-ttally+1
+        trigmat[j,i]<-0
+        plantsurvivorsC[j,i]<-length(which(colSums(mymat)==0))
+        exttimesC[k,i]<-rtrigger
+      }
+      
+      p.ext<-which(((PLANT-colSums(mymat))/PLANT)>=survival_threshold)
+      ntriggerhat<-c(setdiff(names(p.ext),pastplantdeaths),setdiff(pastplantdeaths,names(p.ext)))                                                 
+      
+    }
+    
+    triggertally[k]<-ttally
+    survivorsx<-c(nrow(mymat),survivors)
+    Rvalues[k]<-sum(survivorsx)/(ncol(mymat)*nrow(mymat))
+  }
+  
+  Rstats = c("mean": mean(Rvalues),
+             "median": medain(Rvalues),
+             "min": min(Rvalues),
+             "max": max(Rvalues),
+             "var": var(Rvalues),
+             "std": sd(Rvalues))
+  return(Rstats)
 }
