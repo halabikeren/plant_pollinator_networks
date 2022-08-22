@@ -93,7 +93,12 @@ get_network_features <- function(network_path, null_sim_features_path, nsim=1000
       network_features[paste("delta_transformed_", features_names[i])] = network_features[features_names[i]] - mean(null_network_values)
     }
   }
-  return(network_features)
+  
+  extinction_features = simulate_network_extinction(network, nsim=nsim)
+  keys <- unique(c(names(network_features), names(extinction_features)))
+  all_network_features = setNames(mapply(c, network_features[keys], extinction_features[keys]), keys)
+  
+  return(all_network_features)
 }
 
 get_plant_nestedness_contribution <- function (web, nsimul = 1000) 
@@ -263,9 +268,8 @@ simulate_species_extinction <- function(network, nsim=1000,  survival_threshold 
   }
   Rstats_by_sp = list()
   
-  for (i in (1:length(species)))
+  for (s in (1:length(species)))
   {
-    sp = species[i]
     Rvalues<-NULL
     triggertally<-NULL
     cascadelength<-NULL
@@ -308,17 +312,16 @@ simulate_species_extinction <- function(network, nsim=1000,  survival_threshold 
           }
         }
         else{
-          rtrigger<-sp # the first primary extinction is of the species of interest
-          mymat[,rtrigger]<-0
-          pastplantdeaths<-c(pastplantdeaths,rtrigger)
-          i=i+1
-          v.ext<-which(((POL-rowSums(mymat))/POL)>=survival_threshold)                   # check pollinators
-          mymat[v.ext,]<-0                                                               # make pollinators extinct
-          survivors[i]<-length(which(rowSums(mymat)>0))                                  # save number of survivors
-          ttally<-ttally+1
-          trigmat[j,i]<-0
-          plantsurvivorsC[j,i]<-length(which(colSums(mymat)==0))
-          exttimesC[k,i]<-rtrigger
+          rtrigger<-s # the first primary extinction is of the species of interest
+          if (level == "lower")
+          {
+            mymat[rtrigger,]<-0
+          } else {
+            mymat[,rtrigger]<-0
+          }
+          
+          
+          
         }
         
         p.ext<-which(((PLANT-colSums(mymat))/PLANT)>=survival_threshold)
@@ -331,16 +334,17 @@ simulate_species_extinction <- function(network, nsim=1000,  survival_threshold 
       Rvalues[k]<-sum(survivorsx)/(ncol(mymat)*nrow(mymat))
     }
     
-    Rstats = c("mean": mean(Rvalues),
-               "median": medain(Rvalues),
-               "min": min(Rvalues),
-               "max": max(Rvalues),
-               "var": var(Rvalues),
-               "std": sd(Rvalues))
+    Rstats = c("mean"=mean(Rvalues),
+               "median"=median(Rvalues),
+               "min"=min(Rvalues),
+               "max"=max(Rvalues),
+               "var"=var(Rvalues),
+               "std"=sd(Rvalues))
     Rstats_by_sp[[sp]] = Rstats
   }
   return(Rstats_by_sp)
 }
+
 
 simulate_network_extinction <- function(network, nsim = 1000, survival_threshold = 0.5)
 {
@@ -409,12 +413,11 @@ simulate_network_extinction <- function(network, nsim = 1000, survival_threshold
     survivorsx<-c(nrow(mymat),survivors)
     Rvalues[k]<-sum(survivorsx)/(ncol(mymat)*nrow(mymat))
   }
-  
-  Rstats = c("mean": mean(Rvalues),
-             "median": medain(Rvalues),
-             "min": min(Rvalues),
-             "max": max(Rvalues),
-             "var": var(Rvalues),
-             "std": sd(Rvalues))
+  Rstats = c("mean"=mean(Rvalues),
+             "median"=median(Rvalues),
+             "min"=min(Rvalues),
+             "max"=max(Rvalues),
+             "var"=var(Rvalues),
+             "std"=sd(Rvalues))
   return(Rstats)
 }
