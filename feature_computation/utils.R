@@ -65,13 +65,13 @@ get_network_features <- function(network_path, null_sim_features_path, nsim=1000
     null_network_features = networklevel(web=null_networks[[i]], weighted=is_weighted)
     null_networks_features[[i]] = null_network_features
     null_network_features[["network_index"]] = i
+    null_network_features[["observed_network"]] = basename(network_path)
     df = t(data.frame(Reduce(rbind, null_network_features)))
     colnames(df) = names(null_network_features)
     null_networks_features_dfs[[i]] = df
     
   }
   null_networks_features_df = do.call(rbind, null_networks_features_dfs)
-  null_networks_features_df["observed_network"] = basename(network_path)
   write.csv(null_networks_features_df, null_sim_features_path, row.names = TRUE)
   
   network_features = networklevel(web=network, weighted=is_weighted)
