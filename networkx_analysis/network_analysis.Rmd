@@ -1,0 +1,117 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+library(tidyverse)
+library(survival)
+library(survminer)
+library(cmprsk)
+library(tidyverse)
+library(caret)
+library(survival)
+library(survminer)
+library(lubridate)
+```
+
+
+```{r}
+networks_data = read_csv('networks_metadata') %>% select(orig_path,network_numbered_file,network_type,network_source,Node,connectance, avg_plant_inter, avg_pollinator_inter, NODF, relative_NODF,pct_missing_data,is_polyploid, ranked_degree,ranked_nestedness_contribution,cc, dc, clusr, redundancy, pr_ec,network_n_nodes,number_of_pollinators,number_of_plants)
+networks_data
+```
+
+Missing data
+
+```{r}
+networks_data %>% filter (is.na(is_polyploid))
+networks_data %>% filter (is.na(ranked_degree))
+networks_data %>% filter (is.na(ranked_nestedness_contribution))
+```
+```{r}
+labeled_networks_data<-networks_data %>% filter (!is.na(is_polyploid)) %>% mutate (is_polyploid = as_factor(is_polyploid))  %>% select (connectance,avg_plant_inter,avg_pollinator_inter,NODF,relative_NODF,ranked_degree,ranked_nestedness_contribution,cc,dc,clusr,redundancy,pr_ec,pct_missing_data,is_polyploid,number_of_pollinators,number_of_plants) %>% drop_na() 
+```
+
+EDA
+
+```{r}
+labeled_networks_data %>% ggplot(aes(x = ranked_nestedness_contribution, color= is_polyploid))+ geom_density()
+labeled_networks_data %>% ggplot(aes(x = cc, color= is_polyploid))+ geom_density()
+labeled_networks_data %>% ggplot(aes(x = clusr, color= is_polyploid))+ geom_density()
+```
+
+Kolmogorov-Smirnov
+
+```{r}
+ks.test()
+```
+
+Machine learning
+
+
+```{r}
+
+
+library(tidymodels)
+set.seed(42)
+networks_split <- initial_split(labeled_networks_data, prop = 0.7)
+train_data <- training(networks_split  )
+test_data <- testing(networks_split  )
+```
+
+```{r}
+labeled_networks_data
+```
+
+```{r}
+library(pROC)
+
+bin_glm<-  glm(is_polyploid ~., data = train_data , family = "binomial") 
+caret::varImp(bin_glm)
+
+nullmod <- glm(is_polyploid ~1,data = train_data  , family="binomial")
+r2 = 1-logLik(bin_glm)/logLik(nullmod)
+print(r2)
+summary(bin_glm)
+
+test_prob_glm = predict(bin_glm, newdata = test_data, type = 'response')
+predicted.classes <- ifelse(test_prob_glm > 0.5, 1, 0)
+confusionMatrix(factor(predicted.classes),factor(test_data$is_polyploid))
+```
+
+```{r}
+library(randomForest)
+
+classifier_RF = randomForest(x = train_data %>% select (-is_polyploid),
+                             y = train_data$is_polyploid,
+                             ntree = 500)
+```
+
+```{r}
+y_pred_rf = predict(classifier_RF, newdata = test_data %>% select (-is_polyploid))
+confusionMatrix(factor(y_pred_rf),factor(test_data$is_polyploid))
+```
+
+
+```{r}
+plot(classifier_RF)
+importance(classifier_RF)
+varImpPlot(classifier_RF)
+
+```
+
+```{r}
+train_data %>% select (connectance,avg_plant_inter,avg_pollinator_inter,NODF,relative_NODF,ranked_degree,ranked_nestedness_contribution,cc,dc,clusr,redundancy,pr_ec,pct_missing_data) %>% replace(is.na(.), -1)
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
