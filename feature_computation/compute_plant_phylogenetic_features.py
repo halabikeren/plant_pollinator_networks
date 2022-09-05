@@ -49,7 +49,7 @@ def compute_phylogenetic_features(input_path: str,
                                   output_dir: str,
                                   tree_path: str,
                                   name_resolution_path: str,
-                                  use_name_resolution: str):
+                                  use_name_resolution: bool):
    
     os.makedirs(output_dir, exist_ok=True)
     network = pd.read_csv(input_path)
@@ -73,10 +73,13 @@ def compute_phylogenetic_features(input_path: str,
         raise ValueError(f"no plant names are available and so phylogenetic features cannot be computed")
     tree_names = set(network_tree.get_leaf_names())
     plant_names_in_tree = [name for name in plant_names if name in tree_names]
-    if len(plant_names_in_tree) == 0:
-        raise ValueError(f"no resolved plant names are present in the tree so phylogenetic features cannot be computed")
-    network_tree.prune(plant_names_in_tree, preserve_branch_length=True)
-    pd_val = np.sum([node.dist for node in network_tree.traverse()])
+    if len(plant_names_in_tree) <= 1:
+        raise ValueError(f"# resolved plant names that are present in the tree = {len(plant_names_in_tree)} so phylogenetic features cannot be computed")
+        pd_val = np.nan
+    else:
+        network_tree.prune(plant_names_in_tree, preserve_branch_length=True)
+        pd_val = np.sum([node.dist for node in network_tree.traverse()])
+    
     network_features = pd.DataFrame({"network": [os.path.basename(input_path)],
                                      "num_network_species": len(plant_names),
                                      "num_network_species_in_tree": len(plant_names_in_tree),
@@ -85,11 +88,16 @@ def compute_phylogenetic_features(input_path: str,
     network_features.to_csv(f"{output_dir}/network_features.csv", index=False)
 
     # phylogenetic uniqueness per plant species -  distance from other plant species in the network across the tree
-    leaf_names = set(network_tree.get_leaf_names())
-    plant_features["phylogenetic_uniqueness"] = plant_features[name_field].apply(lambda sp1: np.mean([network_tree.get_distance(sp1, sp2) for sp2 in leaf_names if sp1 != sp2]) if sp1 in leaf_names else np.nan)
+    if len(plant_names_in_tree) > 1:
+        leaf_names = set(network_tree.get_leaf_names())
+        plant_features["phylogenetic_uniqueness"] = plant_features[name_field].apply(lambda sp1: np.mean([network_tree.get_distance(sp1, sp2) for sp2 in leaf_names if sp1 != sp2]) if sp1 in leaf_names else np.nan)
+    else:
+        plant_features["phylogenetic_uniqueness"] = np.nan
     plant_features["genus"] = plant_features[name_field].apply(lambda name: name.split(" ")[0])
     genera_counter = Counter(plant_features["genus"].tolist())
     plant_features["has_relative_in_network"] = plant_features["genus"].apply(lambda genus: genera_counter[genus] > 1)
+    plant_features["network"] = [os.path.basename(input_path)]*plant_features.shape[0]
+    plant_features["coverage"] = [ len(plant_names_in_tree)/len(plant_names)]*plant_features.shape[0]
     plant_features.to_csv(f"{output_dir}/plant_features.csv", index=False)
     
 if __name__ == '__main__':
