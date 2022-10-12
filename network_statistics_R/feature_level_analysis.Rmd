@@ -21,14 +21,6 @@ library(lubridate)
 
 
 
-Network analysis data
-
-```{r}
-binary_networks_data = read_csv('/Users/noa/Workspace/plant_pollinator_networks_data/binary_networks/network_features.csv')
-binary_networks_data$network = paste(binary_networks_data$network,".csv", sep = "")
-weighted_networks_data = read_csv('/Users/noa/Workspace/plant_pollinator_networks_data/weighted_networks/network_features.csv')
-weighted_networks_data$network = paste(weighted_networks_data$network,".csv", sep = "")
-```
 
 Features analysis data
 
