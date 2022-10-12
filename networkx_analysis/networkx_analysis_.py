@@ -4,28 +4,29 @@ import os
 import pickle
 import matplotlib.pyplot as plt
 from networkx.algorithms import bipartite
+from networkx_analysis.constants import *
 
 
-def draw_network(G):
-    node_colors = []
-    for key in list(G.nodes.keys()):
-        if G.nodes[key].get('is_polyploid') == 1 and G.nodes[key]['bipartite'] == 0:  # polyploids
-            node_colors.append('b')
-        elif G.nodes[key].get('is_polyploid') == 0 and G.nodes[key]['bipartite'] == 0:
-            node_colors.append('g')
-        elif G.nodes[key].get('is_polyploid') == -1 and G.nodes[key]['bipartite'] == 0:
-            node_colors.append('y')
-        else:
-            node_colors.append('r')
-
-    nx.draw_networkx(G,
-                     pos=nx.kamada_kawai_layout(G, weight='Value'),
-                     node_size=200,
-                     font_size=5,
-                     node_color=node_colors,
-                     # width=[G.edges[e]['Value'] for e in G.edges],
-                     with_labels=True)
-    plt.show()
+# def draw_network(G):
+#     node_colors = []
+#     for key in list(G.nodes.keys()):
+#         if G.nodes[key].get('is_polyploid') == 1 and G.nodes[key]['bipartite'] == 0:  # polyploids
+#             node_colors.append('b')
+#         elif G.nodes[key].get('is_polyploid') == 0 and G.nodes[key]['bipartite'] == 0:
+#             node_colors.append('g')
+#         elif G.nodes[key].get('is_polyploid') == -1 and G.nodes[key]['bipartite'] == 0:
+#             node_colors.append('y')
+#         else:
+#             node_colors.append('r')
+#
+#     nx.draw_networkx(G,
+#                      pos=nx.kamada_kawai_layout(G, weight='Value'),
+#                      node_size=200,
+#                      font_size=5,
+#                      node_color=node_colors,
+#                      # width=[G.edges[e]['Value'] for e in G.edges],
+#                      with_labels=True)
+#     plt.show()
 
 
 
@@ -80,17 +81,16 @@ def Generate_single_network(network_path, datasets_dict):
     G.add_nodes_from(ep_network_edgelist['Plant'], bipartite=0)
     G_nodes_df = pd.DataFrame({'Node': G.nodes()})
     G_nodes_df['orig_path'] = trimmed_network_path
-    G_nodes_df = G_nodes_df.merge(network_features,how='left', on = 'orig_path', suffixes=[None,"_redundant"])
-    G_nodes_df = G_nodes_df.merge(species_features, how='left', left_on='Node', right_on='species',suffixes=[None,"_redundant"])
-    G_nodes_df = G_nodes_df.merge(datasets_dict['ploidity_classifier'], how='left', left_on='Node', right_on='Species',suffixes=[None,"_redundant"])
-    pct_missing = G_nodes_df['is_polyploid'].isnull().sum() / len(G_nodes_df)
+    G_nodes_df = G_nodes_df.merge(network_features,how='inner', on = 'orig_path', suffixes=[None,"_redundant"])
+    G_nodes_df = G_nodes_df.merge(species_features, how='inner', left_on='Node', right_on='species',suffixes=[None,"_redundant"])
+    G_nodes_df = G_nodes_df.merge(datasets_dict['ploidity_classifier'], how='inner', left_on='Node', right_on='original_name',suffixes=[None,"_redundant"])
+    pct_missing = G_nodes_df[CLASSIFIER_COLUMN].isnull().sum() / len(G_nodes_df)
     G_nodes_df['pct_missing_data'] = pct_missing
-    if G_nodes_df['is_polyploid'].isnull().sum() / len(G_nodes_df) > 0.9:
+    if pct_missing > 0.9:
         return None, pd.DataFrame()
-
     nodes_classification = {node_name: label for node_name, label in
-                            zip(G_nodes_df['Species'],G_nodes_df['is_polyploid'].fillna(-1))}
-    nx.set_node_attributes(G, values=nodes_classification, name='is_polyploid')
+                            zip(G_nodes_df[CLASSIFIER_ORIGINAL_SPECIES_NAME],G_nodes_df[CLASSIFIER_COLUMN].fillna(-1))}
+    nx.set_node_attributes(G, values=nodes_classification, name=CLASSIFIER_COLUMN)
     G.add_nodes_from(ep_network_edgelist['Pollinator'], bipartite=1)
     G.add_weighted_edges_from(
         [(row['Plant'], row['Pollinator'], row['Value']) for idx, row in ep_network_edgelist.iterrows()],
@@ -149,15 +149,16 @@ def unify_metadata(relevant_networks):
 
 def generate_unified_features_datasets(network_metadata, weighted_species_features, binary_species_features, weighted_network_features, binary_network_features):
     network_metadata['orig_path'] = network_metadata['orig_path'].str.replace('/groups/itay_mayrose/halabikeren/plant_pollinator_networks','')
-    network_metadata['network_numbered_file'] = network_metadata['network_index'].astype(str)+".csv"
     weighted_network_features['network_type'] = 'weighted'
     binary_network_features['network_type'] = 'binary'
     all_network_data = pd.concat([weighted_network_features,binary_network_features])
-    network_features = network_metadata.merge(all_network_data,how = 'left', left_on= ['network_numbered_file', 'network_type'], right_on=['network','network_type'])
+    network_features = network_metadata.merge(all_network_data,how = 'left', left_on= ['network_index', 'network_type'], right_on=['network','network_type'])
     weighted_species_features['network_type'] = 'weighted'
     binary_species_features['network_type'] = 'binary'
     all_species_data = pd.concat([weighted_species_features, binary_species_features])
-    all_species_features = network_metadata.merge(all_species_data,how = 'left', left_on= ['network_numbered_file', 'network_type'], right_on=['network','network_type'])
+    all_species_data['network'] = all_species_data['network'].str.rstrip('.csv').astype(int)
+    all_species_features = network_metadata.merge(all_species_data,how = 'left', left_on= ['network_index', 'network_type'], right_on=['network','network_type'])
+    all_species_features.rename(columns = {'Unnamed: 0':'species'}, inplace=True)
     return network_features, all_species_features
 
 
@@ -167,13 +168,15 @@ def main():
     binary_network_features = pd.read_csv(f'{working_dir}/features/network_features/binary/network_features.csv')
     weighted_network_features = pd.read_csv(f'{working_dir}/features/network_features/weighted/network_features.csv')
     network_metadata = pd.read_csv(f'{working_dir}/networks/networks_metadata.csv')
-    classifier = pd.read_csv(f'{working_dir}/classification/classified_unresolved_plant_names.csv')
-    weighted_species_features = pd.read_csv(f'{working_dir}/features/plant_features/weighted/plant_species_features.csv')
+    classifier = pd.read_csv(f'{working_dir}/classification/plant_classification_data.csv')
+    family = pd.read_csv(f'{working_dir}/wfo_classification_data.csv')
+    extended_classifier = pd.merge(classifier,family, left_on=CLASSIFIER_ORIGINAL_SPECIES_NAME,right_on='taxon', how = 'left' )
+    weighted_species_features = pd.read_csv(f'{working_dir}/features/plant_features/weighted/plant_features.csv')
     binary_species_features = pd.read_csv(f'{working_dir}/features/plant_features/binary/plant_features.csv')
     network_features, species_features = generate_unified_features_datasets(network_metadata, weighted_species_features, binary_species_features,  #binary_species_features_df,
                                                                             weighted_network_features, binary_network_features)
 
-    datasets_dict = {'network_features': network_features,'species_features': species_features,'ploidity_classifier': classifier}
+    datasets_dict = {'network_features': network_features,'species_features': species_features,'ploidity_classifier': extended_classifier}
 
     networks_folder_path = f"{working_dir}/networks"
     network_sources_folders = {o: os.path.join(networks_folder_path, o) for o in os.listdir(networks_folder_path) if

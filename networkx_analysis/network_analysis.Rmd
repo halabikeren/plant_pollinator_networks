@@ -20,92 +20,102 @@ library(lubridate)
 ```
 
 
+
+Network analysis data
+
 ```{r}
-networks_data = read_csv('networks_metadata') %>% select(orig_path,network_numbered_file,network_type,network_source,Node,connectance, avg_plant_inter, avg_pollinator_inter, NODF, relative_NODF,pct_missing_data,is_polyploid, ranked_degree,ranked_nestedness_contribution,cc, dc, clusr, redundancy, pr_ec,network_n_nodes,number_of_pollinators,number_of_plants)
-networks_data
+binary_networks_data = read_csv('/Users/noa/Workspace/plant_pollinator_networks_data/binary_networks/network_features.csv')
+binary_networks_data$network = paste(binary_networks_data$network,".csv", sep = "")
+weighted_networks_data = read_csv('/Users/noa/Workspace/plant_pollinator_networks_data/weighted_networks/network_features.csv')
+weighted_networks_data$network = paste(weighted_networks_data$network,".csv", sep = "")
 ```
 
-Missing data
+Features analysis data
 
 ```{r}
-networks_data %>% filter (is.na(is_polyploid))
-networks_data %>% filter (is.na(ranked_degree))
-networks_data %>% filter (is.na(ranked_nestedness_contribution))
-```
-```{r}
-labeled_networks_data<-networks_data %>% filter (!is.na(is_polyploid)) %>% mutate (is_polyploid = as_factor(is_polyploid))  %>% select (connectance,avg_plant_inter,avg_pollinator_inter,NODF,relative_NODF,ranked_degree,ranked_nestedness_contribution,cc,dc,clusr,redundancy,pr_ec,pct_missing_data,is_polyploid,number_of_pollinators,number_of_plants) %>% drop_na() 
-```
+weighted_features_data = read_csv('/Users/noa/Workspace/plant_pollinator_networks_data/weighted_plants/plant_features_with_classification.csv')
+binary_features_data = read_csv('/Users/noa/Workspace/plant_pollinator_networks_data/binary_plants/plant_features_with_classification.csv')
+binarized_features_data = read_csv('/Users/noa/Workspace/plant_pollinator_networks_data/binarized_plants/plant_features_with_classification.csv')
 
-EDA
+binarized_labeled_data<- binarized_features_data %>% group_by(network) %>% mutate(pct_missing = mean(is.na(is_polyploid))) %>% ungroup() %>% filter (!is.na(is_polyploid)) %>% group_by(network) %>% mutate(pct_poli = mean(is_polyploid==1)) %>% ungroup() %>% mutate (is_polyploid = as_factor(is_polyploid)) %>% filter (!network %in% c('106.csv','107.csv','156.csv','157.csv','158.csv','159.csv') )
 
-```{r}
-labeled_networks_data %>% ggplot(aes(x = ranked_nestedness_contribution, color= is_polyploid))+ geom_density()
-labeled_networks_data %>% ggplot(aes(x = cc, color= is_polyploid))+ geom_density()
-labeled_networks_data %>% ggplot(aes(x = clusr, color= is_polyploid))+ geom_density()
-```
+weighted_labeled_data<-weighted_features_data  %>% group_by(network) %>% mutate(pct_missing = mean(is.na(is_polyploid))) %>% ungroup() %>% filter (!is.na(is_polyploid)) %>% group_by(network) %>% mutate(pct_poli = mean(is_polyploid==1)) %>% ungroup() %>% mutate (is_polyploid = as_factor(is_polyploid)) %>% filter (!network %in% c('106.csv','107.csv','156.csv','157.csv','158.csv','159.csv') ) #%>% left_join(weighted_networks_data , on = "network")
 
-Kolmogorov-Smirnov
+binary_labeled_data<-binary_features_data  %>% group_by(network) %>% mutate(pct_missing = mean(is.na(is_polyploid))) %>% ungroup() %>% filter (!is.na(is_polyploid)) %>% group_by(network) %>% mutate(pct_poli = mean(is_polyploid==1)) %>% ungroup() %>% mutate (is_polyploid = as_factor(is_polyploid)) %>% filter (!network %in% c('46.csv','48.csv','50.csv','51.csv','54.csv','55.csv','56.csv','57.csv','61.csv','62.csv','63.csv','64.csv','66.csv','70.csv','71.csv','72.csv','73.csv') ) #%>% left_join(binary_networks_data , on = "network")
 
-```{r}
-ks.test()
-```
+names(weighted_labeled_data)<-make.names(names(weighted_labeled_data),unique = TRUE)
+names(binarized_labeled_data)<-make.names(names(binarized_labeled_data),unique = TRUE)
+names(binary_labeled_data)<-make.names(names(binary_labeled_data),unique = TRUE)
 
-Machine learning
-
-
-```{r}
-
-
-library(tidymodels)
-set.seed(42)
-networks_split <- initial_split(labeled_networks_data, prop = 0.7)
-train_data <- training(networks_split  )
-test_data <- testing(networks_split  )
-```
-
-```{r}
-labeled_networks_data
-```
-
-```{r}
-library(pROC)
-
-bin_glm<-  glm(is_polyploid ~., data = train_data , family = "binomial") 
-caret::varImp(bin_glm)
-
-nullmod <- glm(is_polyploid ~1,data = train_data  , family="binomial")
-r2 = 1-logLik(bin_glm)/logLik(nullmod)
-print(r2)
-summary(bin_glm)
-
-test_prob_glm = predict(bin_glm, newdata = test_data, type = 'response')
-predicted.classes <- ifelse(test_prob_glm > 0.5, 1, 0)
-confusionMatrix(factor(predicted.classes),factor(test_data$is_polyploid))
-```
-
-```{r}
-library(randomForest)
-
-classifier_RF = randomForest(x = train_data %>% select (-is_polyploid),
-                             y = train_data$is_polyploid,
-                             ntree = 500)
-```
-
-```{r}
-y_pred_rf = predict(classifier_RF, newdata = test_data %>% select (-is_polyploid))
-confusionMatrix(factor(y_pred_rf),factor(test_data$is_polyploid))
 ```
 
 
+
+Generating GLM data
+
 ```{r}
-plot(classifier_RF)
-importance(classifier_RF)
-varImpPlot(classifier_RF)
+weighted_glm_data<-  weighted_labeled_data %>% select(network,is_polyploid,original_name, family,normalised.degree,partner.diversity,d, original_name, pct_missing, pct_poli,delta_transformed_.d,nestedness_contribution, delta_transformed_.proportional.generality, interaction.push.pull) #number.of.species.LL,number.of.species.HL
+                                      #%>%  remove_missing() 
+
+binary_glm_data<- binary_labeled_data %>% select(network,is_polyploid,original_name, family,normalised.degree,partner.diversity,d,original_name,pct_missing, pct_poli,delta_transformed_.d,nestedness_contribution, delta_transformed_.proportional.generality, interaction.push.pull)
+
+binarized_glm_data<-binarized_labeled_data %>% select(network,is_polyploid,original_name, family,normalised.degree,partner.diversity,d,original_name,pct_missing, pct_poli,delta_transformed_.d,nestedness_contribution, delta_transformed_.proportional.generality, interaction.push.pull)
+
+all_binary_glm_data<- union(binary_glm_data, binarized_glm_data)
+
+```
+
+
+Basic visualisation
+
+```{r}
+all_binary_glm_data %>% ggplot(aes(x =delta_transformed_.d , color= is_polyploid))+ geom_density()
+all_binary_glm_data %>% ggplot(aes(x =d , color= is_polyploid))+ geom_density()
+all_binary_glm_data %>% ggplot(aes(x =nestedness_contribution , color= is_polyploid))+ geom_density()
+all_binary_glm_data %>% ggplot(aes(x = delta_transformed_.proportional.generality,color= is_polyploid ))+ geom_density()
+all_binary_glm_data %>% ggplot(aes(x = interaction.push.pull,color= is_polyploid ))+ geom_density()
+
+#all_binary_glm_data %>% group_by(original_name, is_polyploid) %>% summarise(d_per_name = mean(d)) %>% ggplot(aes(x =d_per_name , color= is_polyploid))+ #geom_density()
+
+#all_binary_glm_data %>% group_by(family, is_polyploid) %>% summarise(d_per_family = mean(d)) %>% ggplot(aes(x =d_per_family , color= is_polyploid))+ #geom_density()
 
 ```
 
 ```{r}
-train_data %>% select (connectance,avg_plant_inter,avg_pollinator_inter,NODF,relative_NODF,ranked_degree,ranked_nestedness_contribution,cc,dc,clusr,redundancy,pr_ec,pct_missing_data) %>% replace(is.na(.), -1)
+#repetitive_species = all_binary_glm_data %>% count (original_name) %>% arrange(-n)
+#all_binary_glm_data %>% count (original_name) %>% arrange(-n) %>% ggplot(aes(x=n))+geom_histogram()
+#summary(repetitive_species)
+```
+
+
+
+```{r}
+#weighted
+library(lme4)
+library(lmerTest)
+
+all_binary_glm_data_no_null<- binarized_glm_data  %>% remove_missing() #%>% filter (pct_missing>0.6, pct_poli>0, pct_poli<1)
+
+mixed1 = lmer(d ~(is_polyploid)+(1|network)+(1|original_name), data =all_binary_glm_data_no_null)
+print(summary(mixed1))
+
+mixed2 = lmer(delta_transformed_.d ~(is_polyploid)+(1|network)+(1|original_name), data = all_binary_glm_data_no_null)
+print(summary(mixed2))
+
+mixed3 = lmer(nestedness_contribution ~(is_polyploid)+(1|network)+(1|original_name), data = all_binary_glm_data_no_null) 
+print(summary(mixed3))
+
+mixed4 = lmer(delta_transformed_.proportional.generality ~(is_polyploid)+(1|network)+(1|original_name), data = all_binary_glm_data_no_null) 
+print(summary(mixed4))
+
+
+mixed5 = lmer(interaction.push.pull ~(is_polyploid)+(1|network)+(1|original_name), data = all_binary_glm_data_no_null) 
+print(summary(mixed5))
+```
+
+
+```{r}
+
 ```
 
 
