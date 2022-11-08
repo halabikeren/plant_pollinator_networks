@@ -10,7 +10,7 @@ from networkx_analysis.constants import *
 
 
 
-def generate_network_extinction_simulations(network_path, network_species_metedata,network_name,  polyploid_range = [0.9,0.9], diploid_range = [0.9,0.9], unknown_range = [0.9,0.9], pollinator_range =[0.9,0.9]):
+def generate_network_extinction_simulations(network_path, network_species_metedata,output_path,  polyploid_range = [0.9,0.9], diploid_range = [0.9,0.9], unknown_range = [0.9,0.9], pollinator_range =[0.9,0.9], iter  = 5):
     ep_network = pd.read_csv(network_path, encoding='unicode_escape')
     ep_network.rename(columns={"plant/pollinator": "Plant"}, inplace=True)
     if "Plant" not in ep_network.columns:
@@ -26,12 +26,13 @@ def generate_network_extinction_simulations(network_path, network_species_meteda
     ep_network_edgelist = ep_network_edgelist.merge(network_species_metedata, how='left', left_on='Plant',
                                                     right_on='original_name')
     ep_network_edgelist['is_polyploid'] = ep_network_edgelist['is_polyploid'].fillna(-1)
-    extinction_df = extinction_analysis(ep_network_edgelist, pollinator_range= pollinator_range, polyploid_range = polyploid_range, diploid_range = diploid_range, unknown_range= unknown_range)
-    if(len(extinction_df.index)>2):
-        extinction_df.to_csv(f"/Users/noa/Workspace/plant_pollinator_networks/Extinction_analysis/Extinction_results/{network_name}.csv")
+    for i in range(iter):
+        extinction_df = extinction_analysis(ep_network_edgelist, pollinator_range= pollinator_range, polyploid_range = polyploid_range, diploid_range = diploid_range, unknown_range= unknown_range)
+        if(len(extinction_df.index)>2):
+            extinction_df.to_csv(output_path)
+            return
 
-    # sb = bipartite.spectral_bipartivity(P, nodes=plant_nodes, weight='weight')
-    # draw_network(G)
+
 
 
 def All_networks_extinction_analysis(networks_data):
