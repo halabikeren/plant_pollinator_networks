@@ -1,0 +1,6 @@
+,base_extinct_level,baseline_connectence,baseline_n_plant,baseline_n_pollinators,connectence,degree,total_plants_in_base_extinctions,total_plants_in_base_extinctions_diploid,total_plants_in_base_extinctions_polyploid,total_plants_in_base_extinctions_unknown,total_plants_in_primary_extinctions,total_plants_in_primary_extinctions_diploid,total_plants_in_primary_extinctions_polyploid,total_plants_in_primary_extinctions_unknown,total_plants_prior_extinction,total_plants_prior_extinction_diploid,total_plants_prior_extinction_polyploid,total_plants_prior_extinction_unknown,total_pollinator_in_base_extinctions,total_pollinator_in_primary_extinctions,total_pollinators_prior_extinction
+0,Plant,0.07575752984392131,25.0,66.0,0.07575752984392131,0.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,25.0,11.0,8.0,6.0,0.0,2.0,66.0
+1,Pollinator,0.07575752984392131,25.0,66.0,0.0782050780736679,1.0,0.0,0.0,0.0,0.0,5.0,1.0,0.0,4.0,24.0,11.0,7.0,6.0,1.0,0.0,65.0
+2,Plant,0.07575752984392131,25.0,66.0,0.07421870168053277,2.0,5.0,1.0,0.0,4.0,0.0,0.0,0.0,0.0,24.0,11.0,7.0,6.0,0.0,7.0,64.0
+3,Pollinator,0.07575752984392131,25.0,66.0,0.08437754020255622,3.0,0.0,0.0,0.0,0.0,3.0,2.0,1.0,0.0,19.0,10.0,7.0,2.0,6.0,0.0,63.0
+4,Plant,0.07575752984392131,25.0,66.0,0.09978059234584173,4.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,16.0,8.0,6.0,2.0,0.0,0.0,57.0

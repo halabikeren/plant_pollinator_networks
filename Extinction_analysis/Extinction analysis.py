@@ -85,33 +85,35 @@ def get_plant_rates(is_polyploid, unknown_ext_rate, polyploid_ext_rate, diploid_
 def iteration_metrics(ep_network_edgelist, primary_extinct, base_extinct, config, degree, baseline):
     res =   {
         'base_extinct_level': config['base_extinction_col'],
-        'total_pollinator_base_extinctions':len(ep_network_edgelist[ep_network_edgelist['Pollinator'].isin(base_extinct)]['Pollinator'].unique()),
-        'total_plants_base_extinctions':len(ep_network_edgelist[ep_network_edgelist['Plant'].isin(base_extinct)]['Plant'].unique()),
-        'total_plants_base_extinctions_diploid': len(
+        'total_pollinator_in_base_extinctions':len(ep_network_edgelist[ep_network_edgelist['Pollinator'].isin(base_extinct)]['Pollinator'].unique()),
+        'total_plants_in_base_extinctions':len(ep_network_edgelist[ep_network_edgelist['Plant'].isin(base_extinct)]['Plant'].unique()),
+        'total_plants_in_base_extinctions_diploid': len(
             ep_network_edgelist[ep_network_edgelist.is_polyploid==0][ep_network_edgelist['Plant'].isin(base_extinct)]['Plant'].unique()),
-        'total_plants_base_extinctions_polyploid': len(
+        'total_plants_in_base_extinctions_polyploid': len(
             ep_network_edgelist[ep_network_edgelist.is_polyploid==1][ep_network_edgelist['Plant'].isin(base_extinct)]['Plant'].unique()),
 
-        'total_plants_base_extinctions_unknown': len(
+        'total_plants_in_base_extinctions_unknown': len(
             ep_network_edgelist[ep_network_edgelist.is_polyploid==-1][ep_network_edgelist['Plant'].isin(base_extinct)]['Plant'].unique()),
 
         'connectence': len(ep_network_edgelist)/((len(ep_network_edgelist['Plant'].unique())*len(ep_network_edgelist['Pollinator'].unique()))+0.001),
-        'total_pollinator_primary_extinctions':len(ep_network_edgelist[ep_network_edgelist['Pollinator'].isin(primary_extinct)]['Pollinator'].unique()),
-        'total_plants_primary_extinctions':len(ep_network_edgelist[ep_network_edgelist['Plant'].isin(primary_extinct)]['Plant'].unique()),
-        'total_plants_primary_extinctions_diploid': len(
+        'total_pollinator_in_primary_extinctions':len(ep_network_edgelist[ep_network_edgelist['Pollinator'].isin(primary_extinct)]['Pollinator'].unique()),
+        'total_plants_in_primary_extinctions':len(ep_network_edgelist[ep_network_edgelist['Plant'].isin(primary_extinct)]['Plant'].unique()),
+        'total_plants_in_primary_extinctions_diploid': len(
             ep_network_edgelist[ep_network_edgelist.is_polyploid==0][ep_network_edgelist['Plant'].isin(primary_extinct)]['Plant'].unique()),
-        'total_plants_primary_extinctions_polyploid': len(
+        'total_plants_in_primary_extinctions_polyploid': len(
             ep_network_edgelist[ep_network_edgelist.is_polyploid==1][ep_network_edgelist['Plant'].isin(primary_extinct)]['Plant'].unique()),
-        'total_plants_primary_extinctions_unknown': len(
+        'total_plants_in_primary_extinctions_unknown': len(
             ep_network_edgelist[ep_network_edgelist.is_polyploid==-1][ep_network_edgelist['Plant'].isin(primary_extinct)]['Plant'].unique()),
 
-        'total_plants_prior_update': len(
+        'total_pollinators_prior_extinction': len(
+            ep_network_edgelist['Pollinator'].unique()),
+        'total_plants_prior_extinction': len(
            ep_network_edgelist['Plant'].unique()),
-        'total_plants_prior_update_diploid': len(
+        'total_plants_prior_extinction_diploid': len(
             ep_network_edgelist[ep_network_edgelist.is_polyploid==0]['Plant'].unique()),
-        'total_plants_prior_update_polyploid': len(
+        'total_plants_prior_extinction_polyploid': len(
             ep_network_edgelist[ep_network_edgelist.is_polyploid==1]['Plant'].unique()),
-        'total_plants_prior_update_unknown': len(
+        'total_plants_prior_extinction_unknown': len(
             ep_network_edgelist[ep_network_edgelist.is_polyploid==-1]['Plant'].unique()),
 
 
