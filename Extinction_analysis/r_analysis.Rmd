@@ -1,0 +1,73 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+extinction_df = read_csv("/Users/noa/Desktop/united_extinction_simulations.csv")
+extinction_df<- extinction_df %>% mutate(network_name = paste(network,"_",network_type)) %>% arrange(network_name, simulation_index, degree)
+extinction_df<- extinction_df %>% group_by(simulation_index,network_name) %>% mutate(plant_extinction_slope = min(total_plants_prior_extinction)/max(total_plants_prior_extinction), pollinator_extinction_slope =min(total_plants_prior_extinction)/max(total_plants_prior_extinction), baseline_pct_unknown = 1-((baseline_n_diploids+baseline_n_polyploids)/baseline_n_plant), baseline_poly_ratio = baseline_n_diploids/(baseline_n_polyploids+baseline_n_diploids), max_degree = max(degree), connectence_diff = last(connectence)/first(connectence) ) %>% ungroup()
+
+
+
+```
+```{r}
+extinction_df<-extinction_df %>% mutate (diplo_poli_ratio = total_plants_prior_extinction/total_pollinators_prior_extinction, pct_plant_extinct = total_plants_in_base_extinctions/ total_plants_prior_extinction, pct_poli_extinct = total_pollinator_in_base_extinctions/ total_pollinators_prior_extinction )
+
+```
+
+```{r}
+plot_data = extinction_df %>% filter (baseline_pct_unknown<0.3)
+plot_data %>% distinct (network_name)
+plot_data %>% ggplot(aes(x=diplo_poli_ratio,y=pct_plant_extinct)) + geom_point()
+plot_data %>% ggplot(aes(x=diplo_poli_ratio,y=pct_poli_extinct)) + geom_point()
+```
+
+
+
+
+```{r}
+extinction_df_per_simulation<- extinction_df %>% distinct (network_name, simulation_index, baseline_poly_ratio, max_degree,baseline_pct_unknown,plant_extinction_slope, pollinator_extinction_slope, rate_range, connectence_diff) %>% filter (baseline_pct_unknown<0.4)
+
+```
+
+
+```{r}
+
+library(lme4)
+library(lmerTest)
+
+
+
+mixed0 = lmer(max_degree ~baseline_poly_ratio+rate_range+ (1|network_name)+baseline_pct_unknown, data =extinction_df_per_simulation )
+print(summary(mixed0))
+
+mixed1 = lmer(max_degree ~baseline_poly_ratio+rate_range+ (1|network_name)+baseline_pct_unknown, data =extinction_df_per_simulation )
+print(summary(mixed1))
+
+mixed2 = lmer(pollinator_extinction_slope ~baseline_poly_ratio+rate_range+ (1|network_name)+baseline_pct_unknown, data =extinction_df_per_simulation )
+print(summary(mixed2))
+
+mixed3 = lmer(plant_extinction_slope ~baseline_poly_ratio+rate_range+ (1|network_name)+baseline_pct_unknown, data =extinction_df_per_simulation )
+print(summary(mixed3))
+
+mixed4= lmer(connectence_diff ~baseline_poly_ratio+rate_range+ (1|network_name)+baseline_pct_unknown, data =extinction_df_per_simulation )
+print(summary(mixed4))
+
+```
+
+
+```{r}
+extinction_df %>% filter
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
