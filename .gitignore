@@ -19,6 +19,7 @@ lib64/
 parts/
 sdist/
 var/
+data/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
@@ -154,9 +155,9 @@ dmypy.json
 # modules.xml
 
 # specific data files
-data_processing/WFO_Backbone.zip
-data_processing/classification.txt
-data_processing/eml.xml
+code/data_processing/WFO_Backbone.zip
+code/data_processing/classification.txt
+code/data_processing/eml.xml
 .idea/dataSources.xml
-data_processing/references.txt
-data_processing/networs_extraction/.DS_Store
+code/data_processing/references.txt
+code/data_processing/networs_extraction/.DS_Store

@@ -75,6 +75,8 @@ get_network_features <- function(network_path, null_sim_features_path, nsim=1000
   write.csv(null_networks_features_df, null_sim_features_path, row.names = TRUE)
   
   network_features = networklevel(web=network, weighted=is_weighted)
+  extinction_features = simulate_network_extinction(network, nsim=nsim)
+  network_features = c(network_features, extinction_features)
   non_transformable_feature_names = list("H2", 
                                     "connectance", 
                                     "weighted connectance", 
@@ -83,7 +85,13 @@ get_network_features <- function(network_path, null_sim_features_path, nsim=1000
                                     "number.of.species.HL",
                                     "number.of.species.LL",
                                     "mean number of shared partners",
-                                    "partner diversity") 
+                                    "partner diversity",
+                                    "robustness_mean",
+                                    "robustness_medain",
+                                    "robustness_min",
+                                    "robustness_median",
+                                    "robustness_var",
+                                    "robustness_std") 
   features_names = names(network_features)
   for (i in 1:length(features_names))
   {
@@ -94,11 +102,7 @@ get_network_features <- function(network_path, null_sim_features_path, nsim=1000
     }
   }
   
-  extinction_features = simulate_network_extinction(network, nsim=nsim)
-  keys <- unique(c(names(network_features), names(extinction_features)))
-  all_network_features = setNames(mapply(c, network_features[keys], extinction_features[keys]), keys)
-  
-  return(all_network_features)
+  return(network_features)
 }
 
 get_plant_nestedness_contribution <- function (web, nsimul = 1000) 
@@ -413,11 +417,11 @@ simulate_network_extinction <- function(network, nsim = 1000, survival_threshold
     survivorsx<-c(nrow(mymat),survivors)
     Rvalues[k]<-sum(survivorsx)/(ncol(mymat)*nrow(mymat))
   }
-  Rstats = c("mean"=mean(Rvalues),
-             "median"=median(Rvalues),
-             "min"=min(Rvalues),
-             "max"=max(Rvalues),
-             "var"=var(Rvalues),
-             "std"=sd(Rvalues))
+  Rstats = c("robustness_mean"=mean(Rvalues),
+             "robustness_median"=median(Rvalues),
+             "robustness_min"=min(Rvalues),
+             "robustness_max"=max(Rvalues),
+             "robustness_var"=var(Rvalues),
+             "robustness_std"=sd(Rvalues))
   return(Rstats)
 }
