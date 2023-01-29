@@ -1,4 +1,0 @@
-,base_extinct_size,baseline_connectence,baseline_n_plant,baseline_n_pollinators,connectence,degree,level,total_diploid_extinctions,total_diploid_left_after_base_extinction,total_plant_extinctions,total_plant_left,total_pollinator_extinctions,total_pollinators_left_after_base_extinction,total_polyploid_extinctions,total_polyploid_left_after_base_extinction,total_unknown_extinctions,total_unknown_left_after_base_extinction
-0,1.0,0.28571088439423337,7.0,12.0,0.3030257117316404,0.0,Plant,0.0,0.0,0.0,6.0,4.0,11.0,0.0,1.0,0.0,5.0
-1,4.0,0.28571088439423337,7.0,12.0,0.2249943751406215,1.0,Pollinator,0.0,0.0,6.0,5.0,0.0,8.0,1.0,1.0,5.0,4.0
-2,6.0,0.28571088439423337,7.0,12.0,0.0,2.0,Plant,0.0,0.0,0.0,0.0,8.0,0.0,0.0,0.0,0.0,0.0
