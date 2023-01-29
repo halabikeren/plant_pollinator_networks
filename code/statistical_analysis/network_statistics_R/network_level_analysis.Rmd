@@ -1,0 +1,109 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(survival)
+library(survminer)
+library(cmprsk)
+library(tidyverse)
+library(caret)
+library(survival)
+library(survminer)
+library(lubridate)
+```
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+Network analysis data
+
+```{r}
+binary_networks_data = read_csv('../../../data/features/network_features/binary/features_with_classification.csv') %>% filter (!network %in% c('46.csv','48.csv','50.csv','51.csv','54.csv','55.csv','56.csv','57.csv','61.csv','62.csv','63.csv','64.csv','66.csv','70.csv','71.csv','72.csv','73.csv') )
+weighted_networks_data = read_csv('../../../data/features/network_features/weighted/features_with_classification.csv') %>% filter (!network %in% c('106.csv','107.csv','156.csv','157.csv','158.csv','159.csv'))
+binarized_networks_data = read_csv('../../../data/features/network_features/binarized_weighted/features_with_classification.csv')  %>% filter (!network %in% c('106.csv','107.csv','156.csv','157.csv','158.csv','159.csv'))
+
+names(binary_networks_data)<-make.names(names(binary_networks_data),unique = TRUE)
+names(weighted_networks_data )<-make.names(names(weighted_networks_data ),unique = TRUE)
+names(binarized_networks_data)<-make.names(names(binarized_networks_data),unique = TRUE)
+
+
+```
+
+
+
+Generating GLM data
+
+```{r}
+weighted_network_glm_data<-  weighted_networks_data %>% select(network,highest_pollinator_rank,num_pollinator_taxonomic_ranks,connectance,NODF,H2,extinction.slope.LL,robustness.LL,robustness_mean, delta_transformed_.vulnerability.LL, vulnerability.LL, delta_transformed_.Shannon.diversity,delta_transformed_.togetherness.LL, is_polyploid_poly_frac,is_polyploid_missing_frac, highest_pollinator_rank) 
+
+binary_network_glm_data<-  binary_networks_data %>% select(network,highest_pollinator_rank,num_pollinator_taxonomic_ranks,connectance,NODF,H2,extinction.slope.LL,robustness.LL,robustness_mean, delta_transformed_.vulnerability.LL, vulnerability.LL,delta_transformed_.Shannon.diversity,delta_transformed_.togetherness.LL,is_polyploid_poly_frac,is_polyploid_missing_frac, highest_pollinator_rank) 
+
+binarized_network_glm_data<-  binarized_networks_data %>% select(network,highest_pollinator_rank,num_pollinator_taxonomic_ranks,connectance,NODF,H2,extinction.slope.LL,robustness.LL,robustness_mean, delta_transformed_.vulnerability.LL, vulnerability.LL,delta_transformed_.Shannon.diversity,delta_transformed_.togetherness.LL,is_polyploid_poly_frac,is_polyploid_missing_frac, highest_pollinator_rank) 
+
+
+all_binary_network_glm_data<- union(binary_network_glm_data, binarized_network_glm_data)
+
+```
+
+
+Basic visualization
+
+```{r}
+all_binary_network_glm_data %>% ggplot(aes(x =is_polyploid_poly_frac , y=connectance))+ geom_point()
+all_binary_network_glm_data %>% ggplot(aes(x =is_polyploid_poly_frac , y=NODF))+ geom_point()
+all_binary_network_glm_data %>% ggplot(aes(x =is_polyploid_poly_frac , y=H2))+ geom_point()
+all_binary_network_glm_data %>% ggplot(aes(x =is_polyploid_poly_frac , y=extinction.slope.LL))+ geom_point()
+all_binary_network_glm_data %>% ggplot(aes(x =is_polyploid_poly_frac , y=robustness.LL))+ geom_point()
+all_binary_network_glm_data %>% ggplot(aes(x =is_polyploid_poly_frac , y=robustness_mean))+ geom_point()
+all_binary_network_glm_data %>% ggplot(aes(x =is_polyploid_poly_frac , y=vulnerability.LL))+ geom_point()
+all_binary_network_glm_data %>% ggplot(aes(x =is_polyploid_poly_frac , y=delta_transformed_.vulnerability.LL))+ geom_point()
+all_binary_network_glm_data %>% ggplot(aes(x =is_polyploid_poly_frac , y=delta_transformed_.Shannon.diversity))+ geom_point()
+all_binary_network_glm_data %>% ggplot(aes(x =is_polyploid_poly_frac , y=delta_transformed_.togetherness.LL))+ geom_point()
+
+```
+
+
+
+
+```{r}
+#weighted
+library(lme4)
+library(lmerTest)
+
+all_network_binary_glm_data_no_null<- all_binary_network_glm_data   %>% remove_missing() #%>% filter (pct_missing>0.6, pct_poli>0, pct_poli<1)
+
+mixed1 = lmer(connectance ~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|highest_pollinator_rank), data =all_network_binary_glm_data_no_null)
+print(summary(mixed1))
+
+mixed4 = lmer(delta_transformed_.togetherness.LL~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|highest_pollinator_rank), data =all_network_binary_glm_data_no_null)
+
+mixed2 = lmer(extinction.slope.LL ~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|highest_pollinator_rank), data =all_network_binary_glm_data_no_null)
+print(summary(mixed2))
+
+
+mixed3 = lmer(robustness.LL ~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|highest_pollinator_rank), data =all_network_binary_glm_data_no_null)
+print(summary(mixed3))
+
+mixed4 = lmer(robustness_mean~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|highest_pollinator_rank), data =all_network_binary_glm_data_no_null)
+print(summary(mixed4))
+
+mixed4 = lmer(delta_transformed_.vulnerability.LL~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|highest_pollinator_rank), data =all_network_binary_glm_data_no_null)
+print(summary(mixed4))
+
+mixed4 = lmer(delta_transformed_.Shannon.diversity~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|highest_pollinator_rank), data =all_network_binary_glm_data_no_null)
+print(summary(mixed4))
+
+print(summary(mixed4))
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+

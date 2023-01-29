@@ -1,0 +1,15 @@
+Network features
+
+scp noaeker@power9login.tau.ac.il:/groups/itay_mayrose/halabikeren/plant_pollinator_networks/features/network_features/binary/network_features.csv /Users/noa/Workspace/plant_pollinator_networks_data/features/network_features/binary
+scp noaeker@power9login.tau.ac.il:/groups/itay_mayrose/halabikeren/plant_pollinator_networks/features/network_features/weighted/network_features.csv /Users/noa/Workspace/plant_pollinator_networks_data/features/network_features/weighted
+
+
+
+
+Species features
+
+scp noaeker@power9login.tau.ac.il:/groups/itay_mayrose/halabikeren/plant_pollinator_networks/features/plant_features/binary/plant_features.csv /Users/noa/Workspace/plant_pollinator_networks_data/features/plant_features/binary
+scp noaeker@power9login.tau.ac.il:/groups/itay_mayrose/halabikeren/plant_pollinator_networks/features/plant_features/weighted/plant_features.csv /Users/noa/Workspace/plant_pollinator_networks_data/features/plant_features/weighted
+
+Network_metadata
+scp noaeker@power9login.tau.ac.il:/groups/itay_mayrose/halabikeren/plant_pollinator_networks/networks/all/networks_metadata.csv /Users/noa/Workspace/plant_pollinator_networks_data/networks

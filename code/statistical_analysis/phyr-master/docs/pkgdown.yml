@@ -1,0 +1,10 @@
+pandoc: 2.11.2
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  benchmarks: benchmarks.html
+  pglmm: pglmm.html
+  phyr_example_empirical: phyr_example_empirical.html
+  plot-re: plot-re.html
+last_built: 2020-12-18T04:57Z
+
