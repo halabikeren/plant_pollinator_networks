@@ -1763,43 +1763,79 @@ pre code {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHN1cnZpdmFsKVxubGlicmFyeShzdXJ2bWluZXIpXG5saWJyYXJ5KGNtcHJzaylcbmxpYnJhcnkodGlkeXZlcnNlKVxubGlicmFyeShjYXJldClcbmxpYnJhcnkoc3Vydml2YWwpXG5saWJyYXJ5KHN1cnZtaW5lcilcbmxpYnJhcnkobHVicmlkYXRlKVxuYGBgXG5gYGAifQ== -->
-<pre class="r"><code>```r
-library(tidyverse)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHN1cnZpdmFsKVxubGlicmFyeShzdXJ2bWluZXIpXG5gYGAifQ== -->
+<pre class="r"><code>library(tidyverse)
 library(survival)
-library(survminer)
-library(cmprsk)
+library(survminer)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBnZ3B1YnJcblxuQXR0YWNoaW5nIHBhY2thZ2U6IOKAmGdncHVicuKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOmFwZeKAmTpcblxuICAgIHJvdGF0ZVxuXG5SZWdpc3RlcmVkIFMzIG1ldGhvZCBvdmVyd3JpdHRlbiBieSAnZGF0YS50YWJsZSc6XG4gIG1ldGhvZCAgICAgICAgICAgZnJvbVxuICBwcmludC5kYXRhLnRhYmxlICAgICBcblxuQXR0YWNoaW5nIHBhY2thZ2U6IOKAmHN1cnZtaW5lcuKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnN1cnZpdmFs4oCZOlxuXG4gICAgbXllbG9tYVxuIn0= -->
+<pre><code>Loading required package: ggpubr
+
+Attaching package: ‘ggpubr’
+
+The following object is masked from ‘package:ape’:
+
+    rotate
+
+Registered S3 method overwritten by &#39;data.table&#39;:
+  method           from
+  print.data.table     
+
+Attaching package: ‘survminer’
+
+The following object is masked from ‘package:survival’:
+
+    myeloma</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShjbXByc2spXG5saWJyYXJ5KHRpZHl2ZXJzZSlcbmxpYnJhcnkoY2FyZXQpXG5gYGAifQ== -->
+<pre class="r"><code>library(cmprsk)
 library(tidyverse)
-library(caret)
-library(survival)
+library(caret)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBsYXR0aWNlXG5cbkF0dGFjaGluZyBwYWNrYWdlOiDigJhjYXJldOKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnN1cnZpdmFs4oCZOlxuXG4gICAgY2x1c3RlclxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnB1cnJy4oCZOlxuXG4gICAgbGlmdFxuIn0= -->
+<pre><code>Loading required package: lattice
+
+Attaching package: ‘caret’
+
+The following object is masked from ‘package:survival’:
+
+    cluster
+
+The following object is masked from ‘package:purrr’:
+
+    lift</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzdXJ2aXZhbClcbmxpYnJhcnkoc3Vydm1pbmVyKVxubGlicmFyeShsdWJyaWRhdGUpXG5gYGAifQ== -->
+<pre class="r"><code>library(survival)
 library(survminer)
 library(lubridate)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiB0aW1lY2hhbmdlXG5cbkF0dGFjaGluZyBwYWNrYWdlOiDigJhsdWJyaWRhdGXigJlcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOkxhcGxhY2VzRGVtb27igJk6XG5cbiAgICBkc3QsIGludGVydmFsXG5cblRoZSBmb2xsb3dpbmcgb2JqZWN0cyBhcmUgbWFza2VkIGZyb20g4oCYcGFja2FnZTpiYXNl4oCZOlxuXG4gICAgZGF0ZSwgaW50ZXJzZWN0LCBzZXRkaWZmLCB1bmlvblxuIn0= -->
+<pre><code>Loading required package: timechange
 
-&lt;!-- rnb-chunk-end --&gt;
+Attaching package: ‘lubridate’
 
+The following objects are masked from ‘package:LaplacesDemon’:
 
-&lt;!-- rnb-text-begin --&gt;
+    dst, interval
 
+The following objects are masked from ‘package:base’:
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
-
-Network analysis data
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYmluYXJ5X25ldHdvcmtzX2RhdGEgPSByZWFkX2NzdignRzovTXkgRHJpdmUvUGhEL1BsYW50UG9sbGluYXRvck5ldHdvcmtzL2ZlYXR1cmVzL25ldHdvcmsvYmluYXJ5L2ZlYXR1cmVzX3dpdGhfY2xhc3NpZmljYXRpb24uY3N2JykgJT4lIGZpbHRlciAoIW5ldHdvcmsgJWluJSBjKCc0Ni5jc3YnLCc0OC5jc3YnLCc1MC5jc3YnLCc1MS5jc3YnLCc1NC5jc3YnLCc1NS5jc3YnLCc1Ni5jc3YnLCc1Ny5jc3YnLCc2MS5jc3YnLCc2Mi5jc3YnLCc2My5jc3YnLCc2NC5jc3YnLCc2Ni5jc3YnLCc3MC5jc3YnLCc3MS5jc3YnLCc3Mi5jc3YnLCc3My5jc3YnKSApXG53ZWlnaHRlZF9uZXR3b3Jrc19kYXRhID0gcmVhZF9jc3YoJ0c6L015IERyaXZlL1BoRC9QbGFudFBvbGxpbmF0b3JOZXR3b3Jrcy9mZWF0dXJlcy9uZXR3b3JrL3dlaWdodGVkL2ZlYXR1cmVzX3dpdGhfY2xhc3NpZmljYXRpb24uY3N2JykgJT4lIGZpbHRlciAoIW5ldHdvcmsgJWluJSBjKCcxMDYuY3N2JywnMTA3LmNzdicsJzE1Ni5jc3YnLCcxNTcuY3N2JywnMTU4LmNzdicsJzE1OS5jc3YnKSlcbmJpbmFyaXplZF9uZXR3b3Jrc19kYXRhID0gcmVhZF9jc3YoJ0c6L015IERyaXZlL1BoRC9QbGFudFBvbGxpbmF0b3JOZXR3b3Jrcy9mZWF0dXJlcy9uZXR3b3JrL2JpbmFyaXplZF93ZWlnaHRlZC9mZWF0dXJlc193aXRoX2NsYXNzaWZpY2F0aW9uLmNzdicpICAlPiUgZmlsdGVyICghbmV0d29yayAlaW4lIGMoJzEwNi5jc3YnLCcxMDcuY3N2JywnMTU2LmNzdicsJzE1Ny5jc3YnLCcxNTguY3N2JywnMTU5LmNzdicpKVxuXG5uYW1lcyhiaW5hcnlfbmV0d29ya3NfZGF0YSk8LW1ha2UubmFtZXMobmFtZXMoYmluYXJ5X25ldHdvcmtzX2RhdGEpLHVuaXF1ZSA9IFRSVUUpXG5uYW1lcyh3ZWlnaHRlZF9uZXR3b3Jrc19kYXRhICk8LW1ha2UubmFtZXMobmFtZXMod2VpZ2h0ZWRfbmV0d29ya3NfZGF0YSApLHVuaXF1ZSA9IFRSVUUpXG5uYW1lcyhiaW5hcml6ZWRfbmV0d29ya3NfZGF0YSk8LW1ha2UubmFtZXMobmFtZXMoYmluYXJpemVkX25ldHdvcmtzX2RhdGEpLHVuaXF1ZSA9IFRSVUUpXG5cblxuYGBgXG5gYGAifQ== --&gt;
-
-```r
-```r
+    date, intersect, setdiff, union</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>This is an <a href="http://rmarkdown.rstudio.com">R Markdown</a>
+Notebook. When you execute code within the notebook, the results appear
+beneath the code.</p>
+<p>Try executing this chunk by clicking the <em>Run</em> button within
+the chunk or by placing your cursor inside it and pressing
+<em>Cmd+Shift+Enter</em>.</p>
+<p>Network analysis data</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYmluYXJ5X25ldHdvcmtzX2RhdGEgPSByZWFkX2NzdignRzovTXkgRHJpdmUvUGhEL1BsYW50UG9sbGluYXRvck5ldHdvcmtzL2ZlYXR1cmVzL25ldHdvcmsvYmluYXJ5L2ZlYXR1cmVzX3dpdGhfY2xhc3NpZmljYXRpb24uY3N2JykgJT4lIGZpbHRlciAoIW5ldHdvcmsgJWluJSBjKCc0Ni5jc3YnLCc0OC5jc3YnLCc1MC5jc3YnLCc1MS5jc3YnLCc1NC5jc3YnLCc1NS5jc3YnLCc1Ni5jc3YnLCc1Ny5jc3YnLCc2MS5jc3YnLCc2Mi5jc3YnLCc2My5jc3YnLCc2NC5jc3YnLCc2Ni5jc3YnLCc3MC5jc3YnLCc3MS5jc3YnLCc3Mi5jc3YnLCc3My5jc3YnKSApXG53ZWlnaHRlZF9uZXR3b3Jrc19kYXRhID0gcmVhZF9jc3YoJ0c6L015IERyaXZlL1BoRC9QbGFudFBvbGxpbmF0b3JOZXR3b3Jrcy9mZWF0dXJlcy9uZXR3b3JrL3dlaWdodGVkL2ZlYXR1cmVzX3dpdGhfY2xhc3NpZmljYXRpb24uY3N2JykgJT4lIGZpbHRlciAoIW5ldHdvcmsgJWluJSBjKCcxMDYuY3N2JywnMTA3LmNzdicsJzE1Ni5jc3YnLCcxNTcuY3N2JywnMTU4LmNzdicsJzE1OS5jc3YnKSlcbmJpbmFyaXplZF9uZXR3b3Jrc19kYXRhID0gcmVhZF9jc3YoJ0c6L015IERyaXZlL1BoRC9QbGFudFBvbGxpbmF0b3JOZXR3b3Jrcy9mZWF0dXJlcy9uZXR3b3JrL2JpbmFyaXplZF93ZWlnaHRlZC9mZWF0dXJlc193aXRoX2NsYXNzaWZpY2F0aW9uLmNzdicpICAlPiUgZmlsdGVyICghbmV0d29yayAlaW4lIGMoJzEwNi5jc3YnLCcxMDcuY3N2JywnMTU2LmNzdicsJzE1Ny5jc3YnLCcxNTguY3N2JywnMTU5LmNzdicpKVxuXG5uYW1lcyhiaW5hcnlfbmV0d29ya3NfZGF0YSk8LW1ha2UubmFtZXMobmFtZXMoYmluYXJ5X25ldHdvcmtzX2RhdGEpLHVuaXF1ZSA9IFRSVUUpXG5uYW1lcyh3ZWlnaHRlZF9uZXR3b3Jrc19kYXRhICk8LW1ha2UubmFtZXMobmFtZXMod2VpZ2h0ZWRfbmV0d29ya3NfZGF0YSApLHVuaXF1ZSA9IFRSVUUpXG5uYW1lcyhiaW5hcml6ZWRfbmV0d29ya3NfZGF0YSk8LW1ha2UubmFtZXMobmFtZXMoYmluYXJpemVkX25ldHdvcmtzX2RhdGEpLHVuaXF1ZSA9IFRSVUUpXG5cblxuYGBgXG5gYGAifQ== -->
+<pre class="r"><code>```r
 binary_networks_data = read_csv(&#39;G:/My Drive/PhD/PlantPollinatorNetworks/features/network/binary/features_with_classification.csv&#39;) %&gt;% filter (!network %in% c(&#39;46.csv&#39;,&#39;48.csv&#39;,&#39;50.csv&#39;,&#39;51.csv&#39;,&#39;54.csv&#39;,&#39;55.csv&#39;,&#39;56.csv&#39;,&#39;57.csv&#39;,&#39;61.csv&#39;,&#39;62.csv&#39;,&#39;63.csv&#39;,&#39;64.csv&#39;,&#39;66.csv&#39;,&#39;70.csv&#39;,&#39;71.csv&#39;,&#39;72.csv&#39;,&#39;73.csv&#39;) )
 weighted_networks_data = read_csv(&#39;G:/My Drive/PhD/PlantPollinatorNetworks/features/network/weighted/features_with_classification.csv&#39;) %&gt;% filter (!network %in% c(&#39;106.csv&#39;,&#39;107.csv&#39;,&#39;156.csv&#39;,&#39;157.csv&#39;,&#39;158.csv&#39;,&#39;159.csv&#39;))
 binarized_networks_data = read_csv(&#39;G:/My Drive/PhD/PlantPollinatorNetworks/features/network/binarized_weighted/features_with_classification.csv&#39;)  %&gt;% filter (!network %in% c(&#39;106.csv&#39;,&#39;107.csv&#39;,&#39;156.csv&#39;,&#39;157.csv&#39;,&#39;158.csv&#39;,&#39;159.csv&#39;))

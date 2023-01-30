@@ -1,0 +1,112 @@
+
+```{r}
+library(ape)
+library(tidyverse)
+library(glue)
+
+library(phytools)
+library(motmot)
+
+library(caper)
+library(lme4)
+library(lmerTest)
+
+library(glmmTMB) #remotes::install_github("wzmli/phyloglmm/pkg@refactor") # update this new fix: https://stackoverflow.com/questions/74961530/glmmtmb-phylo-error-in-matrixrankmatrixtmbstrucdata-tmbwhichx-length
+library(phyloglmm)
+library(LaplacesDemon) # documentation: https://rdrr.io/cran/phyr/man/pglmm.html
+```
+
+```{r}
+# process data
+do_weighted = FALSE
+
+weighted_str = "unweighted" 
+if (do_weighted)
+    {
+    weighted_str = "weighted" 
+}
+
+features_of_interest = c("d", "partner.diversity", "proportional.generality", "weighted.betweenness")
+
+data_path <- glue("../../../data/statistical_analysis/species_level/processed_features_with_ploidy_classification_on_{weighted_str}_networks.csv")
+tree_path <- glue("../../../data/statistical_analysis/species_level/species_tree_on_{weighted_str}_networks.nwk")
+
+unrooted_tree <- read.tree(tree_path)
+tree <- multi2di(unrooted_tree)
+tree <- makeNodeLabel(tree, method = "number", prefix = "Node")
+
+data <- read.csv(data_path)
+data$sample_id <- factor(data$sample_id)
+rownames(data) <- data$sample_id
+data <- data %>% mutate(d = asin(sqrt(d))) # transform d to non-01 limited range (logit produced right skwed distribution)
+data <- data %>% mutate(weighted.betweenness = asin(sqrt(weighted.betweenness))) # transform d to non-01 limited range (logit produced right skwed distribution)
+
+```
+
+
+```{r}
+# perlimiary test of association of polyploidy with phylogenetic signal
+
+# pagel's lambda
+is_polyploid <- data %>% arrange(is_polyploid) %>% pull(is_polyploid, sample_id)
+is_polyploid <- as.matrix(is_polyploid[order(match(is_polyploid, tree$tip.label))])
+phylosig(tree, is_polyploid, method="lambda", test=TRUE, nsim=100, se=NULL, start=NULL,
+	control=list())
+```
+```{r}
+# d-statistic
+ctree <- di2multi(tree)
+cdata <- comparative.data(phy=ctree, data=data[c("sample_id", "is_polyploid")], names.col="sample_id")
+phylo.d(data=cdata, phy=ctree, binvar=is_polyploid)
+```
+
+
+
+```{r}
+# PGLS without random effect
+cdata <- comparative.data(phy=tree, data=data[c(c("sample_id", "is_polyploid"),features_of_interest)], names.col="sample_id")
+pgls_fit_d <- pgls(d ~ is_polyploid, cdata)
+summary(pgls_fit_d)
+
+#pgls_fit_shanon <- pgls(partner.diversity ~ is_polyploid, cdata)
+#summary(pgls_fit_shanon)
+
+#pgls_fit_generality <- pgls(proportional.generality ~ is_polyploid, cdata)
+#summary(pgls_fit_generality)
+```
+
+
+
+```{r}
+# PGLS with random effect
+phylo_lmm_fit_d <- phylo_lmm(d~is_polyploid+(1|sample_id) +(1|network_id)+(1|num_network_plants)+(1|num_network_pollinators)+(1|taxonomic_rank)
+, data=data
+, phylonm = "sample_id"
+, phylo = tree
+, REML = TRUE
+, control=lmerControl(check.nobs.vs.nlev="ignore",check.nobs.vs.nRE="ignore")
+)
+summary(phylo_lmm_fit_d)
+
+
+phylo_lmm_fit_shanon <- phylo_lmm(partner.diversity~is_polyploid+(1|sample_id) +(1|network_id)+(1|num_network_plants)+(1|num_network_pollinators)+(1|taxonomic_rank)
+, data=data
+, phylonm = "sample_id"
+, phylo = tree
+, REML = TRUE
+, control=lmerControl(check.nobs.vs.nlev="ignore",check.nobs.vs.nRE="ignore")
+)
+summary(phylo_lmm_fit_shanon)
+
+
+phylo_lmm_fit_generality <- phylo_lmm(proportional.generality~is_polyploid+(1|sample_id) +(1|network_id)+(1|num_network_plants)+(1|num_network_pollinators)+(1|taxonomic_rank)
+, data=data
+, phylonm = "sample_id"
+, phylo = tree
+, REML = TRUE
+, control=lmerControl(check.nobs.vs.nlev="ignore",check.nobs.vs.nRE="ignore")
+)
+summary(phylo_lmm_fit_generality)
+```
+
+

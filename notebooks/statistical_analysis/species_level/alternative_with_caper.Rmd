@@ -1,0 +1,34 @@
+
+```{r}
+library(caper)
+library(tidyverse)
+library(ape)
+library(glue)
+```
+
+```{r}
+do_weighted = TRUE
+
+weighted_str = "unweighted" 
+if (do_weighted)
+    {
+    weighted_str = "weighted" 
+}
+
+data_path <- glue("../../../data/statistical_analysis/species_level/processed_features_with_ploidy_classification_on_{weighted_str}_networks.csv")
+tree_path <- glue("../../../data/statistical_analysis/species_level/species_tree_on_{weighted_str}_networks.nwk")
+```
+
+```{r}
+data <- read.csv(data_path)
+data <- data %>% mutate(transformed_d = asin(sqrt(d)))
+
+tree <- read.tree(tree_path)
+tree <- makeNodeLabel(tree, method = "number", prefix = "Node")
+```
+
+```{r}
+cdata <- comparative.data(phy=tree, data=data[c("sample_id", "d", "is_polyploid")], names.col="sample_id")
+res <- pgls(d ~ is_polyploid, cdata)
+```
+

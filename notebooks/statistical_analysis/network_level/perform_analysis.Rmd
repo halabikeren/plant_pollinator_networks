@@ -1,0 +1,68 @@
+```{r}
+library(ape)
+library(tidyverse)
+library(glue)
+
+library(phytools)
+library(motmot)
+
+library(caper)
+library(lme4)
+library(lmerTest)
+```
+
+```{r}
+# process data
+do_weighted = FALSE
+
+weighted_str = "unweighted" 
+if (do_weighted)
+    {
+    weighted_str = "weighted" 
+}
+
+features_of_interest = c("delta_transformed_.weighted.nestedness", "delta_transformed_.weighted.NODF", # nestedness measures
+                     "weighted.connectance", 
+                     "delta_transformed_.niche.overlap.LL", #tendency off plants to share pollination niches
+                     "number.of.compatments", "compartment.diversity", # molecularity measure, when there is only one compartment, the diversity is nan
+                     "extinction.slope.HL", "robustness.HL", # robustness of pollinators, based on memmot 2004
+                     "extinction.slope.LL", "robustness.LL", # robustness of plants,  based on memmot 2004
+                     "robustness_mean")
+
+data_path <- glue("../../../data/statistical_analysis/network_level/processed_features_with_ploidy_classification_on_{weighted_str}_networks.csv")
+
+data <- read.csv(data_path)
+data$network_id <- factor(data$network_id)
+rownames(data) <- data$network_id
+names(data)<-make.names(names(data),unique = TRUE)
+```
+
+```{r}
+
+data %>% ggplot(aes(x =is_polyploid_poly_frac ,y=delta_transformed_.weighted.NODF))+ geom_point()
+data %>% ggplot(aes(x =is_polyploid_poly_frac , y=weighted.connectance))+ geom_point()
+data %>% ggplot(aes(x =is_polyploid_poly_frac , y=delta_transformed_.niche.overlap.LL))+ geom_point()
+data %>% ggplot(aes(x =is_polyploid_poly_frac , y=robustness.LL))+ geom_point()
+data %>% ggplot(aes(x =is_polyploid_poly_frac , y=extinction.slope.LL))+ geom_point()
+
+
+```
+
+```{r}
+mixed1 = lmer(delta_transformed_.weighted.NODF ~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|num_network_plants)+(1|num_network_pollinators)+(1|highest_taxon_rank)+(1|pd), data =data)
+print(summary(mixed1))
+
+mixed2 = lmer(weighted.connectance ~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|num_network_plants)+(1|num_network_pollinators)+(1|highest_taxon_rank)+(1|pd), data =data)
+print(summary(mixed2))
+
+mixed3 = lmer(delta_transformed_.niche.overlap.LL ~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|num_network_plants)+(1|num_network_pollinators)+(1|highest_taxon_rank)+(1|pd), data =data)
+print(summary(mixed3))
+
+mixed4 = lmer(robustness.LL ~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|num_network_plants)+(1|num_network_pollinators)+(1|highest_taxon_rank)+(1|pd), data =data)
+print(summary(mixed4))
+
+mixed5 = lmer(extinction.slope.LL ~is_polyploid_poly_frac+(1|is_polyploid_missing_frac)+(1|num_network_plants)+(1|num_network_pollinators)+(1|highest_taxon_rank)+(1|pd), data =data)
+print(summary(mixed5))
+
+```
+
