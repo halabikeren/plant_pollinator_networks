@@ -22,6 +22,12 @@ load_dotenv(find_dotenv())
     required=True,
 )
 @click.option(
+    "--null_networks_dir",
+    help="directory to the networks files",
+    type=click.Path(exists=True),
+    required=True,
+)
+@click.option(
     "--script_path",
     help="path of script to execute per network",
     type=click.Path(exists=True, file_okay=True, readable=True),
@@ -60,6 +66,7 @@ load_dotenv(find_dotenv())
     default="itaym",
 )
 def exec_by_network(networks_dir: str,
+                    null_networks_dir:str,
                     script_path: str,
                     work_dir: str,
                     features_path: str,
@@ -74,27 +81,34 @@ def exec_by_network(networks_dir: str,
         force=True,  # run over root logger settings to enable simultaneous writing to both stdout and file handler
     )
 
+    logger.info(f"working in {os.getcwd()}")
+
     output_dir = f"{work_dir}/features_by_network/"
     os.makedirs(output_dir, exist_ok=True)
     networks_commands = []
+    job_ids = []
     logger.info(f"generating jobs for networks in {work_dir}jobs/")
     for network_path in os.listdir(networks_dir):
         if "reference" not in network_path:
             input_path = f"{networks_dir}{network_path}"
+            network_index = os.path.basename(network_path).replace(".csv", "")
+            job_ids.append(network_index)
+            null_network_dir = f"{null_networks_dir}{network_index}/"
             output_path = f"{output_dir}{network_path.replace('.csv', '_features.csv')}"
-            script_exec_cmd = f"Rscript --vanilla {script_path} {input_path} {output_path}"
+            script_exec_cmd = f"Rscript --vanilla {script_path} {input_path} {null_network_dir} {output_path}"
             if script_path.endswith(".py"):
                 output_path = f"{output_dir}{network_path.replace('.csv', '_features/')}"
                 script_exec_cmd = f"python {script_path} --input_path={input_path} --output_dir={output_path}"
             if not os.path.exists(output_path):
-                commands = [os.environ.get("CONDA_ACT_CMD", ""), script_exec_cmd]
+                commands = [os.environ.get("CONDA_ACT_CMD", ""), f"cd {os.getcwd()}", script_exec_cmd]
                 networks_commands.append(commands)
 
     logger.info(f"executing feature computation across {len(networks_commands)} networks")
     res = PBSService.execute_job_array(work_dir=f"{work_dir}jobs/",
                                  output_dir=f"{work_dir}jobs_output/",
+                                 job_ids=job_ids,
                                  jobs_commands=networks_commands,
-                                 ram_gb_size=1,
+                                 ram_gb_size=4,
                                  max_parallel_jobs=max_jobs_in_parallel,
                                  queue=queue)
     
@@ -109,4 +123,6 @@ def exec_by_network(networks_dir: str,
         
 if __name__ == '__main__':
     exec_by_network()
+
+
 
