@@ -1,6 +1,0 @@
-release/
-Makefile
-docs/
-misc/
-.*_cache/.*
-TODO.md
