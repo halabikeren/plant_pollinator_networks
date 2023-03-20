@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 library(tidyverse)
 library(bipartite)
-source("/groups/itay_mayrose/halabikeren/tmp/plant_pollinator_inter/feature_computation/utils.R")
+source("utils.R")
 
 args = commandArgs(trailingOnly=TRUE)
 
@@ -10,11 +10,12 @@ if (length(args)<2) {
 }
 
 input_path = args[1]
-output_path = args[2]
+null_dir = args[2]
+output_path = args[3]
 
 start_time <- Sys.time()
 null_sim_features_path = str_replace(output_path, ".csv", "_across_null_networks.csv")
-features = get_network_features(input_path, null_sim_features_path, nsim=1000)
+features = get_network_features(input_path, null_sim_features_path, null_dir)
 features["network"] = basename(input_path)
 network_features = t(data.frame(Reduce(rbind, features)))
 colnames(network_features) = names(features)

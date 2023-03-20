@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 library(tidyverse)
 library(bipartite)
-source("/groups/itay_mayrose/halabikeren/tmp/plant_pollinator_inter/feature_computation/utils.R")
+source("utils.R")
 
 args = commandArgs(trailingOnly=TRUE)
 
