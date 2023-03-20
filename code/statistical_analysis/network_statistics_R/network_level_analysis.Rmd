@@ -22,9 +22,9 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 Network analysis data
 
 ```{r}
-binary_networks_data = read_csv('../../../data/features/network_features/binary/features_with_classification.csv') %>% filter (!network %in% c('46.csv','48.csv','50.csv','51.csv','54.csv','55.csv','56.csv','57.csv','61.csv','62.csv','63.csv','64.csv','66.csv','70.csv','71.csv','72.csv','73.csv') )
-weighted_networks_data = read_csv('../../../data/features/network_features/weighted/features_with_classification.csv') %>% filter (!network %in% c('106.csv','107.csv','156.csv','157.csv','158.csv','159.csv'))
-binarized_networks_data = read_csv('../../../data/features/network_features/binarized_weighted/features_with_classification.csv')  %>% filter (!network %in% c('106.csv','107.csv','156.csv','157.csv','158.csv','159.csv'))
+binary_networks_data = read_csv('G:/My Drive/PhD/PlantPollinatorNetworks/features/network/binary/features_with_classification.csv') %>% filter (!network %in% c('46.csv','48.csv','50.csv','51.csv','54.csv','55.csv','56.csv','57.csv','61.csv','62.csv','63.csv','64.csv','66.csv','70.csv','71.csv','72.csv','73.csv') )
+weighted_networks_data = read_csv('G:/My Drive/PhD/PlantPollinatorNetworks/features/network/weighted/features_with_classification.csv') %>% filter (!network %in% c('106.csv','107.csv','156.csv','157.csv','158.csv','159.csv'))
+binarized_networks_data = read_csv('G:/My Drive/PhD/PlantPollinatorNetworks/features/network/binarized_weighted/features_with_classification.csv')  %>% filter (!network %in% c('106.csv','107.csv','156.csv','157.csv','158.csv','159.csv'))
 
 names(binary_networks_data)<-make.names(names(binary_networks_data),unique = TRUE)
 names(weighted_networks_data )<-make.names(names(weighted_networks_data ),unique = TRUE)
