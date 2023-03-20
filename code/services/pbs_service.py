@@ -64,12 +64,14 @@ class PBSService:
         return curr_jobs_num
 
     @staticmethod
-    def _generate_jobs(jobs_commands: list[list[str]], work_dir: str, output_dir: str, ram_gb_size: int = 4, queue: str = "itaym") -> list[str]:
+    def _generate_jobs(jobs_commands: list[list[str]], work_dir: str, output_dir: str, job_ids: Optional[list] = None, ram_gb_size: int = 4, queue: str = "itaym") -> list[str]:
         jobs_paths, job_output_paths = [], []
+        if job_ids == None:
+            job_ids = list(range(jobs_commands))
         for i in range(len(jobs_commands)):
-            job_path = f"{work_dir}/{i}.sh"
-            job_name = f"{i}.sh"
-            job_output_path = f"{output_dir}/{i}.out"
+            job_path = f"{work_dir}/{job_ids[i]}.sh"
+            job_name = f"{job_ids[i]}.sh"
+            job_output_path = f"{output_dir}/{job_ids[i]}.out"
             PBSService.create_job_file(
     
                 job_path=job_path,
@@ -121,6 +123,7 @@ class PBSService:
             work_dir: str,
             output_dir: str,
             jobs_commands: List[list[str]],
+            job_ids: Optional[list] = None,
             ram_gb_size: int = 4, # mem size per for in gb
             max_parallel_jobs: int = 30,
             queue: str = "itaym",
@@ -130,7 +133,7 @@ class PBSService:
         logger.info(f"# input paths to execute commands on = {len(jobs_commands)}")
 
         if len(jobs_commands) > 0:
-            jobs_paths = PBSService._generate_jobs(jobs_commands=jobs_commands, work_dir=work_dir, output_dir=output_dir, ram_gb_size=ram_gb_size, queue=queue)
+            jobs_paths = PBSService._generate_jobs(jobs_commands=jobs_commands, job_ids=job_ids, work_dir=work_dir, output_dir=output_dir, ram_gb_size=ram_gb_size, queue=queue)
             PBSService.execute_jobs(jobs_paths=jobs_paths, max_parallel_jobs=max_parallel_jobs)
 
         # remove work dir
