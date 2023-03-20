@@ -10,8 +10,24 @@ min_max_scale <- function(v1)
 
 process_network <- function(network_path)
 {
+  if (! file.exists(network_path))
+  {
+    print(paste("network ", network_path, "does not exist"))
+    return (NA)
+  }
   network <- read_csv(file = network_path, show_col_types = FALSE)
-  network = network %>% column_to_rownames(., var = "Plant")
+  if ("Plant" %in% colnames(network))
+  {
+    network = network %>% column_to_rownames(., var = "Plant")
+  }
+  else if ("...1" %in% colnames(network))
+  {
+    network = network %>% column_to_rownames(., var="...1")
+  }
+  else
+  {
+    print("no relevant columns")
+  }
   return(network)
 }
 
@@ -44,42 +60,66 @@ get_feature_values <- function(networks_features, feature_name)
   feature_vals = list()
   for (i in 1:length((networks_features)))
     {
-      feature_vals[[i]] = networks_features[[i]][feature_name] 
+      feature_vals[[i]] = networks_features[[i]][feature_name]
   }
   feature_vals = unlist(feature_vals, use.names=FALSE)
   return(feature_vals)
 }
 
 
-get_network_features <- function(network_path, null_sim_features_path, nsim=1000)
+get_modularity <- function(network)
+{
+	modularity = NA
+    out <- tryCatch(
+            {
+            modularity = computeModules(network)@likelihood
+            },
+            error=function(cond)
+            {
+            message("failed to compute modularity due to error")
+            message(cond)
+            },
+            finally=
+            {
+            message("done with modularity")
+            }
+    )
+	return(modularity)
+}
+
+get_network_features <- function(network_path, null_sim_features_path, null_dir, nsim = 100)
 {
   network <- process_network(network_path)
   is_weighted = any(network > 1)
-  
-  null_networks = r2dtable(n=nsim, r=rowSums(network), c=colSums(network))
+  null_network_paths = list.files(null_dir)
   null_networks_features = list()
   null_networks_features_dfs = list()
 
-  for (i in 1:nsim)
+  for (i in 1:length(null_network_paths))
   {
-    null_network_features = networklevel(web=null_networks[[i]], weighted=is_weighted)
+    path = null_network_paths[i]
+    null_network = process_network(paste(null_dir, path, sep=""))
+    null_network_features = networklevel(web=null_network, weighted=is_weighted)
+    null_network_features[["modularity"]] = get_modularity(null_network)
     null_networks_features[[i]] = null_network_features
     null_network_features[["network_index"]] = i
     null_network_features[["observed_network"]] = basename(network_path)
     df = t(data.frame(Reduce(rbind, null_network_features)))
     colnames(df) = names(null_network_features)
     null_networks_features_dfs[[i]] = df
-    
+
   }
   null_networks_features_df = do.call(rbind, null_networks_features_dfs)
   write.csv(null_networks_features_df, null_sim_features_path, row.names = TRUE)
-  
+
   network_features = networklevel(web=network, weighted=is_weighted)
+
+  network_features[["modularity"]] = get_modularity(network)
   extinction_features = simulate_network_extinction(network, nsim=nsim)
   network_features = c(network_features, extinction_features)
-  non_transformable_feature_names = list("H2", 
-                                    "connectance", 
-                                    "weighted connectance", 
+  non_transformable_feature_names = list("H2",
+                                    "connectance",
+                                    "weighted connectance",
                                     "links per species",
                                     "number of species",
                                     "number.of.species.HL",
@@ -87,28 +127,29 @@ get_network_features <- function(network_path, null_sim_features_path, nsim=1000
                                     "mean number of shared partners",
                                     "partner diversity",
                                     "robustness_mean",
-                                    "robustness_medain",
+                                    "robustness_median",
                                     "robustness_min",
                                     "robustness_median",
                                     "robustness_var",
-                                    "robustness_std") 
+                                    "robustness_std")
   features_names = names(network_features)
   for (i in 1:length(features_names))
   {
     if ((!features_names[i] %in% non_transformable_feature_names) & (!is.na(network_features[features_names[i]])))
     {
-      null_network_values = get_feature_values(networks_features=null_networks_features, feature_name=features_names[i])
-      network_features[paste("delta_transformed_", features_names[i])] = network_features[features_names[i]] - mean(null_network_values)
+          null_values = get_feature_values(networks_features=null_network_features)
+          val = network_features[features_names[i]] - mean(null_values)
+          network_features[paste("standardized_", features_names[i])] = val
     }
   }
-  
+
   return(network_features)
 }
 
-get_plant_nestedness_contribution <- function (web, nsimul = 1000) 
+get_plant_nestedness_contribution <- function (web, nsimul = 1000)
 {
   web <- ifelse(web > 0, 1, 0)
-  if (is.null(rownames(web))) 
+  if (is.null(rownames(web)))
     rownames(web) <- paste0("L", seq.int(nrow(web)))
   lower.out <- data.frame(row.names = rownames(web)) # lower - rows - plants
   lower.out$nestedcontribution <- NA
@@ -125,7 +166,7 @@ get_plant_nestedness_contribution <- function (web, nsimul = 1000)
         web.null[i, ] <- rbinom(ncol(web), 1, probs)
         vegan::nestednodf(web.null)$statistic["NODF"]
       })
-      lower.out[i, "nestedcontribution"] <- (nested.orig - 
+      lower.out[i, "nestedcontribution"] <- (nested.orig -
                                                mean(nested.null))/sd(nested.null)
     }
   }
@@ -133,9 +174,9 @@ get_plant_nestedness_contribution <- function (web, nsimul = 1000)
 }
 
 # switch with group level - higher
-get_pollinator_nestedness_contribution <- function (web, nsimul = 1000) 
+get_pollinator_nestedness_contribution <- function (web, nsimul = 1000)
 {
-  if (is.null(colnames(web))) 
+  if (is.null(colnames(web)))
     colnames(web) <- paste0("H", seq.int(ncol(web)))
   higher.out <- data.frame(row.names = colnames(web)) # higher - columns, pollinators
   higher.out$nestedcontribution <- NA
@@ -152,7 +193,7 @@ get_pollinator_nestedness_contribution <- function (web, nsimul = 1000)
         web.null[, i] <- rbinom(nrow(web), 1, probs)
         vegan::nestednodf(web.null)$statistic["NODF"]
       })
-      higher.out[i, "nestedcontribution"] <- (nested.orig - 
+      higher.out[i, "nestedcontribution"] <- (nested.orig -
                                                 mean(nested.null))/sd(nested.null)
     }
   }
@@ -161,25 +202,27 @@ get_pollinator_nestedness_contribution <- function (web, nsimul = 1000)
 
 
 # switch with group level - lower
-get_species_features <- function(network_path, null_sim_features_path, nsim=1000, level="lower")
+get_species_features <- function(network_path, null_sim_features_path, null_dir, level="lower", nsim = 100)
 {
   network <- process_network(network_path)
   network[is.na(network)] <- 0
   is_weighted = any(network > 1)
-  
+
   if (level == "lower")
   {
     row_names = rownames(network)
   } else {
     row_names = colnames(network)
   }
-  
-  null_networks = r2dtable(n=nsim, r=rowSums(network), c=colSums(network))
+
+  null_network_paths = list.files(null_dir)
+  print(length(null_network_paths))
   null_species_features = list()
   null_species_features_dfs = list()
-  for (i in 1:nsim)
+  for (i in 1:length(null_network_paths))
   {
-    null_features = data.frame(specieslevel(web=null_networks[[i]], level=level))
+    null_network = process_network(paste(null_dir, null_network_paths[i], sep=""))
+    null_features = data.frame(specieslevel(web=null_network, level=level))
     null_species_features[[i]] = null_features
     null_features[["network_index"]] = i
     df = data.frame(null_features)
@@ -190,27 +233,29 @@ get_species_features <- function(network_path, null_sim_features_path, nsim=1000
   null_species_features_df = do.call(rbind, null_species_features_dfs)
   null_species_features_df["observed_network"] = basename(network_path)
   write.csv(null_species_features_df, null_sim_features_path, row.names = TRUE)
-  
+
   species_features = data.frame(specieslevel(web=network, level=level))
   row.names(species_features) = row_names
   if (level == "lower")
   {
-    species_features["nestedness_contribution"] = get_plant_nestedness_contribution(web=network, nsimul=nsim) 
+    species_features["nestedness_contribution"] = get_plant_nestedness_contribution(web=network, nsimul=nsim)
   } else {
     species_features["nestedness_contribution"] = get_pollinator_nestedness_contribution(web=network, nsimul=nsim)
   }
-  
+
   # delta transform using null features
-  non_transformable_feature_names = list("degree", 
+  non_transformable_feature_names = list("degree",
+                                         "d",
                                          "normalized.degree",
-                                         "nestedness_contribution") 
+                                         "nestedness_contribution")
   features_names = names(species_features)
   for (i in 1:length(features_names))
   {
     if ((!features_names[i] %in% non_transformable_feature_names) & (!is.na(species_features[features_names[i]])))
     {
-      null_network_values = get_feature_values(networks_features=null_species_features, feature_name=features_names[i])
-      species_features[paste("delta_transformed_", features_names[i])] = species_features[features_names[i]] - mean(null_network_values)
+      null_values = get_feature_values(networks_features=null_species_features, feature_name=features_names[i])
+      val = species_features[features_names[i]] - mean(null_values)
+      species_features[paste("standardized_", features_names[i])] = val
     }
   }
   return(species_features)
@@ -271,7 +316,7 @@ simulate_species_extinction <- function(network, nsim=1000,  survival_threshold 
     species = colnames(network)
   }
   Rstats_by_sp = list()
-  
+
   for (s in (1:length(species)))
   {
     Rvalues<-NULL
@@ -282,7 +327,7 @@ simulate_species_extinction <- function(network, nsim=1000,  survival_threshold 
     j=0
     plantsurvivorsC<-matrix(nrow=nsim, ncol=ncol(network))
     exttimesC<-matrix(nrow=nsim, ncol=ncol(network))
-    
+
     for(k in 1:nsim){
       mymat<-network                                                      # make copy of original matrix to work on
       PLANT<-colSums(mymat)                                               # save plant degrees
@@ -290,19 +335,19 @@ simulate_species_extinction <- function(network, nsim=1000,  survival_threshold 
       survivors<-NULL                                                     # create survivors to save pollinator counts
       plantdeaths<-NULL                                                   # create survivors to save plant counts
       pastplantdeaths<-NULL
-      
+
       ntriggerhat<-NULL
       i=0
-      j=j+1 
+      j=j+1
       ttally=0
-      
+
       while(sum(colSums(mymat))>0){
-        
+
         if(length(ntriggerhat)>0){
           ntriggerhat<-sample(ntriggerhat)
           cascadelength[c]<-length(ntriggerhat)
           c=c+1
-          for (m in 1:length(ntriggerhat)){      
+          for (m in 1:length(ntriggerhat)){
             ntrigger<-sp
             mymat[,ntrigger]<-0
             pastplantdeaths<-c(pastplantdeaths,ntrigger)
@@ -323,21 +368,21 @@ simulate_species_extinction <- function(network, nsim=1000,  survival_threshold 
           } else {
             mymat[,rtrigger]<-0
           }
-          
-          
-          
+
+
+
         }
-        
+
         p.ext<-which(((PLANT-colSums(mymat))/PLANT)>=survival_threshold)
-        ntriggerhat<-c(setdiff(names(p.ext),pastplantdeaths),setdiff(pastplantdeaths,names(p.ext)))                                                 
-        
+        ntriggerhat<-c(setdiff(names(p.ext),pastplantdeaths),setdiff(pastplantdeaths,names(p.ext)))
+
       }
-      
+
       triggertally[k]<-ttally
       survivorsx<-c(nrow(mymat),survivors)
       Rvalues[k]<-sum(survivorsx)/(ncol(mymat)*nrow(mymat))
     }
-    
+
     Rstats = c("mean"=mean(Rvalues),
                "median"=median(Rvalues),
                "min"=min(Rvalues),
@@ -360,7 +405,7 @@ simulate_network_extinction <- function(network, nsim = 1000, survival_threshold
   j=0
   plantsurvivorsC<-matrix(nrow=nsim, ncol=ncol(network))
   exttimesC<-matrix(nrow=nsim, ncol=ncol(network))
-  
+
   for(k in 1:nsim){
     mymat<-network                                                      # make copy of original matrix to work on
     PLANT<-colSums(mymat)                                               # save plant degrees
@@ -369,19 +414,19 @@ simulate_network_extinction <- function(network, nsim = 1000, survival_threshold
     plantdeaths<-NULL                                                   # create survivors to save plant counts
     triggerhat<-colnames(mymat)                                         # create hat with plant names to pick from
     pastplantdeaths<-NULL
-    
+
     ntriggerhat<-NULL
     i=0
-    j=j+1 
+    j=j+1
     ttally=0
-    
+
     while(sum(colSums(mymat))>0){
-      
+
       if(length(ntriggerhat)>0){
         ntriggerhat<-sample(ntriggerhat)
         cascadelength[c]<-length(ntriggerhat)
         c=c+1
-        for (m in 1:length(ntriggerhat)){      
+        for (m in 1:length(ntriggerhat)){
           ntrigger<-ntriggerhat[m]
           mymat[,ntrigger]<-0
           pastplantdeaths<-c(pastplantdeaths,ntrigger)
@@ -407,12 +452,12 @@ simulate_network_extinction <- function(network, nsim = 1000, survival_threshold
         plantsurvivorsC[j,i]<-length(which(colSums(mymat)==0))
         exttimesC[k,i]<-rtrigger
       }
-      
+
       p.ext<-which(((PLANT-colSums(mymat))/PLANT)>=survival_threshold)
-      ntriggerhat<-c(setdiff(names(p.ext),pastplantdeaths),setdiff(pastplantdeaths,names(p.ext)))                                                 
-      
+      ntriggerhat<-c(setdiff(names(p.ext),pastplantdeaths),setdiff(pastplantdeaths,names(p.ext)))
+
     }
-    
+
     triggertally[k]<-ttally
     survivorsx<-c(nrow(mymat),survivors)
     Rvalues[k]<-sum(survivorsx)/(ncol(mymat)*nrow(mymat))
