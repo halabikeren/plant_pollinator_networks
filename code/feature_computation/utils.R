@@ -395,7 +395,9 @@ simulate_species_extinction <- function(network, nsim=1000,  survival_threshold 
 }
 
 
-simulate_network_extinction <- function(network, nsim = 1000, survival_threshold = 0.5)
+simulate_network_extinction <- function(network, # columns correspond to plants and rows to pollinators
+                                        nsim = 1000, # number of simulations
+                                        survival_threshold = 0.5) # probabilty for rewiring (similar to all species)
 {
   Rvalues<-NULL
   triggertally<-NULL
@@ -411,8 +413,6 @@ simulate_network_extinction <- function(network, nsim = 1000, survival_threshold
     PLANT<-colSums(mymat)                                               # save plant degrees
     POL<-rowSums(mymat)                                                 # save pollinator degrees
     survivors<-NULL                                                     # create survivors to save pollinator counts
-    plantdeaths<-NULL                                                   # create survivors to save plant counts
-    triggerhat<-colnames(mymat)                                         # create hat with plant names to pick from
     pastplantdeaths<-NULL
 
     ntriggerhat<-NULL
