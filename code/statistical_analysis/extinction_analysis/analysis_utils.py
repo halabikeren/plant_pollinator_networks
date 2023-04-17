@@ -1,51 +1,60 @@
 import pandas as pd
-# import networkx as nx
 import os
-import pickle
 import numpy as np
 import random
-import matplotlib.pyplot as plt
+from enum import Enum
 
 
-# from networkx.algorithms import bipartite
-# from networkx_analysis.constants import *
+class ExtinctionOrder(Enum):
+    random: 0
+    polyploids_first: 1
+    diploids_first: 2
 
 
-def generate_network_extinction_simulations(network_path, network_species_metedata_path, output_path,
-                                            polyploid_range=[0.9, 0.9], diploid_range=[0.9, 0.9],
-                                            unknown_range=[0.9, 0.9], pollinator_range=[0.9, 0.9], iter=5):
+def generate_network_extinction_simulations(network_path: str,
+                                            network_species_metedata_path: str,
+                                            output_path: str,
+                                            polyploid_range: tuple = (0.9, 0.9),
+                                            diploid_range: tuple = (0.9, 0.9),
+                                            unknown_range: tuple = (0.9, 0.9),
+                                            pollinator_range: tuple = (0.9, 0.9),
+                                            nsim=5):
     if not os.path.exists(output_path):
-        ep_network = pd.read_csv(network_path, encoding='unicode_escape')
-        network_species_metedata = pd.read_csv(network_species_metedata_path).query(
+        network = pd.read_csv(network_path, encoding='unicode_escape')
+        network_metedata = pd.read_csv(network_species_metedata_path).query(
             f"network == '{os.path.basename(network_path)}'")
-        ep_network.rename(columns={"plant/pollinator": "Plant"}, inplace=True)
-        if "Plant" not in ep_network.columns:
-            ep_network.rename(columns={ep_network.columns.tolist()[0]: "Plant"}, inplace=True)
-        ep_network_edgelist = ep_network.melt(id_vars=["Plant"],
+        network.rename(columns={"plant/pollinator": "Plant"}, inplace=True)
+        if "Plant" not in network.columns:
+            network.rename(columns={network.columns.tolist()[0]: "Plant"}, inplace=True)
+        processed_network = network.melt(id_vars=["Plant"],
                                               var_name="Pollinator",
                                               value_name="Value")
-        ep_network_edgelist['Plant'] = ep_network_edgelist['Plant'].str.lower()  # lowercase
-        ep_network_edgelist['Pollinator'] = ep_network_edgelist['Pollinator'].str.lower()  # lowercase
-        ep_network_edgelist['Value'] = pd.to_numeric(ep_network_edgelist['Value'], errors='coerce')
-        ep_network_edgelist = ep_network_edgelist[ep_network_edgelist["Value"] > 0]
-        ep_network_edgelist = ep_network_edgelist.merge(network_species_metedata.drop(["Plant"], axis=1), how='left',
-                                                        left_on='Plant',
-                                                        right_on='original_name')
-        ep_network_edgelist['is_polyploid'] = ep_network_edgelist['is_polyploid'].fillna(-1)
+        processed_network['Plant'] = processed_network['Plant'].str.lower()  # lowercase
+        processed_network['Pollinator'] = processed_network['Pollinator'].str.lower()  # lowercase
+        processed_network['Value'] = pd.to_numeric(processed_network['Value'], errors='coerce')
+        processed_network = processed_network[processed_network["Value"] > 0]
+        processed_network = processed_network.merge(network_metedata[["original_name", "is_polyploid"]],
+                                                    how='left',
+                                                    left_on='Plant',
+                                                    right_on='original_name')
+        processed_network['is_polyploid'].fillna(-1, inplace=True)
         extinction_dfs = []
-        for i in range(iter):
-            extinction_df = extinction_analysis(ep_network_edgelist, pollinator_range=pollinator_range,
-                                                polyploid_range=polyploid_range, diploid_range=diploid_range,
-                                                unknown_range=unknown_range)
+        for i in range(nsim):
+            extinction_df = extinction_analysis(classified_network=processed_network,
+                                                polyploid_range=polyploid_range,
+                                                diploid_range=diploid_range,
+                                                unknown_range=unknown_range,
+                                                pollinator_range=pollinator_range)
             extinction_df["simulation_index"] = i
             extinction_dfs.append(extinction_df)
-            # if (len(extinction_df.index)>2):
-            #     print(f"succeeded in simulating more than 2 iterations at extinction simulation {i}")
-        pd.concat(extinction_dfs).to_csv(output_path)
-        # print(f"failed to simulate extinction after {iter} attempts")
+        all_extinction_data = pd.concat(extinction_dfs)
+        all_extinction_data.to_csv(output_path)
 
 
-def All_networks_extinction_analysis(networks_data, output_dir, range_of_rates: list[int], num_sim: int = 100):
+def All_networks_extinction_analysis(networks_data: dict,
+                                     output_dir: str,
+                                     range_of_rates: tuple,
+                                     num_sim: int = 100):
     network_folder = networks_data['networks']
     species_data_path = networks_data['data']
     networks_files = {f: os.path.join(network_folder, f) for f in os.listdir(network_folder) if
@@ -59,7 +68,7 @@ def All_networks_extinction_analysis(networks_data, output_dir, range_of_rates: 
                                                     diploid_range=range_of_rates,
                                                     unknown_range=range_of_rates,
                                                     pollinator_range=range_of_rates,
-                                                    iter=num_sim,
+                                                    nsim=num_sim,
                                                     output_path=f"{output_dir}/extinction_simulations_network_{i}.csv")
     return 0
 
@@ -75,7 +84,8 @@ def update_edgelist_totals(ep_network_edgelist):
     return ep_network_edgelist
 
 
-def get_config(name):
+def get_config(name: str,
+               ext_order: ExtinctionOrder):
     if name == 'Plant':
         return {'base_extinction_col': 'Plant', 'primary_extinction_col': 'Pollinator', 'd_col': 'd_poli_plant',
                 'rate_col': "pollinator_r"}
@@ -84,7 +94,10 @@ def get_config(name):
                 'rate_col': "plant_r"}
 
 
-def get_plant_rates(is_polyploid, unknown_ext_rate, polyploid_ext_rate, diploid_ext_rate):
+def get_plant_rates(is_polyploid: bool,
+                    unknown_ext_rate: float,
+                    polyploid_ext_rate: float,
+                    diploid_ext_rate: float):
     if is_polyploid == -1:
         return unknown_ext_rate
     elif is_polyploid == 1:
@@ -146,35 +159,40 @@ def iteration_metrics(ep_network_edgelist, primary_extinct, base_extinct, config
     return res
 
 
-def extinction_analysis(ep_network_edgelist, polyploid_range, diploid_range, unknown_range, pollinator_range):
+def extinction_analysis(classified_network: pd.DataFrame,
+                        polyploid_range: tuple,
+                        diploid_range: tuple,
+                        unknown_range: tuple,
+                        pollinator_range: tuple,
+                        extinction_order: ExtinctionOrder = ExtinctionOrder.random):
     polyploid_ext_rate = np.random.uniform(low=polyploid_range[0], high=polyploid_range[1])
     diploid_ext_rate = np.random.uniform(low=diploid_range[0], high=diploid_range[1])
     unknown_ext_rate = np.random.uniform(low=unknown_range[0], high=unknown_range[1])
     pollinator_ext_rate = np.random.uniform(low=pollinator_range[0], high=pollinator_range[1])
-    ep_network_edgelist["pollinator_r"] = pollinator_ext_rate
-    ep_network_edgelist["plant_r"] = ep_network_edgelist["is_polyploid"].apply(
-        lambda x: get_plant_rates(x, unknown_ext_rate, polyploid_ext_rate, diploid_ext_rate))
-    ep_network_edgelist = update_edgelist_totals(ep_network_edgelist)
+    classified_network["pollinator_r"] = pollinator_ext_rate
+    classified_network["plant_r"] = classified_network["is_polyploid"].apply(
+        lambda is_poly: get_plant_rates(is_poly, unknown_ext_rate, polyploid_ext_rate, diploid_ext_rate))
+    classified_network = update_edgelist_totals(classified_network)
 
     Base = 'Plant'
     Primary = 'Pollinator'
     config = get_config(Base)
-    base_extinct = random.sample(list(ep_network_edgelist[config['base_extinction_col']].unique()), 1)
+    base_extinct = random.sample(list(classified_network[config['base_extinction_col']].unique()), 1)
     # print(base_extinct)
     iters_df = pd.DataFrame()
     degree = 0
     # print(ep_network_edgelist[['Plant', 'Pollinator']])
-    baseline = {'baseline_n_pollinators': len(ep_network_edgelist['Pollinator'].unique()),
-                'baseline_n_plant': len(ep_network_edgelist['Plant'].unique()),
-                'baseline_n_polyploids': len(ep_network_edgelist.query("is_polyploid == 1")['Plant'].unique()),
-                'baseline_n_diploids': len(ep_network_edgelist.query("is_polyploid == 0")['Plant'].unique()),
-                'baseline_n_unknowns': len(ep_network_edgelist.query("is_polyploid == -1")['Plant'].unique()),
-                'baseline_connectence': len(ep_network_edgelist) / ((len(ep_network_edgelist['Plant'].unique()) * len(
-                    ep_network_edgelist['Pollinator'].unique())) + 0.001)}
+    baseline = {'baseline_n_pollinators': len(classified_network['Pollinator'].unique()),
+                'baseline_n_plant': len(classified_network['Plant'].unique()),
+                'baseline_n_polyploids': len(classified_network.query("is_polyploid == 1")['Plant'].unique()),
+                'baseline_n_diploids': len(classified_network.query("is_polyploid == 0")['Plant'].unique()),
+                'baseline_n_unknowns': len(classified_network.query("is_polyploid == -1")['Plant'].unique()),
+                'baseline_connectence': len(classified_network) / ((len(classified_network['Plant'].unique()) * len(
+                    classified_network['Pollinator'].unique())) + 0.001)}
     while True:
         # print(f"degree: {degree}")
         at_extinction_risk = \
-            ep_network_edgelist.loc[ep_network_edgelist[config['base_extinction_col']].isin(base_extinct)][
+            classified_network.loc[classified_network[config['base_extinction_col']].isin(base_extinct)][
                 ['is_polyploid', config['d_col'], config['base_extinction_col'], config['primary_extinction_col'],
                  config['rate_col']]]
         if len(at_extinction_risk.index) == 0:
@@ -189,14 +207,14 @@ def extinction_analysis(ep_network_edgelist, polyploid_range, diploid_range, unk
         if len(primary_extinct) == 0:
             primary_extinct = []
             break
-        iter_metrics = iteration_metrics(ep_network_edgelist, primary_extinct, base_extinct, config, degree, baseline)
+        iter_metrics = iteration_metrics(classified_network, primary_extinct, base_extinct, config, degree, baseline)
 
         iters_df = iters_df.append(iter_metrics, ignore_index=True)
         # print(f'Primary extinct:\n{primary_extinct}')
-        ep_network_edgelist = ep_network_edgelist.loc[
-            ~ep_network_edgelist[config['base_extinction_col']].isin(base_extinct)]  # Removing the base extinction
+        classified_network = classified_network.loc[
+            ~classified_network[config['base_extinction_col']].isin(base_extinct)]  # Removing the base extinction
         # print( ep_network_edgelist[['Plant','Pollinator']])
-        ep_network_edgelist = update_edgelist_totals(ep_network_edgelist)
+        classified_network = update_edgelist_totals(classified_network)
         # print(iter_metrics)
 
         base_extinct = primary_extinct
@@ -206,7 +224,7 @@ def extinction_analysis(ep_network_edgelist, polyploid_range, diploid_range, unk
         Base, Primary = Primary, Base  # update
         config = get_config(Base)
 
-    iter_metrics = iteration_metrics(ep_network_edgelist, primary_extinct, base_extinct, config, degree, baseline)
+    iter_metrics = iteration_metrics(classified_network, primary_extinct, base_extinct, config, degree, baseline)
 
     iters_df = iters_df.append(iter_metrics, ignore_index=True)
     # print(iters_df)
