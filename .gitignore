@@ -59,7 +59,7 @@ coverage.xml
 # Django stuff:
 *.log
 *.ini
-.Rhistory
+*.Rhistory
 *.html
 local_settings.py
 db.sqlite3
