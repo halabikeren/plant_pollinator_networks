@@ -53,10 +53,10 @@ def get_rank_data(db_connection: sqlite3.Connection, kingdom_id: int) -> pd.Data
 def get_taxonomic_data(
     db_connection: sqlite3.Connection, kingdom_id: int, names: list[str]
 ):
-    taxonomic_units_quey = (
+    taxonomic_units_query = (
         f"SELECT * FROM taxonomic_units WHERE kingdom_id IS {kingdom_id}"
     )
-    taxonomic_units_data = pd.read_sql_query(taxonomic_units_quey, db_connection)
+    taxonomic_units_data = pd.read_sql_query(taxonomic_units_query, db_connection)
     taxonomic_units_data.complete_name = (
         taxonomic_units_data.complete_name.str.capitalize()
     )
