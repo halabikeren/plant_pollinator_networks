@@ -1,11 +1,9 @@
 import logging
-import sys
-from typing import Optional
+
 import click
 import pandas as pd
 import os
 import sys
-import glob
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from services.pbs_service import PBSService
 logger = logging.getLogger(__name__)
@@ -95,7 +93,7 @@ def exec_by_network(networks_dir: str,
             job_ids.append(network_index)
             null_network_dir = f"{null_networks_dir}{network_index}/"
             output_path = f"{output_dir}{network_path.replace('.csv', '_features.csv')}"
-            script_exec_cmd = f"Rscript --vanilla {script_path} {input_path} {null_network_dir} {output_path}"
+            script_exec_cmd = f"Rscript --vanilla {script_path} {input_path} {null_network_dir} {output_path} FALSE"
             if script_path.endswith(".py"):
                 output_path = f"{output_dir}{network_path.replace('.csv', '_features/')}"
                 script_exec_cmd = f"python {script_path} --input_path={input_path} --output_dir={output_path}"
