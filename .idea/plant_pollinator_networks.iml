@@ -4,7 +4,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/data" />
     </content>
-    <orderEntry type="jdk" jdkName="Remote Python 3.10.4 (sftp://halabikeren@power9login.tau.ac.il:22/groups/itay_mayrose/halabikeren/miniconda3/envs/ppn/bin/python)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.10.4 (sftp://halabikeren@hpcssd.tau.ac.il:22/groups/itay_mayrose/halabikeren/miniconda3/envs/ppn/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">
