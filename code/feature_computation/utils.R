@@ -115,8 +115,6 @@ get_network_features <- function(network_path, null_sim_features_path, null_dir,
   network_features = networklevel(web=network, weighted=is_weighted)
 
   network_features[["modularity"]] = get_modularity(network)
-  extinction_features = simulate_network_extinction(network, nsim=nsim)
-  network_features = c(network_features, extinction_features)
   non_transformable_feature_names = list("H2",
                                     "connectance",
                                     "weighted connectance",
@@ -146,7 +144,7 @@ get_network_features <- function(network_path, null_sim_features_path, null_dir,
   return(network_features)
 }
 
-get_plant_nestedness_contribution <- function (web, nsimul = 1000)
+get_plant_nestedness_contribution <- function (web, nsim = 1000)
 {
   web <- ifelse(web > 0, 1, 0)
   if (is.null(rownames(web)))
@@ -161,7 +159,7 @@ get_plant_nestedness_contribution <- function (web, nsimul = 1000)
     for (i in rownames(web)) {
       message(i)
       probs <- (rowSums(web)[i]/ncol(web) + colSums(web)/nrow(web))/2
-      nested.null <- sapply(1:nsimul, function(x) {
+      nested.null <- sapply(1:nsim, function(x) {
         web.null <- web
         web.null[i, ] <- rbinom(ncol(web), 1, probs)
         vegan::nestednodf(web.null)$statistic["NODF"]
@@ -174,7 +172,7 @@ get_plant_nestedness_contribution <- function (web, nsimul = 1000)
 }
 
 # switch with group level - higher
-get_pollinator_nestedness_contribution <- function (web, nsimul = 1000)
+get_pollinator_nestedness_contribution <- function (web, nsim = 1000)
 {
   if (is.null(colnames(web)))
     colnames(web) <- paste0("H", seq.int(ncol(web)))
@@ -188,7 +186,7 @@ get_pollinator_nestedness_contribution <- function (web, nsimul = 1000)
     for (i in colnames(web)) {
       message(i)
       probs <- (rowSums(web)/ncol(web) + colSums(web)[i]/nrow(web))/2
-      nested.null <- sapply(1:nsimul, function(x) {
+      nested.null <- sapply(1:nsim, function(x) {
         web.null <- web
         web.null[, i] <- rbinom(nrow(web), 1, probs)
         vegan::nestednodf(web.null)$statistic["NODF"]
@@ -238,9 +236,9 @@ get_species_features <- function(network_path, null_sim_features_path, null_dir,
   row.names(species_features) = row_names
   if (level == "lower")
   {
-    species_features["nestedness_contribution"] = get_plant_nestedness_contribution(web=network, nsimul=nsim)
+    species_features["nestedness_contribution"] = get_plant_nestedness_contribution(web=network, nsim=nsim)
   } else {
-    species_features["nestedness_contribution"] = get_pollinator_nestedness_contribution(web=network, nsimul=nsim)
+    species_features["nestedness_contribution"] = get_pollinator_nestedness_contribution(web=network, nsim=nsim)
   }
 
   # delta transform using null features
@@ -301,7 +299,7 @@ get_pollinator_features <- function(network, plant_species_classification_path, 
   pollinator_features$network = basename(network_path)
   pollinator_features$pollinator = colnames(network)
   pollinator_features$ranked_degree = min_max_scale(rank(colSums(network), ties.method="average"))
-  nestedness_contribution = get_pollinator_nestedness_contribution(network, nsimul=1000)
+  nestedness_contribution = get_pollinator_nestedness_contribution(network, nsim=nsim)
   pollinator_features$ranked_nestedness_contribution = min_max_scale(rank(unlist(nestedness_contribution, use.names=FALSE)))
   pollinator_features$exotic_tendency = get_exotic_tendency(network, plant_classification)
   return (pollinator_features)
