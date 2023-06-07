@@ -1,0 +1,255 @@
+
+```{r}
+library(raster)
+library(sf)
+library(stars)
+library(tidyverse)
+```
+
+```{r}
+# Load the data -----------------------------------------------------------
+#--#Observation points (NEED columns "ID", "Latitude", "Longitude") #--# 
+Observations = read.csv("../../../data/networks/all/networks_metadata.csv")
+Observations =  filter(Observations, Latitude != "")
+Observations =  filter(Observations, Longitude != "")
+
+# Prepare Observation Points ----------------------------------------------
+#Convert the Observation data to an SF object
+Observation_SF = Observations %>%
+                   st_as_sf(coords = c("Longitude", 
+                                       "Latitude"))
+```
+
+```{r}
+#--#Ecoregion Polygon #--# 
+ecoregion_polygon_data_path1 = "../../../data/networks/metadata/polygon/WWF/wwf_terr_ecos.shp"
+ecoregion_polygon_data_path2 = "../../../data/networks/metadata/polygon/Ecoregions2017/Ecoregions2017.shp"
+ecoregion_polygon_data_path3 = "../../../../data/networks/metadata/polygon/WTE/wwf_terr_ecos.shp"
+
+
+Ecoregion_Polygon_1 = st_read(ecoregion_polygon_data_path1)
+Ecoregion_Polygon_2 = st_read(ecoregion_polygon_data_path2)
+Ecoregion_Polygon_3 = st_read(ecoregion_polygon_data_path3)
+
+#To check that the rest of the polygons are good, you can do the following
+bad_polygons_1 = which(st_is_valid(Ecoregion_Polygon_1) != TRUE)
+bad_polygons_2 = which(st_is_valid(Ecoregion_Polygon_2) != TRUE)
+bad_polygons_3 = which(st_is_valid(Ecoregion_Polygon_3) != TRUE)
+
+# Prepare the Ecoregion Data ----------------------------------------------
+#For whatever region, the polygon in row 1526 is not good and will cause the whole thing to mess up.
+#But since your data probably doesn't care about this you can just remove it 
+#Info about the bad polygon:
+  #OBJECT_ID = 1501
+  #ECO_ID = 60125
+  #ECO_NAME = Guianan moist forests
+  #You can see the location of the region here: https://dopa-explorer.jrc.ec.europa.eu/ecoregion/60125
+#Remove the bad polygon
+Ecoregion_Polygon_1 = Ecoregion_Polygon_1[-1*bad_polygons_1, ]
+Ecoregion_Polygon_2 = Ecoregion_Polygon_2[-1*bad_polygons_2, ]
+Ecoregion_Polygon_3 = Ecoregion_Polygon_3[-1*bad_polygons_3, ]
+
+#To check that the rest of the polygons are good, you can do the following
+which(st_is_valid(Ecoregion_Polygon_1) != TRUE)
+which(st_is_valid(Ecoregion_Polygon_2) != TRUE)
+which(st_is_valid(Ecoregion_Polygon_3) != TRUE)
+
+# unite
+dfList <- list(Ecoregion_Polygon_1, Ecoregion_Polygon_2, Ecoregion_Polygon_3)
+dfColList <- lapply(dfList,names)
+commonCols <- Reduce(intersect,dfColList)
+Ecoregion_Polygon = rbind(rbind(Ecoregion_Polygon_1[, commonCols], Ecoregion_Polygon_2[, commonCols]), Ecoregion_Polygon_3[, commonCols])
+```
+
+```{r}
+#Give the observations the coordinate system it is referenced in (#This is dataset specific, if from GBIF use this number)
+st_crs(Observation_SF) = 4326 
+  
+#Set the coordinate system of the observations to be the same as the Polygon
+Observation_SF_1 = st_transform(Observation_SF,
+                          crs = st_crs(Ecoregion_Polygon_1))
+
+Observation_SF_2 = st_transform(Observation_SF,
+                          crs = st_crs(Ecoregion_Polygon_2))
+
+Observation_SF_3 = st_transform(Observation_SF,
+                          crs = st_crs(Ecoregion_Polygon_3))
+
+# Intersect Points and Polygon --------------------------------------------
+#NOTE THAT DEPENDING ON YOUR DATA NOT ALL POINTS MAY INTERSECT WITH AN ECOREGION
+#Determine which polygon each point is in
+sf_use_s2(FALSE)
+Intersection_Data_1 = as.data.frame(st_intersects(Observation_SF_1, Ecoregion_Polygon_1))
+Intersection_Data_2 = as.data.frame(st_intersects(Observation_SF_2, Ecoregion_Polygon_2))
+Intersection_Data_3 = as.data.frame(st_intersects(Observation_SF_3, Ecoregion_Polygon_3))
+
+#Convert the row.ID to the observation ID
+Intersection_Data_1$Obs_ID = Observations$ID[Intersection_Data_1$row.id]
+Intersection_Data_2$Obs_ID = Observations$ID[Intersection_Data_2$row.id]
+Intersection_Data_3$Obs_ID = Observations$ID[Intersection_Data_3$row.id]
+
+#Convert the col.ID to the ecoregion ID
+Intersection_Data_1$EcoRegion = Ecoregion_Polygon_1$ECO_ID[Intersection_Data_1$col.id]
+Intersection_Data_2$EcoRegion = Ecoregion_Polygon_2$ECO_ID[Intersection_Data_2$col.id]
+Intersection_Data_3$EcoRegion = Ecoregion_Polygon_3$ECO_ID[Intersection_Data_3$col.id]
+Intersection_Data_1$EcoRegion_name = Ecoregion_Polygon_1$ECO_NAME[Intersection_Data_1$col.id]
+Intersection_Data_2$EcoRegion_name = Ecoregion_Polygon_2$ECO_NAME[Intersection_Data_2$col.id]
+Intersection_Data_3$EcoRegion_name = Ecoregion_Polygon_3$ECO_NAME[Intersection_Data_3$col.id]
+```
+
+
+```{r}
+#--#BioClim Data #--# 
+my_path = "../../../../data/networks/metadata/bioclimate/"
+BioClim_list = list.files(path = my_path, 
+                          pattern = ".tif$", 
+                          all.files = TRUE, 
+                          full.names = FALSE)
+  
+#Load rasters (Should create a list of 19)
+BioClim_Rasters = lapply(paste(my_path, 
+                               BioClim_list,
+                               sep = ""),
+                         raster)
+
+  
+#--#Remover superfluous data #--# 
+rm(my_path, BioClim_list)
+
+#--#Regional Species Richness Data #--# 
+Richness_Rasters = raster("../../../../data/networks/metadata/polygon/Richness_2021.tif")
+
+```
+
+
+```{r}
+# Intersect Points and BioClim Rasters ------------------------------------
+#Determine the raster values of each point (I do this individually to make sure no errors occur)
+
+#Create a holder
+BioClim_data_1 = as.data.frame(matrix(nrow = nrow(Observations),
+                                    ncol = length(BioClim_Rasters) +1))
+BioClim_data_2 = as.data.frame(matrix(nrow = nrow(Observations),
+                                    ncol = length(BioClim_Rasters) +1))
+BioClim_data_3 = as.data.frame(matrix(nrow = nrow(Observations),
+                                    ncol = length(BioClim_Rasters) +1))
+
+#Set the column names
+colnames(BioClim_data_1) = c("Obs_ID",
+                            paste("BioClim_",
+                                1:19,
+                                sep = ""))
+colnames(BioClim_data_2) = c("Obs_ID",
+                            paste("BioClim_",
+                                1:19,
+                                sep = ""))
+colnames(BioClim_data_3) = c("Obs_ID",
+                            paste("BioClim_",
+                                1:19,
+                                sep = ""))
+  
+#Set the observation ID
+BioClim_data_1$Obs_ID = Observations$ID
+BioClim_data_2$Obs_ID = Observations$ID
+BioClim_data_3$Obs_ID = Observations$ID
+```
+
+```{r}
+#Go through each raster
+for (i in 1:length(BioClim_Rasters)) 
+{
+  #Extract values and place in holder
+  biovar = BioClim_Rasters[[i]]
+  BioClim_data_1[, i+1] = raster::extract(biovar, Observation_SF_1)
+  BioClim_data_2[, i+1] = raster::extract(biovar, Observation_SF_2)
+  BioClim_data_3[, i+1] = raster::extract(biovar, Observation_SF_3)
+}
+```
+
+
+```{r}
+#Add the data to the Intersection_Data for those whose ID match
+Complete_Data_1 = merge(Intersection_Data_1[, c("Obs_ID", "EcoRegion", "EcoRegion_name")], 
+                      BioClim_data_1,
+                      by.x = "Obs_ID",
+                      by.y = "Obs_ID")
+
+Complete_Data_2 = merge(Intersection_Data_2[, c("Obs_ID", "EcoRegion", "EcoRegion_name")], 
+                      BioClim_data_2,
+                      by.x = "Obs_ID",
+                      by.y = "Obs_ID")
+Complete_Data_3 = merge(Intersection_Data_3[, c("Obs_ID", "EcoRegion", "EcoRegion_name")], 
+                      BioClim_data_2,
+                      by.x = "Obs_ID",
+                      by.y = "Obs_ID")
+```
+
+
+```{r}
+#Create a holder
+richness_data = as.data.frame(matrix(nrow = nrow(Observations),
+                                    ncol = 2))
+
+#Set the column names
+colnames(richness_data) = c("Obs_ID",
+                            "species_richness")
+
+#Set the observation ID
+richness_data$Obs_ID = Observations$ID
+  
+#Go through each raster
+richness_data[["species_richness"]] = raster::extract(Richness_Rasters, Observation_SF)
+  
+
+#Add the data to the Intersection_Data for those whose ID match
+Richness_Complete_Data_1 = merge(Intersection_Data_1[, c("Obs_ID", "EcoRegion")], 
+                      richness_data,
+                      by.x = "Obs_ID",
+                      by.y = "Obs_ID")
+
+Richness_Complete_Data_2 = merge(Intersection_Data_2[, c("Obs_ID", "EcoRegion")], 
+                      richness_data,
+                      by.x = "Obs_ID",
+                      by.y = "Obs_ID")
+
+Richness_Complete_Data_3 = merge(Intersection_Data_3[, c("Obs_ID", "EcoRegion")], 
+                      richness_data,
+                      by.x = "Obs_ID",
+                      by.y = "Obs_ID")
+
+Richness_Complete_Data_1 <- Richness_Complete_Data_1[c("Obs_ID", "EcoRegion", "species_richness")]
+
+Richness_Complete_Data_2 <- Richness_Complete_Data_2[c("Obs_ID", "EcoRegion", "species_richness")]
+
+Richness_Complete_Data_3 <- Richness_Complete_Data_3[c("Obs_ID", "EcoRegion", "species_richness")]
+```
+
+```{r}
+full_data_1 = merge(Complete_Data_1, 
+                  Richness_Complete_Data_1,
+                  by.x = "Obs_ID",
+                  by.y = "Obs_ID")
+full_data_2 = merge(Complete_Data_2, 
+                  Richness_Complete_Data_2,
+                  by.x = "Obs_ID",
+                  by.y = "Obs_ID")
+full_data_3 = merge(Complete_Data_3, 
+                  Richness_Complete_Data_3,
+                  by.x = "Obs_ID",
+                  by.y = "Obs_ID")
+
+uni_data = rbind(full_data_1, full_data_2, full_data_3)
+```
+
+```{r}
+uni_data = uni_data %>% mutate(EcoRegion.x = replace_na(EcoRegion.x, -1),
+                               species_richness = replace_na(species_richness, -1))
+uni_data = uni_data %>% select(-EcoRegion.y)
+```
+
+
+```{r}
+final_data = uni_data %>% group_by(Obs_ID) %>% mutate(EcoRegion = max(EcoRegion.x), species_richness = max(species_richness))
+final_data = final_data %>% select(-EcoRegion.x) %>% distinct()
+write_csv(final_data, "../../../data/networks/all/networks_unparsed_geodata.csv")
+```
