@@ -60,13 +60,21 @@ load_dotenv(find_dotenv())
     required=False,
     default="itaym",
 )
+@click.option(
+    "--mem_per_job",
+    help="amount of memory in gb to assign to each single-network job",
+    type=int,
+    required=False,
+    default=10,
+)
 def computer_features_across_queue(network_path: str,
                                     null_networks_dir: str,
                                     script_path: str,
                                     work_dir: str,
                                     log_path: str,
                                     max_jobs_in_parallel: int,
-                                    queue: str):
+                                    queue: str,
+                                    mem_per_job: int):
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s module: %(module)s function: %(funcName)s line %(lineno)d: %(message)s",
@@ -103,7 +111,7 @@ def computer_features_across_queue(network_path: str,
                                        output_dir=f"{work_dir}jobs_output/{alt_network_id}",
                                        job_ids=job_ids,
                                        jobs_commands=networks_commands,
-                                       ram_gb_size=10,
+                                       ram_gb_size=mem_per_job,
                                        max_parallel_jobs=max_jobs_in_parallel,
                                        queue=queue)
 
