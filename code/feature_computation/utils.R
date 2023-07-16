@@ -87,7 +87,7 @@ get_modularity <- function(network)
 	return(modularity)
 }
 
-get_network_features <- function(network_path, null_sim_features_path, null_dir, nsim = 100)
+get_network_features <- function(network_path, null_sim_features_path, null_dir)
 {
   network <- process_network(network_path)
   is_weighted = any(network > 1)
@@ -468,3 +468,15 @@ simulate_network_extinction <- function(network, # columns correspond to plants 
              "robustness_std"=sd(Rvalues))
   return(Rstats)
 }
+
+
+
+for family in os.listdir(d):
+  if os.path.exists(f"{d}{family}/chromevol/stochastic_mapping.zip"):
+    os.rename(f"{d}{family}/chromevol/stochastic_mapping.zip", f"{d}{family}/chromevol/_stochastic_mapping.zip")
+  if os.path.exists(f"{d}{family}/chromevol/simulations.zip"):
+    os.rename(f"{d}{family}/chromevol/simulations.zip", f"{d}{family}/chromevol/_simulations.zip")
+  if os.path.exists(f"{d}{family}/chromevol/ploidy.csv"):
+    os.rename(f"{d}{family}/chromevol/ploidy.csv", f"{d}{family}/chromevol/_ploidy.csv")
+  os.system(f"qsub {d}{family}/chromevol.sh")
+
