@@ -227,34 +227,5 @@ def extinction_analysis(classified_network: pd.DataFrame,
     iter_metrics = iteration_metrics(classified_network, primary_extinct, base_extinct, config, degree, baseline)
 
     iters_df = iters_df.append(iter_metrics, ignore_index=True)
-    # print(iters_df)
     return iters_df
 
-# def main():
-#     # working_dir = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/extinction_analysis/"
-#     # weighted_features_data = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/features/plant_features/weighted/features_with_classification.csv"
-#     # weighted_networks_path = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/networks/all/weighted/"
-#     # binary_features_data = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/features/plant_features/binary/features_with_classification.csv"
-#     # binary_networks_path = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/networks/all/binary/"
-#     # binarized_features_data = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/features/plant_features/binarized_weighted/features_with_classification.csv"
-#     # binarized_networks_path = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/networks/all/binarized_weighted/"
-#     # networks = {'weighted': {'networks': weighted_networks_path, 'data': weighted_features_data},
-#     #             'binary': {'networks': binary_networks_path, 'data': binary_features_data},
-#     #             'binarized': {'networks': binarized_networks_path, 'data': binarized_features_data}
-#     #             }
-#     #
-#     #
-#     # for _type in ['binary']: #networks:
-#     #     output_dir = f"/groups/itay_mayrose/halabikeren/plant_pollinator_networks/extinction_analysis/{_type}/"
-#     #     os.makedirs(output_dir, exist_ok=True)
-#     #     type_df = All_networks_extinction_analysis(networks[_type], output_dir=output_dir)
-#     #     type_df_path = f"/groups/itay_mayrose/halabikeren/plant_pollinator_networks/extinction_analysis/all_{_type}_networks_simulation_data.csv"
-#     #     type_df.to_csv(type_df_path)
-#
-#     network_path = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/networks/all/weighted/118.csv"
-#     network_species_metedata_path = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/features/plant_features/weighted/features_with_classification.csv"
-#     output_path = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/extinction_analysis/test.csv"
-#     generate_network_extinction_simulations(network_path, network_species_metedata_path, output_path, iter=10)
-#
-# if __name__ == '__main__':
-#     main()
