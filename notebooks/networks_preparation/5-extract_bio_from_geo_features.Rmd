@@ -9,7 +9,7 @@ library(tidyverse)
 ```{r}
 # Load the data -----------------------------------------------------------
 #--#Observation points (NEED columns "ID", "Latitude", "Longitude") #--# 
-Observations = read.csv("../../../data/networks/all/networks_metadata.csv")
+Observations = read.csv("../../data/networks/all/networks_metadata.csv")
 Observations =  filter(Observations, Latitude != "")
 Observations =  filter(Observations, Longitude != "")
 
@@ -22,9 +22,9 @@ Observation_SF = Observations %>%
 
 ```{r}
 #--#Ecoregion Polygon #--# 
-ecoregion_polygon_data_path1 = "../../../data/networks/metadata/polygon/WWF/wwf_terr_ecos.shp"
-ecoregion_polygon_data_path2 = "../../../data/networks/metadata/polygon/Ecoregions2017/Ecoregions2017.shp"
-ecoregion_polygon_data_path3 = "../../../../data/networks/metadata/polygon/WTE/wwf_terr_ecos.shp"
+ecoregion_polygon_data_path1 = "../../data/networks/metadata/polygon/WWF/wwf_terr_ecos.shp"
+ecoregion_polygon_data_path2 = "../../data/networks/metadata/polygon/Ecoregions2017/Ecoregions2017.shp"
+ecoregion_polygon_data_path3 = "../../data/networks/metadata/polygon/WTE/wwf_terr_ecos.shp"
 
 
 Ecoregion_Polygon_1 = st_read(ecoregion_polygon_data_path1)
