@@ -208,6 +208,6 @@ write_csv(final_data, "../../data/networks/all/networks_unparsed_geodata.csv")
 ```{r}
 eco_data = Ecoregion_Polygon[, -which(names(Ecoregion_Polygon) %in% c("REALM", "OBJECTID", "geometry"))]
 eco_data = eco_data %>% st_drop_geometry() %>% distinct()
-write.csv(eco_data, "../../data/networks/all/ecoregions_data.csv")
+write.csv(eco_data, "../../data/metadata/network_level/ecoregions_data.csv")
 ```
 
