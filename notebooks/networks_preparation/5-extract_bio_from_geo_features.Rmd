@@ -1,10 +1,9 @@
 
 ```{r}
-require(raster)
-require(sf)
-require(stars)
-require(tidyverse)
-require(rgdal)
+library(raster)
+library(sf)
+library(stars)
+library(tidyverse)
 ```
 
 ```{r}
@@ -207,9 +206,8 @@ write_csv(final_data, "../../data/networks/all/networks_unparsed_geodata.csv")
 ```
 
 ```{r}
-eco_data = as.data.frame(Ecoregion_Polygon)
-eco_data = eco_data[!duplicated(eco_data$ECO_ID),]
-eco_data = st_as_sf(eco_data)
-sf::st_write(eco_data, 'G:/My Drive/PhD/PlantPollinatorNetworks/plant_pollinator_networks/data/metadata/network_level/ecoregions_data.shp')
+eco_data = Ecoregion_Polygon[, -which(names(Ecoregion_Polygon) %in% c("REALM", "OBJECTID", "geometry"))]
+eco_data = eco_data %>% st_drop_geometry() %>% distinct()
+write.csv(eco_data, "../../data/metadata/network_level/ecoregions_data.csv")
 ```
 
