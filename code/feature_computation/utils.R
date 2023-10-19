@@ -469,14 +469,23 @@ simulate_network_extinction <- function(network, # columns correspond to plants 
   return(Rstats)
 }
 
-
-
-for family in os.listdir(d):
-  if os.path.exists(f"{d}{family}/chromevol/stochastic_mapping.zip"):
-    os.rename(f"{d}{family}/chromevol/stochastic_mapping.zip", f"{d}{family}/chromevol/_stochastic_mapping.zip")
-  if os.path.exists(f"{d}{family}/chromevol/simulations.zip"):
-    os.rename(f"{d}{family}/chromevol/simulations.zip", f"{d}{family}/chromevol/_simulations.zip")
-  if os.path.exists(f"{d}{family}/chromevol/ploidy.csv"):
-    os.rename(f"{d}{family}/chromevol/ploidy.csv", f"{d}{family}/chromevol/_ploidy.csv")
-  os.system(f"qsub {d}{family}/chromevol.sh")
-
+generare_null_networks <- function(web, nsimul=100) # based on null model 2 of Bascompte 2003 (https://doi.org/10.1073/pnas.1633576100)
+{
+    web[web > 0] <- 1
+	null_webs = replicate(nsimul, web, simplify = FALSE)
+	for (i in rownames(web)) {
+	  probs <- (rowSums(web)[i]/ncol(web) + colSums(web)/nrow(web))/2
+	  for (s in 1:nsimul)
+	  {
+		null_webs[[s]][i, ] <- rbinom(ncol(web), 1, probs)
+	  }
+	}
+	for (i in colnames(web)) {
+	  probs <- (rowSums(web)/ncol(web) + colSums(web)[i]/nrow(web))/2
+	  for (s in 1:nsimul)
+	  {
+		null_webs[[s]][, i] <- rbinom(nrow(web), 1, probs)
+	  }
+	}
+	return (null_webs)
+}
