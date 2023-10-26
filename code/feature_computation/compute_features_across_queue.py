@@ -133,3 +133,10 @@ if __name__ == '__main__':
 
 
 
+for p in to_make_weighted:
+    new_index = nt_to_free_indices["weighted"].pop()
+    new_p = f"/groups/itay_mayrose/halabikeren/plant_pollinator_networks/data/networks/fixed_all/weighted/{new_index}.csv"
+    assert(not os.path.exists(new_p))
+    assert(new_index not in nt_to_free_indices["weighted"])
+    old_p = p.replace("../../","/groups/itay_mayrose/halabikeren/plant_pollinator_networks/")
+    old_to_new_path[old_p] = new_p

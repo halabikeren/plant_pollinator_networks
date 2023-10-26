@@ -20,9 +20,15 @@ load_dotenv(find_dotenv())
     required=True,
 )
 @click.option(
+    "--null_method",
+    help="type of null algorithm used for simulations",
+    type=str,
+    required=True,
+)
+@click.option(
     "--null_networks_dir",
     help="directory to the networks files",
-    type=click.Path(exists=True),
+    type=click.Path(exists=False),
     required=True,
 )
 @click.option(
@@ -64,6 +70,7 @@ load_dotenv(find_dotenv())
     default="itaym",
 )
 def exec_by_network(networks_dir: str,
+                    null_method: str,
                     null_networks_dir:str,
                     script_path: str,
                     work_dir: str,
@@ -91,13 +98,18 @@ def exec_by_network(networks_dir: str,
             input_path = f"{networks_dir}{network_path}"
             network_index = os.path.basename(network_path).replace(".csv", "")
             job_ids.append(network_index)
-            null_network_dir = f"{null_networks_dir}{network_index}/"
+            null_dir = f"{null_networks_dir}{network_index}/"
             output_path = f"{output_dir}{network_path.replace('.csv', '_features.csv')}"
-            script_exec_cmd = f"Rscript --vanilla {script_path} {input_path} {null_network_dir} {output_path} FALSE"
+            if (not os.path.exists(null_dir) and "network" in script_path) or (os.path.exists(output_path) and "species" in script_path):
+                continue
+            null_output_path = output_path.replace(".csv", f"_across_null_networks_{null_method}.csv")
+            script_exec_cmd = f"Rscript --vanilla {script_path} {input_path} {null_dir} {null_method} {output_path} FALSE"
+            if "species" in script_path:
+                script_exec_cmd = f"Rscript --vanilla {script_path} {input_path} {output_path}"
             if script_path.endswith(".py"):
                 output_path = f"{output_dir}{network_path.replace('.csv', '_features/')}"
                 script_exec_cmd = f"python {script_path} --input_path={input_path} --output_dir={output_path}"
-            if not os.path.exists(output_path):
+            if not os.path.exists(null_output_path):
                 commands = [os.environ.get("CONDA_ACT_CMD", ""), f"cd {os.getcwd()}", script_exec_cmd]
                 networks_commands.append(commands)
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
-library(tidyverse)
-library(bipartite)
+require(tidyverse)
+require(bipartite)
+require(glue)
 source("utils.R")
 
 args = commandArgs(trailingOnly=TRUE)
@@ -11,8 +12,11 @@ if (length(args)<2) {
 
 input_path = args[1]
 null_dir = args[2]
-output_path = args[3]
-only_input = args[4]
+null_method = args[3]
+output_path = args[4]
+only_input = args[5]
+print(glue("input_path=", input_path))
+print(glue("output_path=", output_path))
 
 start_time = Sys.time()
 if (only_input) {
@@ -21,7 +25,8 @@ if (only_input) {
   network_features = networklevel(web=network, weighted=is_weighted)
   network_features[["modularity"]] = get_modularity(network)
 } else {
-  null_sim_features_path = str_replace(output_path, ".csv", "_across_null_networks.csv")
+  null_str = glue("_across_null_networks_", null_method, ".csv")
+  null_sim_features_path = str_replace(output_path, ".csv", null_str)
   features = get_network_features(input_path, null_sim_features_path, null_dir)
 }
 features["network"] = basename(input_path)
