@@ -1,7 +1,5 @@
-import glob
 import os.path
 import random
-import shutil
 from enum import Enum
 import pandas as pd
 import numpy as np
@@ -23,16 +21,15 @@ class Simulator:
                  classification_path: str,
                  ext_order: ExtinctionOrder = ExtinctionOrder.random,
                  rewiring_flag: bool = True,
-                 rewiring_probability: float = 0.3):
+                 rewiring_probability: float = 0):
         classification_data = pd.read_csv(classification_path)
+        ploidy_level_col = "is_polyploid_by_resolved"
         if "Plant" in classification_data.columns:
             classification_data["original_name"] = classification_data.Plant.str.lower()
         else:
             classification_data.original_name = classification_data.original_name.str.lower()
-        if "is_polyploid" not in classification_data.columns:
-            classification_data["is_polyploid"] = classification_data.conservative_is_polyploid_by_resolved
-        classification_data["is_polyploid"].fillna(-1, inplace=True)
-        self.classification_data = classification_data.set_index("original_name")["is_polyploid"].to_dict()
+        classification_data[ploidy_level_col].fillna(-1, inplace=True)
+        self.classification_data = classification_data.set_index("original_name")[ploidy_level_col].to_dict()
         self.ext_order = ext_order
         self.rewiring_flag = rewiring_flag
         self.rewiring_probability = rewiring_probability
@@ -72,8 +69,9 @@ class Simulator:
             network = network.rename(columns={"Unnamed: 0": "Plant"})
         if "Unnamed: 0" in network.columns:
             network = network.drop(["Unnamed: 0"], axis=1)
+        network.Plant = network.Plant.str.lower()
         network.set_index("Plant", inplace=True)
-        plants = network.index.tolist()
+        plants = network.index.str.lower().tolist()
         primary_extinction_order = plants
         random.shuffle(primary_extinction_order)
         polyploids = [p for p in plants if self.classification_data.get(p, -1) == 1]
@@ -96,7 +94,7 @@ class Simulator:
                     f"no species left for primary extinction, but there are somehow still {network.sum().sum()} interactions in the network {network_path}")
                 return pd.DataFrame(columns=["cascade_iteration", "extinction_type", "extinction_level",
                                              "extinct_taxon", "primary_iteration", "simulation_index"])
-            candidate = primary_extinction_order.pop()
+            candidate = primary_extinction_order.pop(0)
             cascade_out, network_copy = self.cascade(start=candidate,
                                                      network=network_copy,
                                                      primary_extinction_candidates=primary_extinction_order)
@@ -119,3 +117,12 @@ class Simulator:
                 full_extinction_data.append(extinction_data)
             full_extinction_data = pd.concat(full_extinction_data)
             full_extinction_data.to_csv(output_path)
+
+if __name__ == '__main__':
+    simulator = Simulator(classification_path="/groups/itay_mayrose/halabikeren/plant_pollinator_networks/data/ploidy_classification/plant_classification.csv",
+                          ext_order = ExtinctionOrder.diploids_first,
+                          rewiring_flag = True,
+                          rewiring_probability = 0)
+    simulator.write_simulations(network_path="/groups/itay_mayrose/halabikeren/plant_pollinator_networks/data/networks/all/weighted/470.csv",
+                                output_path = "/groups/itay_mayrose/halabikeren/plant_pollinator_networks/data/statistical_analysis/extinction_analysis/rewiring_prob_0/weighted/diploids_first/470.csv",
+                                nsim=5)
