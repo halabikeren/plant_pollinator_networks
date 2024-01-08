@@ -1686,8 +1686,8 @@ pre code {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -1695,9 +1695,16 @@ pre code {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
+  content: "";
   border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -1763,66 +1770,17 @@ pre code {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHN1cnZpdmFsKVxubGlicmFyeShzdXJ2bWluZXIpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHN1cnZpdmFsKVxubGlicmFyeShzdXJ2bWluZXIpXG5saWJyYXJ5KGNtcHJzaylcbmxpYnJhcnkodGlkeXZlcnNlKVxubGlicmFyeShjYXJldClcbmxpYnJhcnkoc3Vydml2YWwpXG5saWJyYXJ5KHN1cnZtaW5lcilcbmxpYnJhcnkobHVicmlkYXRlKVxuYGBgIn0= -->
 <pre class="r"><code>library(tidyverse)
 library(survival)
-library(survminer)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBnZ3B1YnJcblxuQXR0YWNoaW5nIHBhY2thZ2U6IOKAmGdncHVicuKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOmFwZeKAmTpcblxuICAgIHJvdGF0ZVxuXG5SZWdpc3RlcmVkIFMzIG1ldGhvZCBvdmVyd3JpdHRlbiBieSAnZGF0YS50YWJsZSc6XG4gIG1ldGhvZCAgICAgICAgICAgZnJvbVxuICBwcmludC5kYXRhLnRhYmxlICAgICBcblxuQXR0YWNoaW5nIHBhY2thZ2U6IOKAmHN1cnZtaW5lcuKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnN1cnZpdmFs4oCZOlxuXG4gICAgbXllbG9tYVxuIn0= -->
-<pre><code>Loading required package: ggpubr
-
-Attaching package: ‘ggpubr’
-
-The following object is masked from ‘package:ape’:
-
-    rotate
-
-Registered S3 method overwritten by &#39;data.table&#39;:
-  method           from
-  print.data.table     
-
-Attaching package: ‘survminer’
-
-The following object is masked from ‘package:survival’:
-
-    myeloma</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShjbXByc2spXG5saWJyYXJ5KHRpZHl2ZXJzZSlcbmxpYnJhcnkoY2FyZXQpXG5gYGAifQ== -->
-<pre class="r"><code>library(cmprsk)
+library(survminer)
+library(cmprsk)
 library(tidyverse)
-library(caret)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBsYXR0aWNlXG5cbkF0dGFjaGluZyBwYWNrYWdlOiDigJhjYXJldOKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnN1cnZpdmFs4oCZOlxuXG4gICAgY2x1c3RlclxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnB1cnJy4oCZOlxuXG4gICAgbGlmdFxuIn0= -->
-<pre><code>Loading required package: lattice
-
-Attaching package: ‘caret’
-
-The following object is masked from ‘package:survival’:
-
-    cluster
-
-The following object is masked from ‘package:purrr’:
-
-    lift</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzdXJ2aXZhbClcbmxpYnJhcnkoc3Vydm1pbmVyKVxubGlicmFyeShsdWJyaWRhdGUpXG5gYGAifQ== -->
-<pre class="r"><code>library(survival)
+library(caret)
+library(survival)
 library(survminer)
 library(lubridate)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiB0aW1lY2hhbmdlXG5cbkF0dGFjaGluZyBwYWNrYWdlOiDigJhsdWJyaWRhdGXigJlcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOkxhcGxhY2VzRGVtb27igJk6XG5cbiAgICBkc3QsIGludGVydmFsXG5cblRoZSBmb2xsb3dpbmcgb2JqZWN0cyBhcmUgbWFza2VkIGZyb20g4oCYcGFja2FnZTpiYXNl4oCZOlxuXG4gICAgZGF0ZSwgaW50ZXJzZWN0LCBzZXRkaWZmLCB1bmlvblxuIn0= -->
-<pre><code>Loading required package: timechange
-
-Attaching package: ‘lubridate’
-
-The following objects are masked from ‘package:LaplacesDemon’:
-
-    dst, interval
-
-The following objects are masked from ‘package:base’:
-
-    date, intersect, setdiff, union</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>This is an <a href="http://rmarkdown.rstudio.com">R Markdown</a>
@@ -1834,9 +1792,8 @@ the chunk or by placing your cursor inside it and pressing
 <p>Network analysis data</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYmluYXJ5X25ldHdvcmtzX2RhdGEgPSByZWFkX2NzdignRzovTXkgRHJpdmUvUGhEL1BsYW50UG9sbGluYXRvck5ldHdvcmtzL2ZlYXR1cmVzL25ldHdvcmsvYmluYXJ5L2ZlYXR1cmVzX3dpdGhfY2xhc3NpZmljYXRpb24uY3N2JykgJT4lIGZpbHRlciAoIW5ldHdvcmsgJWluJSBjKCc0Ni5jc3YnLCc0OC5jc3YnLCc1MC5jc3YnLCc1MS5jc3YnLCc1NC5jc3YnLCc1NS5jc3YnLCc1Ni5jc3YnLCc1Ny5jc3YnLCc2MS5jc3YnLCc2Mi5jc3YnLCc2My5jc3YnLCc2NC5jc3YnLCc2Ni5jc3YnLCc3MC5jc3YnLCc3MS5jc3YnLCc3Mi5jc3YnLCc3My5jc3YnKSApXG53ZWlnaHRlZF9uZXR3b3Jrc19kYXRhID0gcmVhZF9jc3YoJ0c6L015IERyaXZlL1BoRC9QbGFudFBvbGxpbmF0b3JOZXR3b3Jrcy9mZWF0dXJlcy9uZXR3b3JrL3dlaWdodGVkL2ZlYXR1cmVzX3dpdGhfY2xhc3NpZmljYXRpb24uY3N2JykgJT4lIGZpbHRlciAoIW5ldHdvcmsgJWluJSBjKCcxMDYuY3N2JywnMTA3LmNzdicsJzE1Ni5jc3YnLCcxNTcuY3N2JywnMTU4LmNzdicsJzE1OS5jc3YnKSlcbmJpbmFyaXplZF9uZXR3b3Jrc19kYXRhID0gcmVhZF9jc3YoJ0c6L015IERyaXZlL1BoRC9QbGFudFBvbGxpbmF0b3JOZXR3b3Jrcy9mZWF0dXJlcy9uZXR3b3JrL2JpbmFyaXplZF93ZWlnaHRlZC9mZWF0dXJlc193aXRoX2NsYXNzaWZpY2F0aW9uLmNzdicpICAlPiUgZmlsdGVyICghbmV0d29yayAlaW4lIGMoJzEwNi5jc3YnLCcxMDcuY3N2JywnMTU2LmNzdicsJzE1Ny5jc3YnLCcxNTguY3N2JywnMTU5LmNzdicpKVxuXG5uYW1lcyhiaW5hcnlfbmV0d29ya3NfZGF0YSk8LW1ha2UubmFtZXMobmFtZXMoYmluYXJ5X25ldHdvcmtzX2RhdGEpLHVuaXF1ZSA9IFRSVUUpXG5uYW1lcyh3ZWlnaHRlZF9uZXR3b3Jrc19kYXRhICk8LW1ha2UubmFtZXMobmFtZXMod2VpZ2h0ZWRfbmV0d29ya3NfZGF0YSApLHVuaXF1ZSA9IFRSVUUpXG5uYW1lcyhiaW5hcml6ZWRfbmV0d29ya3NfZGF0YSk8LW1ha2UubmFtZXMobmFtZXMoYmluYXJpemVkX25ldHdvcmtzX2RhdGEpLHVuaXF1ZSA9IFRSVUUpXG5cblxuYGBgXG5gYGAifQ== -->
-<pre class="r"><code>```r
-binary_networks_data = read_csv(&#39;G:/My Drive/PhD/PlantPollinatorNetworks/features/network/binary/features_with_classification.csv&#39;) %&gt;% filter (!network %in% c(&#39;46.csv&#39;,&#39;48.csv&#39;,&#39;50.csv&#39;,&#39;51.csv&#39;,&#39;54.csv&#39;,&#39;55.csv&#39;,&#39;56.csv&#39;,&#39;57.csv&#39;,&#39;61.csv&#39;,&#39;62.csv&#39;,&#39;63.csv&#39;,&#39;64.csv&#39;,&#39;66.csv&#39;,&#39;70.csv&#39;,&#39;71.csv&#39;,&#39;72.csv&#39;,&#39;73.csv&#39;) )
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmluYXJ5X25ldHdvcmtzX2RhdGEgPSByZWFkX2NzdignRzovTXkgRHJpdmUvUGhEL1BsYW50UG9sbGluYXRvck5ldHdvcmtzL2ZlYXR1cmVzL25ldHdvcmsvYmluYXJ5L2ZlYXR1cmVzX3dpdGhfY2xhc3NpZmljYXRpb24uY3N2JykgJT4lIGZpbHRlciAoIW5ldHdvcmsgJWluJSBjKCc0Ni5jc3YnLCc0OC5jc3YnLCc1MC5jc3YnLCc1MS5jc3YnLCc1NC5jc3YnLCc1NS5jc3YnLCc1Ni5jc3YnLCc1Ny5jc3YnLCc2MS5jc3YnLCc2Mi5jc3YnLCc2My5jc3YnLCc2NC5jc3YnLCc2Ni5jc3YnLCc3MC5jc3YnLCc3MS5jc3YnLCc3Mi5jc3YnLCc3My5jc3YnKSApXG53ZWlnaHRlZF9uZXR3b3Jrc19kYXRhID0gcmVhZF9jc3YoJ0c6L015IERyaXZlL1BoRC9QbGFudFBvbGxpbmF0b3JOZXR3b3Jrcy9mZWF0dXJlcy9uZXR3b3JrL3dlaWdodGVkL2ZlYXR1cmVzX3dpdGhfY2xhc3NpZmljYXRpb24uY3N2JykgJT4lIGZpbHRlciAoIW5ldHdvcmsgJWluJSBjKCcxMDYuY3N2JywnMTA3LmNzdicsJzE1Ni5jc3YnLCcxNTcuY3N2JywnMTU4LmNzdicsJzE1OS5jc3YnKSlcbmJpbmFyaXplZF9uZXR3b3Jrc19kYXRhID0gcmVhZF9jc3YoJ0c6L015IERyaXZlL1BoRC9QbGFudFBvbGxpbmF0b3JOZXR3b3Jrcy9mZWF0dXJlcy9uZXR3b3JrL2JpbmFyaXplZF93ZWlnaHRlZC9mZWF0dXJlc193aXRoX2NsYXNzaWZpY2F0aW9uLmNzdicpICAlPiUgZmlsdGVyICghbmV0d29yayAlaW4lIGMoJzEwNi5jc3YnLCcxMDcuY3N2JywnMTU2LmNzdicsJzE1Ny5jc3YnLCcxNTguY3N2JywnMTU5LmNzdicpKVxuXG5uYW1lcyhiaW5hcnlfbmV0d29ya3NfZGF0YSk8LW1ha2UubmFtZXMobmFtZXMoYmluYXJ5X25ldHdvcmtzX2RhdGEpLHVuaXF1ZSA9IFRSVUUpXG5uYW1lcyh3ZWlnaHRlZF9uZXR3b3Jrc19kYXRhICk8LW1ha2UubmFtZXMobmFtZXMod2VpZ2h0ZWRfbmV0d29ya3NfZGF0YSApLHVuaXF1ZSA9IFRSVUUpXG5uYW1lcyhiaW5hcml6ZWRfbmV0d29ya3NfZGF0YSk8LW1ha2UubmFtZXMobmFtZXMoYmluYXJpemVkX25ldHdvcmtzX2RhdGEpLHVuaXF1ZSA9IFRSVUUpXG5cblxuYGBgIn0= -->
+<pre class="r"><code>binary_networks_data = read_csv(&#39;G:/My Drive/PhD/PlantPollinatorNetworks/features/network/binary/features_with_classification.csv&#39;) %&gt;% filter (!network %in% c(&#39;46.csv&#39;,&#39;48.csv&#39;,&#39;50.csv&#39;,&#39;51.csv&#39;,&#39;54.csv&#39;,&#39;55.csv&#39;,&#39;56.csv&#39;,&#39;57.csv&#39;,&#39;61.csv&#39;,&#39;62.csv&#39;,&#39;63.csv&#39;,&#39;64.csv&#39;,&#39;66.csv&#39;,&#39;70.csv&#39;,&#39;71.csv&#39;,&#39;72.csv&#39;,&#39;73.csv&#39;) )
 weighted_networks_data = read_csv(&#39;G:/My Drive/PhD/PlantPollinatorNetworks/features/network/weighted/features_with_classification.csv&#39;) %&gt;% filter (!network %in% c(&#39;106.csv&#39;,&#39;107.csv&#39;,&#39;156.csv&#39;,&#39;157.csv&#39;,&#39;158.csv&#39;,&#39;159.csv&#39;))
 binarized_networks_data = read_csv(&#39;G:/My Drive/PhD/PlantPollinatorNetworks/features/network/binarized_weighted/features_with_classification.csv&#39;)  %&gt;% filter (!network %in% c(&#39;106.csv&#39;,&#39;107.csv&#39;,&#39;156.csv&#39;,&#39;157.csv&#39;,&#39;158.csv&#39;,&#39;159.csv&#39;))
 
@@ -1844,31 +1801,14 @@ names(binary_networks_data)&lt;-make.names(names(binary_networks_data),unique = 
 names(weighted_networks_data )&lt;-make.names(names(weighted_networks_data ),unique = TRUE)
 names(binarized_networks_data)&lt;-make.names(names(binarized_networks_data),unique = TRUE)
 </code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-
-Generating GLM data
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxud2VpZ2h0ZWRfbmV0d29ya19nbG1fZGF0YTwtICB3ZWlnaHRlZF9uZXR3b3Jrc19kYXRhICU+JSBzZWxlY3QobmV0d29yayxoaWdoZXN0X3BvbGxpbmF0b3JfcmFuayxudW1fcG9sbGluYXRvcl90YXhvbm9taWNfcmFua3MsY29ubmVjdGFuY2UsTk9ERixIMixleHRpbmN0aW9uLnNsb3BlLkxMLHJvYnVzdG5lc3MuTEwscm9idXN0bmVzc19tZWFuLCBkZWx0YV90cmFuc2Zvcm1lZF8udnVsbmVyYWJpbGl0eS5MTCwgdnVsbmVyYWJpbGl0eS5MTCwgZGVsdGFfdHJhbnNmb3JtZWRfLlNoYW5ub24uZGl2ZXJzaXR5LGRlbHRhX3RyYW5zZm9ybWVkXy50b2dldGhlcm5lc3MuTEwsIGlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMsaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYywgaGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspIFxuXG5iaW5hcnlfbmV0d29ya19nbG1fZGF0YTwtICBiaW5hcnlfbmV0d29ya3NfZGF0YSAlPiUgc2VsZWN0KG5ldHdvcmssaGlnaGVzdF9wb2xsaW5hdG9yX3JhbmssbnVtX3BvbGxpbmF0b3JfdGF4b25vbWljX3JhbmtzLGNvbm5lY3RhbmNlLE5PREYsSDIsZXh0aW5jdGlvbi5zbG9wZS5MTCxyb2J1c3RuZXNzLkxMLHJvYnVzdG5lc3NfbWVhbiwgZGVsdGFfdHJhbnNmb3JtZWRfLnZ1bG5lcmFiaWxpdHkuTEwsIHZ1bG5lcmFiaWxpdHkuTEwsZGVsdGFfdHJhbnNmb3JtZWRfLlNoYW5ub24uZGl2ZXJzaXR5LGRlbHRhX3RyYW5zZm9ybWVkXy50b2dldGhlcm5lc3MuTEwsaXNfcG9seXBsb2lkX3BvbHlfZnJhYyxpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjLCBoaWdoZXN0X3BvbGxpbmF0b3JfcmFuaykgXG5cbmJpbmFyaXplZF9uZXR3b3JrX2dsbV9kYXRhPC0gIGJpbmFyaXplZF9uZXR3b3Jrc19kYXRhICU+JSBzZWxlY3QobmV0d29yayxoaWdoZXN0X3BvbGxpbmF0b3JfcmFuayxudW1fcG9sbGluYXRvcl90YXhvbm9taWNfcmFua3MsY29ubmVjdGFuY2UsTk9ERixIMixleHRpbmN0aW9uLnNsb3BlLkxMLHJvYnVzdG5lc3MuTEwscm9idXN0bmVzc19tZWFuLCBkZWx0YV90cmFuc2Zvcm1lZF8udnVsbmVyYWJpbGl0eS5MTCwgdnVsbmVyYWJpbGl0eS5MTCxkZWx0YV90cmFuc2Zvcm1lZF8uU2hhbm5vbi5kaXZlcnNpdHksZGVsdGFfdHJhbnNmb3JtZWRfLnRvZ2V0aGVybmVzcy5MTCxpc19wb2x5cGxvaWRfcG9seV9mcmFjLGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rKSBcblxuXG5hbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGE8LSB1bmlvbihiaW5hcnlfbmV0d29ya19nbG1fZGF0YSwgYmluYXJpemVkX25ldHdvcmtfZ2xtX2RhdGEpXG5cbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-weighted_network_glm_data&lt;-  weighted_networks_data %&gt;% select(network,highest_pollinator_rank,num_pollinator_taxonomic_ranks,connectance,NODF,H2,extinction.slope.LL,robustness.LL,robustness_mean, delta_transformed_.vulnerability.LL, vulnerability.LL, delta_transformed_.Shannon.diversity,delta_transformed_.togetherness.LL, is_polyploid_poly_frac,is_polyploid_missing_frac, highest_pollinator_rank) 
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Generating GLM data</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud2VpZ2h0ZWRfbmV0d29ya19nbG1fZGF0YTwtICB3ZWlnaHRlZF9uZXR3b3Jrc19kYXRhICU+JSBzZWxlY3QobmV0d29yayxoaWdoZXN0X3BvbGxpbmF0b3JfcmFuayxudW1fcG9sbGluYXRvcl90YXhvbm9taWNfcmFua3MsY29ubmVjdGFuY2UsTk9ERixIMixleHRpbmN0aW9uLnNsb3BlLkxMLHJvYnVzdG5lc3MuTEwscm9idXN0bmVzc19tZWFuLCBkZWx0YV90cmFuc2Zvcm1lZF8udnVsbmVyYWJpbGl0eS5MTCwgdnVsbmVyYWJpbGl0eS5MTCwgZGVsdGFfdHJhbnNmb3JtZWRfLlNoYW5ub24uZGl2ZXJzaXR5LGRlbHRhX3RyYW5zZm9ybWVkXy50b2dldGhlcm5lc3MuTEwsIGlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMsaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYywgaGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspIFxuXG5iaW5hcnlfbmV0d29ya19nbG1fZGF0YTwtICBiaW5hcnlfbmV0d29ya3NfZGF0YSAlPiUgc2VsZWN0KG5ldHdvcmssaGlnaGVzdF9wb2xsaW5hdG9yX3JhbmssbnVtX3BvbGxpbmF0b3JfdGF4b25vbWljX3JhbmtzLGNvbm5lY3RhbmNlLE5PREYsSDIsZXh0aW5jdGlvbi5zbG9wZS5MTCxyb2J1c3RuZXNzLkxMLHJvYnVzdG5lc3NfbWVhbiwgZGVsdGFfdHJhbnNmb3JtZWRfLnZ1bG5lcmFiaWxpdHkuTEwsIHZ1bG5lcmFiaWxpdHkuTEwsZGVsdGFfdHJhbnNmb3JtZWRfLlNoYW5ub24uZGl2ZXJzaXR5LGRlbHRhX3RyYW5zZm9ybWVkXy50b2dldGhlcm5lc3MuTEwsaXNfcG9seXBsb2lkX3BvbHlfZnJhYyxpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjLCBoaWdoZXN0X3BvbGxpbmF0b3JfcmFuaykgXG5cbmJpbmFyaXplZF9uZXR3b3JrX2dsbV9kYXRhPC0gIGJpbmFyaXplZF9uZXR3b3Jrc19kYXRhICU+JSBzZWxlY3QobmV0d29yayxoaWdoZXN0X3BvbGxpbmF0b3JfcmFuayxudW1fcG9sbGluYXRvcl90YXhvbm9taWNfcmFua3MsY29ubmVjdGFuY2UsTk9ERixIMixleHRpbmN0aW9uLnNsb3BlLkxMLHJvYnVzdG5lc3MuTEwscm9idXN0bmVzc19tZWFuLCBkZWx0YV90cmFuc2Zvcm1lZF8udnVsbmVyYWJpbGl0eS5MTCwgdnVsbmVyYWJpbGl0eS5MTCxkZWx0YV90cmFuc2Zvcm1lZF8uU2hhbm5vbi5kaXZlcnNpdHksZGVsdGFfdHJhbnNmb3JtZWRfLnRvZ2V0aGVybmVzcy5MTCxpc19wb2x5cGxvaWRfcG9seV9mcmFjLGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rKSBcblxuXG5hbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGE8LSB1bmlvbihiaW5hcnlfbmV0d29ya19nbG1fZGF0YSwgYmluYXJpemVkX25ldHdvcmtfZ2xtX2RhdGEpXG5cbmBgYCJ9 -->
+<pre class="r"><code>weighted_network_glm_data&lt;-  weighted_networks_data %&gt;% select(network,highest_pollinator_rank,num_pollinator_taxonomic_ranks,connectance,NODF,H2,extinction.slope.LL,robustness.LL,robustness_mean, delta_transformed_.vulnerability.LL, vulnerability.LL, delta_transformed_.Shannon.diversity,delta_transformed_.togetherness.LL, is_polyploid_poly_frac,is_polyploid_missing_frac, highest_pollinator_rank) 
 
 binary_network_glm_data&lt;-  binary_networks_data %&gt;% select(network,highest_pollinator_rank,num_pollinator_taxonomic_ranks,connectance,NODF,H2,extinction.slope.LL,robustness.LL,robustness_mean, delta_transformed_.vulnerability.LL, vulnerability.LL,delta_transformed_.Shannon.diversity,delta_transformed_.togetherness.LL,is_polyploid_poly_frac,is_polyploid_missing_frac, highest_pollinator_rank) 
 
@@ -1877,30 +1817,14 @@ binarized_network_glm_data&lt;-  binarized_networks_data %&gt;% select(network,h
 
 all_binary_network_glm_data&lt;- union(binary_network_glm_data, binarized_network_glm_data)
 </code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-Basic visualization
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PWNvbm5lY3RhbmNlKSkrIGdlb21fcG9pbnQoKVxuYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PU5PREYpKSsgZ2VvbV9wb2ludCgpXG5hbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGEgJT4lIGdncGxvdChhZXMoeCA9aXNfcG9seXBsb2lkX3BvbHlfZnJhYyAsIHk9SDIpKSsgZ2VvbV9wb2ludCgpXG5hbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGEgJT4lIGdncGxvdChhZXMoeCA9aXNfcG9seXBsb2lkX3BvbHlfZnJhYyAsIHk9ZXh0aW5jdGlvbi5zbG9wZS5MTCkpKyBnZW9tX3BvaW50KClcbmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1yb2J1c3RuZXNzLkxMKSkrIGdlb21fcG9pbnQoKVxuYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PXJvYnVzdG5lc3NfbWVhbikpKyBnZW9tX3BvaW50KClcbmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT12dWxuZXJhYmlsaXR5LkxMKSkrIGdlb21fcG9pbnQoKVxuYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PWRlbHRhX3RyYW5zZm9ybWVkXy52dWxuZXJhYmlsaXR5LkxMKSkrIGdlb21fcG9pbnQoKVxuYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PWRlbHRhX3RyYW5zZm9ybWVkXy5TaGFubm9uLmRpdmVyc2l0eSkpKyBnZW9tX3BvaW50KClcbmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1kZWx0YV90cmFuc2Zvcm1lZF8udG9nZXRoZXJuZXNzLkxMKSkrIGdlb21fcG9pbnQoKVxuXG5gYGBcbmBgYCJ9 --&gt;
-
-```r
-```r
-all_binary_network_glm_data %&gt;% ggplot(aes(x =is_polyploid_poly_frac , y=connectance))+ geom_point()
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Basic visualization</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PWNvbm5lY3RhbmNlKSkrIGdlb21fcG9pbnQoKVxuYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PU5PREYpKSsgZ2VvbV9wb2ludCgpXG5hbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGEgJT4lIGdncGxvdChhZXMoeCA9aXNfcG9seXBsb2lkX3BvbHlfZnJhYyAsIHk9SDIpKSsgZ2VvbV9wb2ludCgpXG5hbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGEgJT4lIGdncGxvdChhZXMoeCA9aXNfcG9seXBsb2lkX3BvbHlfZnJhYyAsIHk9ZXh0aW5jdGlvbi5zbG9wZS5MTCkpKyBnZW9tX3BvaW50KClcbmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1yb2J1c3RuZXNzLkxMKSkrIGdlb21fcG9pbnQoKVxuYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PXJvYnVzdG5lc3NfbWVhbikpKyBnZW9tX3BvaW50KClcbmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT12dWxuZXJhYmlsaXR5LkxMKSkrIGdlb21fcG9pbnQoKVxuYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PWRlbHRhX3RyYW5zZm9ybWVkXy52dWxuZXJhYmlsaXR5LkxMKSkrIGdlb21fcG9pbnQoKVxuYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PWRlbHRhX3RyYW5zZm9ybWVkXy5TaGFubm9uLmRpdmVyc2l0eSkpKyBnZW9tX3BvaW50KClcbmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1kZWx0YV90cmFuc2Zvcm1lZF8udG9nZXRoZXJuZXNzLkxMKSkrIGdlb21fcG9pbnQoKVxuXG5gYGAifQ== -->
+<pre class="r"><code>all_binary_network_glm_data %&gt;% ggplot(aes(x =is_polyploid_poly_frac , y=connectance))+ geom_point()
 all_binary_network_glm_data %&gt;% ggplot(aes(x =is_polyploid_poly_frac , y=NODF))+ geom_point()
 all_binary_network_glm_data %&gt;% ggplot(aes(x =is_polyploid_poly_frac , y=H2))+ geom_point()
 all_binary_network_glm_data %&gt;% ggplot(aes(x =is_polyploid_poly_frac , y=extinction.slope.LL))+ geom_point()
@@ -1911,291 +1835,258 @@ all_binary_network_glm_data %&gt;% ggplot(aes(x =is_polyploid_poly_frac , y=delt
 all_binary_network_glm_data %&gt;% ggplot(aes(x =is_polyploid_poly_frac , y=delta_transformed_.Shannon.diversity))+ geom_point()
 all_binary_network_glm_data %&gt;% ggplot(aes(x =is_polyploid_poly_frac , y=delta_transformed_.togetherness.LL))+ geom_point()
 </code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuI3dlaWdodGVkXG5saWJyYXJ5KGxtZTQpXG5saWJyYXJ5KGxtZXJUZXN0KVxuXG5hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbDwtIGFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAgICU+JSByZW1vdmVfbWlzc2luZygpICMlPiUgZmlsdGVyIChwY3RfbWlzc2luZz4wLjYsIHBjdF9wb2xpPjAsIHBjdF9wb2xpPDEpXG5gYGBcbmBgYCJ9 --&gt;
-
-```r
-```r
-#weighted
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3dlaWdodGVkXG5saWJyYXJ5KGxtZTQpXG5saWJyYXJ5KGxtZXJUZXN0KVxuXG5hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbDwtIGFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAgICU+JSByZW1vdmVfbWlzc2luZygpICMlPiUgZmlsdGVyIChwY3RfbWlzc2luZz4wLjYsIHBjdF9wb2xpPjAsIHBjdF9wb2xpPDEpXG5gYGAifQ== -->
+<pre class="r"><code>#weighted
 library(lme4)
 library(lmerTest)
 
 all_network_binary_glm_data_no_null&lt;- all_binary_network_glm_data   %&gt;% remove_missing() #%&gt;% filter (pct_missing&gt;0.6, pct_poli&gt;0, pct_poli&lt;1)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogUmVtb3ZlZCAxNDcgcm93cyBjb250YWluaW5nIG1pc3NpbmcgdmFsdWVzLlxuIn0= --&gt;
-</code></pre>
-<p>Warning: Removed 147 rows containing missing values.</p>
-<pre><code>
-
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubWl4ZWQxID0gbG1lcihjb25uZWN0YW5jZSB+aXNfcG9seXBsb2lkX3BvbHlfZnJhYysoMXxuZXR3b3JrKSsoMXxpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjKSwgZGF0YSA9YWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGwpXG5wcmludChzdW1tYXJ5KG1peGVkMSkpXG5gYGBcbmBgYCJ9 --&gt;
-
-```r
-```r
-mixed1 = lmer(connectance ~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogUmVtb3ZlZCAxNDcgcm93cyBjb250YWluaW5nIG1pc3NpbmcgdmFsdWVzLlxuIn0= -->
+<pre><code>Warning: Removed 147 rows containing missing values.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWl4ZWQxID0gbG1lcihjb25uZWN0YW5jZSB+aXNfcG9seXBsb2lkX3BvbHlfZnJhYysoMXxuZXR3b3JrKSsoMXxpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjKSwgZGF0YSA9YWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGwpXG5wcmludChzdW1tYXJ5KG1peGVkMSkpXG5gYGAifQ== -->
+<pre class="r"><code>mixed1 = lmer(connectance ~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
 print(summary(mixed1))</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IGNvbm5lY3RhbmNlIH4gaXNfcG9seXBsb2lkX3BvbHlfZnJhYyArICgxIHwgbmV0d29yaykgKyAoMSB8IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpXG4gICBEYXRhOiBhbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbFxuXG5SRU1MIGNyaXRlcmlvbiBhdCBjb252ZXJnZW5jZTogLTgxNS41XG5cblNjYWxlZCByZXNpZHVhbHM6IFxuICAgICBNaW4gICAgICAgMVEgICBNZWRpYW4gICAgICAgM1EgICAgICBNYXggXG4tMS43MTY3MCAtMC4zNjgxNyAtMC4wODQ3NyAgMC4zMTczMyAgMi45MzYzOCBcblxuUmFuZG9tIGVmZmVjdHM6XG4gR3JvdXBzICAgICAgICAgICAgICAgICAgICBOYW1lICAgICAgICBWYXJpYW5jZSBTdGQuRGV2LlxuIG5ldHdvcmsgICAgICAgICAgICAgICAgICAgKEludGVyY2VwdCkgMC4wMDUyMzYgMC4wNzIzNiBcbiBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjIChJbnRlcmNlcHQpIDAuMDAzMDczIDAuMDU1NDMgXG4gUmVzaWR1YWwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLjAwNDIxOSAwLjA2NDk1IFxuTnVtYmVyIG9mIG9iczogNTAwLCBncm91cHM6ICBuZXR3b3JrLCA0OTg7IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIDEyOVxuXG5GaXhlZCBlZmZlY3RzOlxuICAgICAgICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciAgICAgICAgZGYgdCB2YWx1ZSBQcig+fHR8KSAgICBcbihJbnRlcmNlcHQpICAgICAgICAgICAgMS44NDRlLTAxICAxLjEwOGUtMDIgMy41ODVlKzAyICAxNi42NDIgICA8MmUtMTYgKioqXG5pc19wb2x5cGxvaWRfcG9seV9mcmFjIDQuOTg2ZS0wMyAgMS43NDVlLTAyIDQuODc4ZSswMiAgIDAuMjg2ICAgIDAuNzc1ICAgIFxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbkNvcnJlbGF0aW9uIG9mIEZpeGVkIEVmZmVjdHM6XG4gICAgICAgICAgICAoSW50cilcbmlzX3BseXBsZF9fIC0wLjc0MFxuIn0= -->
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [&#39;lmerModLmerTest&#39;]
+Formula: connectance ~ is_polyploid_poly_frac + (1 | network) + (1 | is_polyploid_missing_frac)
+   Data: all_network_binary_glm_data_no_null
 
-&lt;!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IGNvbm5lY3RhbmNlIH4gaXNfcG9seXBsb2lkX3BvbHlfZnJhYyArICgxIHwgbmV0d29yaykgKyAoMSB8IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpXG4gICBEYXRhOiBhbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbFxuXG5SRU1MIGNyaXRlcmlvbiBhdCBjb252ZXJnZW5jZTogLTgxNS41XG5cblNjYWxlZCByZXNpZHVhbHM6IFxuICAgICBNaW4gICAgICAgMVEgICBNZWRpYW4gICAgICAgM1EgICAgICBNYXggXG4tMS43MTY3MCAtMC4zNjgxNyAtMC4wODQ3NyAgMC4zMTczMyAgMi45MzYzOCBcblxuUmFuZG9tIGVmZmVjdHM6XG4gR3JvdXBzICAgICAgICAgICAgICAgICAgICBOYW1lICAgICAgICBWYXJpYW5jZSBTdGQuRGV2LlxuIG5ldHdvcmsgICAgICAgICAgICAgICAgICAgKEludGVyY2VwdCkgMC4wMDUyMzYgMC4wNzIzNiBcbiBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjIChJbnRlcmNlcHQpIDAuMDAzMDczIDAuMDU1NDMgXG4gUmVzaWR1YWwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLjAwNDIxOSAwLjA2NDk1IFxuTnVtYmVyIG9mIG9iczogNTAwLCBncm91cHM6ICBuZXR3b3JrLCA0OTg7IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIDEyOVxuXG5GaXhlZCBlZmZlY3RzOlxuICAgICAgICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciAgICAgICAgZGYgdCB2YWx1ZSBQcig+fHR8KSAgICBcbihJbnRlcmNlcHQpICAgICAgICAgICAgMS44NDRlLTAxICAxLjEwOGUtMDIgMy41ODVlKzAyICAxNi42NDIgICA8MmUtMTYgKioqXG5pc19wb2x5cGxvaWRfcG9seV9mcmFjIDQuOTg2ZS0wMyAgMS43NDVlLTAyIDQuODc4ZSswMiAgIDAuMjg2ICAgIDAuNzc1ICAgIFxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbkNvcnJlbGF0aW9uIG9mIEZpeGVkIEVmZmVjdHM6XG4gICAgICAgICAgICAoSW50cilcbmlzX3BseXBsZF9fIC0wLjc0MFxuIn0= --&gt;
-</code></pre>
-<p>Linear mixed model fit by REML. t-tests use Satterthwaite’s method
-[‘lmerModLmerTest’] Formula: connectance ~ is_polyploid_poly_frac + (1 |
-network) + (1 | is_polyploid_missing_frac) Data:
-all_network_binary_glm_data_no_null</p>
-<p>REML criterion at convergence: -815.5</p>
-<p>Scaled residuals: Min 1Q Median 3Q Max -1.71670 -0.36817 -0.08477
-0.31733 2.93638</p>
-<p>Random effects: Groups Name Variance Std.Dev. network (Intercept)
-0.005236 0.07236 is_polyploid_missing_frac (Intercept) 0.003073 0.05543
-Residual 0.004219 0.06495 Number of obs: 500, groups: network, 498;
-is_polyploid_missing_frac, 129</p>
-<p>Fixed effects: Estimate Std. Error df t value Pr(&gt;|t|)<br />
-(Intercept) 1.844e-01 1.108e-02 3.585e+02 16.642 &lt;2e-16 ***
-is_polyploid_poly_frac 4.986e-03 1.745e-02 4.878e+02 0.286 0.775<br />
-— Signif. codes: 0 ‘<em><strong>’ 0.001 ‘</strong>’ 0.01 ‘</em>’ 0.05
-‘.’ 0.1 ‘ ’ 1</p>
-<p>Correlation of Fixed Effects: (Intr) is_plypld__ -0.740</p>
-<pre><code>
+REML criterion at convergence: -815.5
 
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-1.71670 -0.36817 -0.08477  0.31733  2.93638 
 
-&lt;!-- rnb-output-end --&gt;
+Random effects:
+ Groups                    Name        Variance Std.Dev.
+ network                   (Intercept) 0.005236 0.07236 
+ is_polyploid_missing_frac (Intercept) 0.003073 0.05543 
+ Residual                              0.004219 0.06495 
+Number of obs: 500, groups:  network, 498; is_polyploid_missing_frac, 129
 
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubWl4ZWQyID0gbG1lcihleHRpbmN0aW9uLnNsb3BlLkxMIH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfG5ldHdvcmspKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbClcbnByaW50KHN1bW1hcnkobWl4ZWQyKSlcbmBgYFxuYGBgIn0= --&gt;
+Fixed effects:
+                        Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)            1.844e-01  1.108e-02 3.585e+02  16.642   &lt;2e-16 ***
+is_polyploid_poly_frac 4.986e-03  1.745e-02 4.878e+02   0.286    0.775    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-```r
-```r
-mixed2 = lmer(extinction.slope.LL ~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
+Correlation of Fixed Effects:
+            (Intr)
+is_plypld__ -0.740</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWl4ZWQyID0gbG1lcihleHRpbmN0aW9uLnNsb3BlLkxMIH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfG5ldHdvcmspKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbClcbnByaW50KHN1bW1hcnkobWl4ZWQyKSlcbmBgYCJ9 -->
+<pre class="r"><code>mixed2 = lmer(extinction.slope.LL ~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
 print(summary(mixed2))</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IGV4dGluY3Rpb24uc2xvcGUuTEwgfiBpc19wb2x5cGxvaWRfcG9seV9mcmFjICsgKDEgfCBuZXR3b3JrKSArICAgICAgKDEgfCBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjKVxuICAgRGF0YTogYWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGxcblxuUkVNTCBjcml0ZXJpb24gYXQgY29udmVyZ2VuY2U6IDEyNTUuM1xuXG5TY2FsZWQgcmVzaWR1YWxzOiBcbiAgICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4IFxuLTAuOTU5NDQgLTAuMDI5NDkgLTAuMDA4MTcgIDAuMDE3NzYgIDAuOTgzMDQgXG5cblJhbmRvbSBlZmZlY3RzOlxuIEdyb3VwcyAgICAgICAgICAgICAgICAgICAgTmFtZSAgICAgICAgVmFyaWFuY2UgU3RkLkRldi5cbiBuZXR3b3JrICAgICAgICAgICAgICAgICAgIChJbnRlcmNlcHQpIDAuMzc4NDM1IDAuNjE1MTcgXG4gaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYyAoSW50ZXJjZXB0KSAxLjgyODAxOCAxLjM1MjA0IFxuIFJlc2lkdWFsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMC4wMDMzMTEgMC4wNTc1NCBcbk51bWJlciBvZiBvYnM6IDUwMCwgZ3JvdXBzOiAgbmV0d29yaywgNDk4OyBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjLCAxMjlcblxuRml4ZWQgZWZmZWN0czpcbiAgICAgICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciAgICAgICBkZiB0IHZhbHVlIFByKD58dHwpICAgIFxuKEludGVyY2VwdCkgICAgICAgICAgICAgIDIuMTk5MCAgICAgMC4xMzc0IDE1My4wODUyICAgMTYuMDAgIDwgMmUtMTYgKioqXG5pc19wb2x5cGxvaWRfcG9seV9mcmFjICAtMC40Mjc0ICAgICAwLjEyMDcgMzc4LjA2NjIgICAtMy41NCAwLjAwMDQ1MSAqKipcbi0tLVxuU2lnbmlmLiBjb2RlczogIDAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuXG5Db3JyZWxhdGlvbiBvZiBGaXhlZCBFZmZlY3RzOlxuICAgICAgICAgICAgKEludHIpXG5pc19wbHlwbGRfXyAtMC4zOThcbiJ9 -->
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [&#39;lmerModLmerTest&#39;]
+Formula: extinction.slope.LL ~ is_polyploid_poly_frac + (1 | network) +      (1 | is_polyploid_missing_frac)
+   Data: all_network_binary_glm_data_no_null
 
-&lt;!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IGV4dGluY3Rpb24uc2xvcGUuTEwgfiBpc19wb2x5cGxvaWRfcG9seV9mcmFjICsgKDEgfCBuZXR3b3JrKSArICAgICAgKDEgfCBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjKVxuICAgRGF0YTogYWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGxcblxuUkVNTCBjcml0ZXJpb24gYXQgY29udmVyZ2VuY2U6IDEyNTUuM1xuXG5TY2FsZWQgcmVzaWR1YWxzOiBcbiAgICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4IFxuLTAuOTU5NDQgLTAuMDI5NDkgLTAuMDA4MTcgIDAuMDE3NzYgIDAuOTgzMDQgXG5cblJhbmRvbSBlZmZlY3RzOlxuIEdyb3VwcyAgICAgICAgICAgICAgICAgICAgTmFtZSAgICAgICAgVmFyaWFuY2UgU3RkLkRldi5cbiBuZXR3b3JrICAgICAgICAgICAgICAgICAgIChJbnRlcmNlcHQpIDAuMzc4NDM1IDAuNjE1MTcgXG4gaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYyAoSW50ZXJjZXB0KSAxLjgyODAxOCAxLjM1MjA0IFxuIFJlc2lkdWFsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMC4wMDMzMTEgMC4wNTc1NCBcbk51bWJlciBvZiBvYnM6IDUwMCwgZ3JvdXBzOiAgbmV0d29yaywgNDk4OyBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjLCAxMjlcblxuRml4ZWQgZWZmZWN0czpcbiAgICAgICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciAgICAgICBkZiB0IHZhbHVlIFByKD58dHwpICAgIFxuKEludGVyY2VwdCkgICAgICAgICAgICAgIDIuMTk5MCAgICAgMC4xMzc0IDE1My4wODUyICAgMTYuMDAgIDwgMmUtMTYgKioqXG5pc19wb2x5cGxvaWRfcG9seV9mcmFjICAtMC40Mjc0ICAgICAwLjEyMDcgMzc4LjA2NjIgICAtMy41NCAwLjAwMDQ1MSAqKipcbi0tLVxuU2lnbmlmLiBjb2RlczogIDAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuXG5Db3JyZWxhdGlvbiBvZiBGaXhlZCBFZmZlY3RzOlxuICAgICAgICAgICAgKEludHIpXG5pc19wbHlwbGRfXyAtMC4zOThcbiJ9 --&gt;
-</code></pre>
-<p>Linear mixed model fit by REML. t-tests use Satterthwaite’s method
-[‘lmerModLmerTest’] Formula: extinction.slope.LL ~
-is_polyploid_poly_frac + (1 | network) + (1 | is_polyploid_missing_frac)
-Data: all_network_binary_glm_data_no_null</p>
-<p>REML criterion at convergence: 1255.3</p>
-<p>Scaled residuals: Min 1Q Median 3Q Max -0.95944 -0.02949 -0.00817
-0.01776 0.98304</p>
-<p>Random effects: Groups Name Variance Std.Dev. network (Intercept)
-0.378435 0.61517 is_polyploid_missing_frac (Intercept) 1.828018 1.35204
-Residual 0.003311 0.05754 Number of obs: 500, groups: network, 498;
-is_polyploid_missing_frac, 129</p>
-<p>Fixed effects: Estimate Std. Error df t value Pr(&gt;|t|)<br />
-(Intercept) 2.1990 0.1374 153.0852 16.00 &lt; 2e-16 <strong><em>
-is_polyploid_poly_frac -0.4274 0.1207 378.0662 -3.54 0.000451
-</em></strong> — Signif. codes: 0 ‘<em><strong>’ 0.001 ‘</strong>’ 0.01
-‘</em>’ 0.05 ‘.’ 0.1 ‘ ’ 1</p>
-<p>Correlation of Fixed Effects: (Intr) is_plypld__ -0.398</p>
-<pre><code>
+REML criterion at convergence: 1255.3
 
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-0.95944 -0.02949 -0.00817  0.01776  0.98304 
 
-&lt;!-- rnb-output-end --&gt;
+Random effects:
+ Groups                    Name        Variance Std.Dev.
+ network                   (Intercept) 0.378435 0.61517 
+ is_polyploid_missing_frac (Intercept) 1.828018 1.35204 
+ Residual                              0.003311 0.05754 
+Number of obs: 500, groups:  network, 498; is_polyploid_missing_frac, 129
 
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubWl4ZWQzID0gbG1lcihyb2J1c3RuZXNzLkxMIH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfG5ldHdvcmspKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbClcbnByaW50KHN1bW1hcnkobWl4ZWQzKSlcbmBgYFxuYGBgIn0= --&gt;
+Fixed effects:
+                       Estimate Std. Error       df t value Pr(&gt;|t|)    
+(Intercept)              2.1990     0.1374 153.0852   16.00  &lt; 2e-16 ***
+is_polyploid_poly_frac  -0.4274     0.1207 378.0662   -3.54 0.000451 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-```r
-```r
-mixed3 = lmer(robustness.LL ~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
+Correlation of Fixed Effects:
+            (Intr)
+is_plypld__ -0.398</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWl4ZWQzID0gbG1lcihyb2J1c3RuZXNzLkxMIH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfG5ldHdvcmspKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbClcbnByaW50KHN1bW1hcnkobWl4ZWQzKSlcbmBgYCJ9 -->
+<pre class="r"><code>mixed3 = lmer(robustness.LL ~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
 print(summary(mixed3))</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IHJvYnVzdG5lc3MuTEwgfiBpc19wb2x5cGxvaWRfcG9seV9mcmFjICsgKDEgfCBuZXR3b3JrKSArICgxIHwgICAgICBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjKVxuICAgRGF0YTogYWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGxcblxuUkVNTCBjcml0ZXJpb24gYXQgY29udmVyZ2VuY2U6IC0xNDg1LjVcblxuU2NhbGVkIHJlc2lkdWFsczogXG4gICAgIE1pbiAgICAgICAxUSAgIE1lZGlhbiAgICAgICAzUSAgICAgIE1heCBcbi0wLjkwOTcyIC0wLjEwMzMzIC0wLjAyMDI4ICAwLjA3Mjg5ICAwLjk4NDc2IFxuXG5SYW5kb20gZWZmZWN0czpcbiBHcm91cHMgICAgICAgICAgICAgICAgICAgIE5hbWUgICAgICAgIFZhcmlhbmNlICBTdGQuRGV2LlxuIG5ldHdvcmsgICAgICAgICAgICAgICAgICAgKEludGVyY2VwdCkgMi4zMDBlLTAzIDAuMDQ3OTYxXG4gaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYyAoSW50ZXJjZXB0KSAxLjEyM2UtMDMgMC4wMzM1MThcbiBSZXNpZHVhbCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDcuNzQ3ZS0wNSAwLjAwODgwMlxuTnVtYmVyIG9mIG9iczogNTAwLCBncm91cHM6ICBuZXR3b3JrLCA0OTg7IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIDEyOVxuXG5GaXhlZCBlZmZlY3RzOlxuICAgICAgICAgICAgICAgICAgICAgICAgIEVzdGltYXRlIFN0ZC4gRXJyb3IgICAgICAgICBkZiB0IHZhbHVlIFByKD58dHwpICAgIFxuKEludGVyY2VwdCkgICAgICAgICAgICAgIDAuNjQ2NTY5ICAgMC4wMDU4NjUgMjE1LjExNDg0NyAgMTEwLjI0ICA8IDJlLTE2ICoqKlxuaXNfcG9seXBsb2lkX3BvbHlfZnJhYyAgLTAuMDQzMzI4ICAgMC4wMDg4NzkgNDQ5LjcxOTY1NCAgIC00Ljg4IDEuNDhlLTA2ICoqKlxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbkNvcnJlbGF0aW9uIG9mIEZpeGVkIEVmZmVjdHM6XG4gICAgICAgICAgICAoSW50cilcbmlzX3BseXBsZF9fIC0wLjcwN1xuIn0= -->
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [&#39;lmerModLmerTest&#39;]
+Formula: robustness.LL ~ is_polyploid_poly_frac + (1 | network) + (1 |      is_polyploid_missing_frac)
+   Data: all_network_binary_glm_data_no_null
 
-&lt;!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IHJvYnVzdG5lc3MuTEwgfiBpc19wb2x5cGxvaWRfcG9seV9mcmFjICsgKDEgfCBuZXR3b3JrKSArICgxIHwgICAgICBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjKVxuICAgRGF0YTogYWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGxcblxuUkVNTCBjcml0ZXJpb24gYXQgY29udmVyZ2VuY2U6IC0xNDg1LjVcblxuU2NhbGVkIHJlc2lkdWFsczogXG4gICAgIE1pbiAgICAgICAxUSAgIE1lZGlhbiAgICAgICAzUSAgICAgIE1heCBcbi0wLjkwOTcyIC0wLjEwMzMzIC0wLjAyMDI4ICAwLjA3Mjg5ICAwLjk4NDc2IFxuXG5SYW5kb20gZWZmZWN0czpcbiBHcm91cHMgICAgICAgICAgICAgICAgICAgIE5hbWUgICAgICAgIFZhcmlhbmNlICBTdGQuRGV2LlxuIG5ldHdvcmsgICAgICAgICAgICAgICAgICAgKEludGVyY2VwdCkgMi4zMDBlLTAzIDAuMDQ3OTYxXG4gaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYyAoSW50ZXJjZXB0KSAxLjEyM2UtMDMgMC4wMzM1MThcbiBSZXNpZHVhbCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDcuNzQ3ZS0wNSAwLjAwODgwMlxuTnVtYmVyIG9mIG9iczogNTAwLCBncm91cHM6ICBuZXR3b3JrLCA0OTg7IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIDEyOVxuXG5GaXhlZCBlZmZlY3RzOlxuICAgICAgICAgICAgICAgICAgICAgICAgIEVzdGltYXRlIFN0ZC4gRXJyb3IgICAgICAgICBkZiB0IHZhbHVlIFByKD58dHwpICAgIFxuKEludGVyY2VwdCkgICAgICAgICAgICAgIDAuNjQ2NTY5ICAgMC4wMDU4NjUgMjE1LjExNDg0NyAgMTEwLjI0ICA8IDJlLTE2ICoqKlxuaXNfcG9seXBsb2lkX3BvbHlfZnJhYyAgLTAuMDQzMzI4ICAgMC4wMDg4NzkgNDQ5LjcxOTY1NCAgIC00Ljg4IDEuNDhlLTA2ICoqKlxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbkNvcnJlbGF0aW9uIG9mIEZpeGVkIEVmZmVjdHM6XG4gICAgICAgICAgICAoSW50cilcbmlzX3BseXBsZF9fIC0wLjcwN1xuIn0= --&gt;
-</code></pre>
-<p>Linear mixed model fit by REML. t-tests use Satterthwaite’s method
-[‘lmerModLmerTest’] Formula: robustness.LL ~ is_polyploid_poly_frac + (1
-| network) + (1 | is_polyploid_missing_frac) Data:
-all_network_binary_glm_data_no_null</p>
-<p>REML criterion at convergence: -1485.5</p>
-<p>Scaled residuals: Min 1Q Median 3Q Max -0.90972 -0.10333 -0.02028
-0.07289 0.98476</p>
-<p>Random effects: Groups Name Variance Std.Dev. network (Intercept)
-2.300e-03 0.047961 is_polyploid_missing_frac (Intercept) 1.123e-03
-0.033518 Residual 7.747e-05 0.008802 Number of obs: 500, groups:
-network, 498; is_polyploid_missing_frac, 129</p>
-<p>Fixed effects: Estimate Std. Error df t value Pr(&gt;|t|)<br />
-(Intercept) 0.646569 0.005865 215.114847 110.24 &lt; 2e-16 <strong><em>
-is_polyploid_poly_frac -0.043328 0.008879 449.719654 -4.88 1.48e-06
-</em></strong> — Signif. codes: 0 ‘<em><strong>’ 0.001 ‘</strong>’ 0.01
-‘</em>’ 0.05 ‘.’ 0.1 ‘ ’ 1</p>
-<p>Correlation of Fixed Effects: (Intr) is_plypld__ -0.707</p>
-<pre><code>
+REML criterion at convergence: -1485.5
 
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-0.90972 -0.10333 -0.02028  0.07289  0.98476 
 
-&lt;!-- rnb-output-end --&gt;
+Random effects:
+ Groups                    Name        Variance  Std.Dev.
+ network                   (Intercept) 2.300e-03 0.047961
+ is_polyploid_missing_frac (Intercept) 1.123e-03 0.033518
+ Residual                              7.747e-05 0.008802
+Number of obs: 500, groups:  network, 498; is_polyploid_missing_frac, 129
 
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubWl4ZWQ0ID0gbG1lciggcm9idXN0bmVzc19tZWFufmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8bmV0d29yaykrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYyksIGRhdGEgPWFsbF9uZXR3b3JrX2JpbmFyeV9nbG1fZGF0YV9ub19udWxsKVxucHJpbnQoc3VtbWFyeShtaXhlZDQpKVxuYGBgXG5gYGAifQ== --&gt;
+Fixed effects:
+                         Estimate Std. Error         df t value Pr(&gt;|t|)    
+(Intercept)              0.646569   0.005865 215.114847  110.24  &lt; 2e-16 ***
+is_polyploid_poly_frac  -0.043328   0.008879 449.719654   -4.88 1.48e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-```r
-```r
-mixed4 = lmer( robustness_mean~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
+Correlation of Fixed Effects:
+            (Intr)
+is_plypld__ -0.707</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWl4ZWQ0ID0gbG1lciggcm9idXN0bmVzc19tZWFufmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8bmV0d29yaykrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYyksIGRhdGEgPWFsbF9uZXR3b3JrX2JpbmFyeV9nbG1fZGF0YV9ub19udWxsKVxucHJpbnQoc3VtbWFyeShtaXhlZDQpKVxuYGBgIn0= -->
+<pre class="r"><code>mixed4 = lmer( robustness_mean~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
 print(summary(mixed4))</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IHJvYnVzdG5lc3NfbWVhbiB+IGlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgKyAoMSB8IG5ldHdvcmspICsgKDEgfCAgICAgIGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpXG4gICBEYXRhOiBhbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbFxuXG5SRU1MIGNyaXRlcmlvbiBhdCBjb252ZXJnZW5jZTogLTE5NjQuOVxuXG5TY2FsZWQgcmVzaWR1YWxzOiBcbiAgICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4IFxuLTEuNDMwMTYgLTAuMTAxMTAgIDAuMDEyOTMgIDAuMTE4OTQgIDAuODY5NzggXG5cblJhbmRvbSBlZmZlY3RzOlxuIEdyb3VwcyAgICAgICAgICAgICAgICAgICAgTmFtZSAgICAgICAgVmFyaWFuY2UgIFN0ZC5EZXYuXG4gbmV0d29yayAgICAgICAgICAgICAgICAgICAoSW50ZXJjZXB0KSA5Ljk2NWUtMDQgMC4wMzE1NjhcbiBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjIChJbnRlcmNlcHQpIDEuMTA2ZS0wNCAwLjAxMDUxOFxuIFJlc2lkdWFsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgNC4zOTNlLTA1IDAuMDA2NjI4XG5OdW1iZXIgb2Ygb2JzOiA1MDAsIGdyb3VwczogIG5ldHdvcmssIDQ5ODsgaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYywgMTI5XG5cbkZpeGVkIGVmZmVjdHM6XG4gICAgICAgICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yICAgICAgICBkZiB0IHZhbHVlIFByKD58dHwpICAgIFxuKEludGVyY2VwdCkgICAgICAgICAgICA1LjI4MWUtMDEgIDMuMjg3ZS0wMyAzLjU5MGUrMDIgMTYwLjY2NiAgIDwyZS0xNiAqKipcbmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgNy42NzRlLTAzICA1LjU3M2UtMDMgNC45NjBlKzAyICAgMS4zNzcgICAgMC4xNjkgICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuQ29ycmVsYXRpb24gb2YgRml4ZWQgRWZmZWN0czpcbiAgICAgICAgICAgIChJbnRyKVxuaXNfcGx5cGxkX18gLTAuODA5XG4ifQ== -->
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [&#39;lmerModLmerTest&#39;]
+Formula: robustness_mean ~ is_polyploid_poly_frac + (1 | network) + (1 |      is_polyploid_missing_frac)
+   Data: all_network_binary_glm_data_no_null
 
-&lt;!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IHJvYnVzdG5lc3NfbWVhbiB+IGlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgKyAoMSB8IG5ldHdvcmspICsgKDEgfCAgICAgIGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpXG4gICBEYXRhOiBhbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbFxuXG5SRU1MIGNyaXRlcmlvbiBhdCBjb252ZXJnZW5jZTogLTE5NjQuOVxuXG5TY2FsZWQgcmVzaWR1YWxzOiBcbiAgICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4IFxuLTEuNDMwMTYgLTAuMTAxMTAgIDAuMDEyOTMgIDAuMTE4OTQgIDAuODY5NzggXG5cblJhbmRvbSBlZmZlY3RzOlxuIEdyb3VwcyAgICAgICAgICAgICAgICAgICAgTmFtZSAgICAgICAgVmFyaWFuY2UgIFN0ZC5EZXYuXG4gbmV0d29yayAgICAgICAgICAgICAgICAgICAoSW50ZXJjZXB0KSA5Ljk2NWUtMDQgMC4wMzE1NjhcbiBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjIChJbnRlcmNlcHQpIDEuMTA2ZS0wNCAwLjAxMDUxOFxuIFJlc2lkdWFsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgNC4zOTNlLTA1IDAuMDA2NjI4XG5OdW1iZXIgb2Ygb2JzOiA1MDAsIGdyb3VwczogIG5ldHdvcmssIDQ5ODsgaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYywgMTI5XG5cbkZpeGVkIGVmZmVjdHM6XG4gICAgICAgICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yICAgICAgICBkZiB0IHZhbHVlIFByKD58dHwpICAgIFxuKEludGVyY2VwdCkgICAgICAgICAgICA1LjI4MWUtMDEgIDMuMjg3ZS0wMyAzLjU5MGUrMDIgMTYwLjY2NiAgIDwyZS0xNiAqKipcbmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgNy42NzRlLTAzICA1LjU3M2UtMDMgNC45NjBlKzAyICAgMS4zNzcgICAgMC4xNjkgICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuQ29ycmVsYXRpb24gb2YgRml4ZWQgRWZmZWN0czpcbiAgICAgICAgICAgIChJbnRyKVxuaXNfcGx5cGxkX18gLTAuODA5XG4ifQ== --&gt;
-</code></pre>
-<p>Linear mixed model fit by REML. t-tests use Satterthwaite’s method
-[‘lmerModLmerTest’] Formula: robustness_mean ~ is_polyploid_poly_frac +
-(1 | network) + (1 | is_polyploid_missing_frac) Data:
-all_network_binary_glm_data_no_null</p>
-<p>REML criterion at convergence: -1964.9</p>
-<p>Scaled residuals: Min 1Q Median 3Q Max -1.43016 -0.10110 0.01293
-0.11894 0.86978</p>
-<p>Random effects: Groups Name Variance Std.Dev. network (Intercept)
-9.965e-04 0.031568 is_polyploid_missing_frac (Intercept) 1.106e-04
-0.010518 Residual 4.393e-05 0.006628 Number of obs: 500, groups:
-network, 498; is_polyploid_missing_frac, 129</p>
-<p>Fixed effects: Estimate Std. Error df t value Pr(&gt;|t|)<br />
-(Intercept) 5.281e-01 3.287e-03 3.590e+02 160.666 &lt;2e-16 ***
-is_polyploid_poly_frac 7.674e-03 5.573e-03 4.960e+02 1.377 0.169<br />
-— Signif. codes: 0 ‘<em><strong>’ 0.001 ‘</strong>’ 0.01 ‘</em>’ 0.05
-‘.’ 0.1 ‘ ’ 1</p>
-<p>Correlation of Fixed Effects: (Intr) is_plypld__ -0.809</p>
-<pre><code>
+REML criterion at convergence: -1964.9
 
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-1.43016 -0.10110  0.01293  0.11894  0.86978 
 
-&lt;!-- rnb-output-end --&gt;
+Random effects:
+ Groups                    Name        Variance  Std.Dev.
+ network                   (Intercept) 9.965e-04 0.031568
+ is_polyploid_missing_frac (Intercept) 1.106e-04 0.010518
+ Residual                              4.393e-05 0.006628
+Number of obs: 500, groups:  network, 498; is_polyploid_missing_frac, 129
 
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubWl4ZWQ0ID0gbG1lciggZGVsdGFfdHJhbnNmb3JtZWRfLnZ1bG5lcmFiaWxpdHkuTEx+aXNfcG9seXBsb2lkX3BvbHlfZnJhYysoMXxuZXR3b3JrKSsoMXxpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjKSwgZGF0YSA9YWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGwpXG5gYGBcbmBgYCJ9 --&gt;
+Fixed effects:
+                        Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)            5.281e-01  3.287e-03 3.590e+02 160.666   &lt;2e-16 ***
+is_polyploid_poly_frac 7.674e-03  5.573e-03 4.960e+02   1.377    0.169    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-```r
-```r
-mixed4 = lmer( delta_transformed_.vulnerability.LL~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
+Correlation of Fixed Effects:
+            (Intr)
+is_plypld__ -0.809</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWl4ZWQ0ID0gbG1lciggZGVsdGFfdHJhbnNmb3JtZWRfLnZ1bG5lcmFiaWxpdHkuTEx+aXNfcG9seXBsb2lkX3BvbHlfZnJhYysoMXxuZXR3b3JrKSsoMXxpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjKSwgZGF0YSA9YWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGwpXG5gYGAifQ== -->
+<pre class="r"><code>mixed4 = lmer( delta_transformed_.vulnerability.LL~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiYm91bmRhcnkgKHNpbmd1bGFyKSBmaXQ6IHNlZSBoZWxwKCdpc1Npbmd1bGFyJylcbiJ9 -->
+<pre><code>boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQoc3VtbWFyeShtaXhlZDQpKVxuYGBgIn0= -->
+<pre class="r"><code>print(summary(mixed4))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IGRlbHRhX3RyYW5zZm9ybWVkXy52dWxuZXJhYmlsaXR5LkxMIH4gaXNfcG9seXBsb2lkX3BvbHlfZnJhYyArICAgICAgKDEgfCBuZXR3b3JrKSArICgxIHwgaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYylcbiAgIERhdGE6IGFsbF9uZXR3b3JrX2JpbmFyeV9nbG1fZGF0YV9ub19udWxsXG5cblJFTUwgY3JpdGVyaW9uIGF0IGNvbnZlcmdlbmNlOiA4MTUuOVxuXG5TY2FsZWQgcmVzaWR1YWxzOiBcbiAgICBNaW4gICAgICAxUSAgTWVkaWFuICAgICAgM1EgICAgIE1heCBcbi0xLjUzOTcgLTAuNTkzOCAtMC4xOTU3ICAwLjQ0MTMgMTEuMzA4NCBcblxuUmFuZG9tIGVmZmVjdHM6XG4gR3JvdXBzICAgICAgICAgICAgICAgICAgICBOYW1lICAgICAgICBWYXJpYW5jZSBTdGQuRGV2LlxuIG5ldHdvcmsgICAgICAgICAgICAgICAgICAgKEludGVyY2VwdCkgMC4wMDAwMCAgMC4wMDAwICBcbiBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjIChJbnRlcmNlcHQpIDAuMDIyNjIgIDAuMTUwNCAgXG4gUmVzaWR1YWwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLjI3ODA0ICAwLjUyNzMgIFxuTnVtYmVyIG9mIG9iczogNTAwLCBncm91cHM6ICBuZXR3b3JrLCA0OTg7IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIDEyOVxuXG5GaXhlZCBlZmZlY3RzOlxuICAgICAgICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciAgICAgICAgZGYgdCB2YWx1ZSBQcig+fHR8KSAgICBcbihJbnRlcmNlcHQpICAgICAgICAgICAgICAwLjc5ODE5ICAgIDAuMDUyNzQgMzE2LjA3NDEwICAxNS4xMzMgICA8MmUtMTYgKioqXG5pc19wb2x5cGxvaWRfcG9seV9mcmFjICAtMC4yMDQ2MiAgICAwLjA5MDM1IDQ5Ny4zMDU0NCAgLTIuMjY1ICAgIDAuMDI0ICogIFxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbkNvcnJlbGF0aW9uIG9mIEZpeGVkIEVmZmVjdHM6XG4gICAgICAgICAgICAoSW50cilcbmlzX3BseXBsZF9fIC0wLjgyMFxub3B0aW1pemVyIChubG9wdHdyYXApIGNvbnZlcmdlbmNlIGNvZGU6IDAgKE9LKVxuYm91bmRhcnkgKHNpbmd1bGFyKSBmaXQ6IHNlZSBoZWxwKCdpc1Npbmd1bGFyJylcbiJ9 -->
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [&#39;lmerModLmerTest&#39;]
+Formula: delta_transformed_.vulnerability.LL ~ is_polyploid_poly_frac +      (1 | network) + (1 | is_polyploid_missing_frac)
+   Data: all_network_binary_glm_data_no_null
 
-&lt;!-- rnb-output-begin eyJkYXRhIjoiYm91bmRhcnkgKHNpbmd1bGFyKSBmaXQ6IHNlZSBoZWxwKCdpc1Npbmd1bGFyJylcbiJ9 --&gt;
-</code></pre>
-<p>boundary (singular) fit: see help(‘isSingular’)</p>
-<pre><code>
+REML criterion at convergence: 815.9
 
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.5397 -0.5938 -0.1957  0.4413 11.3084 
 
-&lt;!-- rnb-output-end --&gt;
+Random effects:
+ Groups                    Name        Variance Std.Dev.
+ network                   (Intercept) 0.00000  0.0000  
+ is_polyploid_missing_frac (Intercept) 0.02262  0.1504  
+ Residual                              0.27804  0.5273  
+Number of obs: 500, groups:  network, 498; is_polyploid_missing_frac, 129
 
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucHJpbnQoc3VtbWFyeShtaXhlZDQpKVxuYGBgXG5gYGAifQ== --&gt;
+Fixed effects:
+                        Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)              0.79819    0.05274 316.07410  15.133   &lt;2e-16 ***
+is_polyploid_poly_frac  -0.20462    0.09035 497.30544  -2.265    0.024 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-```r
-```r
+Correlation of Fixed Effects:
+            (Intr)
+is_plypld__ -0.820
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWl4ZWQ0ID0gbG1lciggZGVsdGFfdHJhbnNmb3JtZWRfLlNoYW5ub24uZGl2ZXJzaXR5fmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8bmV0d29yaykrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYyksIGRhdGEgPWFsbF9uZXR3b3JrX2JpbmFyeV9nbG1fZGF0YV9ub19udWxsKVxucHJpbnQoc3VtbWFyeShtaXhlZDQpKVxuYGBgIn0= -->
+<pre class="r"><code>mixed4 = lmer( delta_transformed_.Shannon.diversity~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
 print(summary(mixed4))</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IGRlbHRhX3RyYW5zZm9ybWVkXy5TaGFubm9uLmRpdmVyc2l0eSB+IGlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgKyAgICAgICgxIHwgbmV0d29yaykgKyAoMSB8IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpXG4gICBEYXRhOiBhbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbFxuXG5SRU1MIGNyaXRlcmlvbiBhdCBjb252ZXJnZW5jZTogLTEyOTAuNlxuXG5TY2FsZWQgcmVzaWR1YWxzOiBcbiAgICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4IFxuLTEuMDI0NjIgLTAuMjM1NTcgIDAuMDA3NjYgIDAuMjI2MjggIDEuMDEzNjAgXG5cblJhbmRvbSBlZmZlY3RzOlxuIEdyb3VwcyAgICAgICAgICAgICAgICAgICAgTmFtZSAgICAgICAgVmFyaWFuY2UgIFN0ZC5EZXYuXG4gbmV0d29yayAgICAgICAgICAgICAgICAgICAoSW50ZXJjZXB0KSAwLjAwMzQ2NjIgMC4wNTg4NyBcbiBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjIChJbnRlcmNlcHQpIDAuMDAwNjA4OSAwLjAyNDY4IFxuIFJlc2lkdWFsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMC4wMDA0NDgzIDAuMDIxMTcgXG5OdW1iZXIgb2Ygb2JzOiA1MDAsIGdyb3VwczogIG5ldHdvcmssIDQ5ODsgaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYywgMTI5XG5cbkZpeGVkIGVmZmVjdHM6XG4gICAgICAgICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciAgICAgICAgIGRmIHQgdmFsdWUgUHIoPnx0fCkgICAgXG4oSW50ZXJjZXB0KSAgICAgICAgICAgICAgMC4xNzA4NTUgICAwLjAwNjU3NiAzMDkuNjE1OTE3ICAyNS45ODMgICA8MmUtMTYgKioqXG5pc19wb2x5cGxvaWRfcG9seV9mcmFjICAtMC4wMTY3MDYgICAwLjAxMDkzOCA0OTMuOTg2NTcyICAtMS41MjcgICAgMC4xMjcgICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuQ29ycmVsYXRpb24gb2YgRml4ZWQgRWZmZWN0czpcbiAgICAgICAgICAgIChJbnRyKVxuaXNfcGx5cGxkX18gLTAuNzkwXG4ifQ== -->
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [&#39;lmerModLmerTest&#39;]
+Formula: delta_transformed_.Shannon.diversity ~ is_polyploid_poly_frac +      (1 | network) + (1 | is_polyploid_missing_frac)
+   Data: all_network_binary_glm_data_no_null
 
-&lt;!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IGRlbHRhX3RyYW5zZm9ybWVkXy52dWxuZXJhYmlsaXR5LkxMIH4gaXNfcG9seXBsb2lkX3BvbHlfZnJhYyArICAgICAgKDEgfCBuZXR3b3JrKSArICgxIHwgaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYylcbiAgIERhdGE6IGFsbF9uZXR3b3JrX2JpbmFyeV9nbG1fZGF0YV9ub19udWxsXG5cblJFTUwgY3JpdGVyaW9uIGF0IGNvbnZlcmdlbmNlOiA4MTUuOVxuXG5TY2FsZWQgcmVzaWR1YWxzOiBcbiAgICBNaW4gICAgICAxUSAgTWVkaWFuICAgICAgM1EgICAgIE1heCBcbi0xLjUzOTcgLTAuNTkzOCAtMC4xOTU3ICAwLjQ0MTMgMTEuMzA4NCBcblxuUmFuZG9tIGVmZmVjdHM6XG4gR3JvdXBzICAgICAgICAgICAgICAgICAgICBOYW1lICAgICAgICBWYXJpYW5jZSBTdGQuRGV2LlxuIG5ldHdvcmsgICAgICAgICAgICAgICAgICAgKEludGVyY2VwdCkgMC4wMDAwMCAgMC4wMDAwICBcbiBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjIChJbnRlcmNlcHQpIDAuMDIyNjIgIDAuMTUwNCAgXG4gUmVzaWR1YWwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLjI3ODA0ICAwLjUyNzMgIFxuTnVtYmVyIG9mIG9iczogNTAwLCBncm91cHM6ICBuZXR3b3JrLCA0OTg7IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIDEyOVxuXG5GaXhlZCBlZmZlY3RzOlxuICAgICAgICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciAgICAgICAgZGYgdCB2YWx1ZSBQcig+fHR8KSAgICBcbihJbnRlcmNlcHQpICAgICAgICAgICAgICAwLjc5ODE5ICAgIDAuMDUyNzQgMzE2LjA3NDEwICAxNS4xMzMgICA8MmUtMTYgKioqXG5pc19wb2x5cGxvaWRfcG9seV9mcmFjICAtMC4yMDQ2MiAgICAwLjA5MDM1IDQ5Ny4zMDU0NCAgLTIuMjY1ICAgIDAuMDI0ICogIFxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbkNvcnJlbGF0aW9uIG9mIEZpeGVkIEVmZmVjdHM6XG4gICAgICAgICAgICAoSW50cilcbmlzX3BseXBsZF9fIC0wLjgyMFxub3B0aW1pemVyIChubG9wdHdyYXApIGNvbnZlcmdlbmNlIGNvZGU6IDAgKE9LKVxuYm91bmRhcnkgKHNpbmd1bGFyKSBmaXQ6IHNlZSBoZWxwKCdpc1Npbmd1bGFyJylcbiJ9 --&gt;
-</code></pre>
-<p>Linear mixed model fit by REML. t-tests use Satterthwaite’s method
-[‘lmerModLmerTest’] Formula: delta_transformed_.vulnerability.LL ~
-is_polyploid_poly_frac + (1 | network) + (1 | is_polyploid_missing_frac)
-Data: all_network_binary_glm_data_no_null</p>
-<p>REML criterion at convergence: 815.9</p>
-<p>Scaled residuals: Min 1Q Median 3Q Max -1.5397 -0.5938 -0.1957 0.4413
-11.3084</p>
-<p>Random effects: Groups Name Variance Std.Dev. network (Intercept)
-0.00000 0.0000<br />
-is_polyploid_missing_frac (Intercept) 0.02262 0.1504<br />
-Residual 0.27804 0.5273<br />
-Number of obs: 500, groups: network, 498; is_polyploid_missing_frac,
-129</p>
-<p>Fixed effects: Estimate Std. Error df t value Pr(&gt;|t|)<br />
-(Intercept) 0.79819 0.05274 316.07410 15.133 &lt;2e-16 **<em>
-is_polyploid_poly_frac -0.20462 0.09035 497.30544 -2.265 0.024
-</em><br />
-— Signif. codes: 0 ‘<em><strong>’ 0.001 ‘</strong>’ 0.01 ‘</em>’ 0.05
-‘.’ 0.1 ‘ ’ 1</p>
-<p>Correlation of Fixed Effects: (Intr) is_plypld__ -0.820 optimizer
-(nloptwrap) convergence code: 0 (OK) boundary (singular) fit: see
-help(‘isSingular’)</p>
-<pre><code>
+REML criterion at convergence: -1290.6
 
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-1.02462 -0.23557  0.00766  0.22628  1.01360 
 
-&lt;!-- rnb-output-end --&gt;
+Random effects:
+ Groups                    Name        Variance  Std.Dev.
+ network                   (Intercept) 0.0034662 0.05887 
+ is_polyploid_missing_frac (Intercept) 0.0006089 0.02468 
+ Residual                              0.0004483 0.02117 
+Number of obs: 500, groups:  network, 498; is_polyploid_missing_frac, 129
 
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubWl4ZWQ0ID0gbG1lciggZGVsdGFfdHJhbnNmb3JtZWRfLlNoYW5ub24uZGl2ZXJzaXR5fmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8bmV0d29yaykrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYyksIGRhdGEgPWFsbF9uZXR3b3JrX2JpbmFyeV9nbG1fZGF0YV9ub19udWxsKVxucHJpbnQoc3VtbWFyeShtaXhlZDQpKVxuYGBgXG5gYGAifQ== --&gt;
+Fixed effects:
+                         Estimate Std. Error         df t value Pr(&gt;|t|)    
+(Intercept)              0.170855   0.006576 309.615917  25.983   &lt;2e-16 ***
+is_polyploid_poly_frac  -0.016706   0.010938 493.986572  -1.527    0.127    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-```r
-```r
-mixed4 = lmer( delta_transformed_.Shannon.diversity~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
+Correlation of Fixed Effects:
+            (Intr)
+is_plypld__ -0.790</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWl4ZWQ0ID0gbG1lciggZGVsdGFfdHJhbnNmb3JtZWRfLnRvZ2V0aGVybmVzcy5MTH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfG5ldHdvcmspKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbClcbnByaW50KHN1bW1hcnkobWl4ZWQ0KSlcbmBgYCJ9 -->
+<pre class="r"><code>mixed4 = lmer( delta_transformed_.togetherness.LL~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
 print(summary(mixed4))</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IGRlbHRhX3RyYW5zZm9ybWVkXy50b2dldGhlcm5lc3MuTEwgfiBpc19wb2x5cGxvaWRfcG9seV9mcmFjICsgICAgICAoMSB8IG5ldHdvcmspICsgKDEgfCBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjKVxuICAgRGF0YTogYWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGxcblxuUkVNTCBjcml0ZXJpb24gYXQgY29udmVyZ2VuY2U6IC0xODM0LjhcblxuU2NhbGVkIHJlc2lkdWFsczogXG4gICAgIE1pbiAgICAgICAxUSAgIE1lZGlhbiAgICAgICAzUSAgICAgIE1heCBcbi0wLjg3MDYwIC0wLjE1ODU2IC0wLjA2NDgxICAwLjA5Mzc5ICAxLjMyODE5IFxuXG5SYW5kb20gZWZmZWN0czpcbiBHcm91cHMgICAgICAgICAgICAgICAgICAgIE5hbWUgICAgICAgIFZhcmlhbmNlICBTdGQuRGV2LlxuIG5ldHdvcmsgICAgICAgICAgICAgICAgICAgKEludGVyY2VwdCkgMS4xODRlLTAzIDAuMDM0NDA3XG4gaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYyAoSW50ZXJjZXB0KSAyLjk1OGUtMDQgMC4wMTcxOTlcbiBSZXNpZHVhbCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDguNzcxZS0wNSAwLjAwOTM2NlxuTnVtYmVyIG9mIG9iczogNTAwLCBncm91cHM6ICBuZXR3b3JrLCA0OTg7IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIDEyOVxuXG5GaXhlZCBlZmZlY3RzOlxuICAgICAgICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciAgICAgICAgZGYgdCB2YWx1ZSBQcig+fHR8KSAgICBcbihJbnRlcmNlcHQpICAgICAgICAgICAgMy4xNDVlLTAyICAzLjkwMmUtMDMgMy40OTBlKzAyICAgOC4wNTkgMS4yM2UtMTQgKioqXG5pc19wb2x5cGxvaWRfcG9seV9mcmFjIDUuNzQ5ZS0wMyAgNi4zMjFlLTAzIDQuOTA2ZSswMiAgIDAuOTEwICAgIDAuMzY0ICAgIFxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbkNvcnJlbGF0aW9uIG9mIEZpeGVkIEVmZmVjdHM6XG4gICAgICAgICAgICAoSW50cilcbmlzX3BseXBsZF9fIC0wLjc2NVxuIn0= -->
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [&#39;lmerModLmerTest&#39;]
+Formula: delta_transformed_.togetherness.LL ~ is_polyploid_poly_frac +      (1 | network) + (1 | is_polyploid_missing_frac)
+   Data: all_network_binary_glm_data_no_null
 
-&lt;!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IGRlbHRhX3RyYW5zZm9ybWVkXy5TaGFubm9uLmRpdmVyc2l0eSB+IGlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgKyAgICAgICgxIHwgbmV0d29yaykgKyAoMSB8IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpXG4gICBEYXRhOiBhbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbFxuXG5SRU1MIGNyaXRlcmlvbiBhdCBjb252ZXJnZW5jZTogLTEyOTAuNlxuXG5TY2FsZWQgcmVzaWR1YWxzOiBcbiAgICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4IFxuLTEuMDI0NjIgLTAuMjM1NTcgIDAuMDA3NjYgIDAuMjI2MjggIDEuMDEzNjAgXG5cblJhbmRvbSBlZmZlY3RzOlxuIEdyb3VwcyAgICAgICAgICAgICAgICAgICAgTmFtZSAgICAgICAgVmFyaWFuY2UgIFN0ZC5EZXYuXG4gbmV0d29yayAgICAgICAgICAgICAgICAgICAoSW50ZXJjZXB0KSAwLjAwMzQ2NjIgMC4wNTg4NyBcbiBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjIChJbnRlcmNlcHQpIDAuMDAwNjA4OSAwLjAyNDY4IFxuIFJlc2lkdWFsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMC4wMDA0NDgzIDAuMDIxMTcgXG5OdW1iZXIgb2Ygb2JzOiA1MDAsIGdyb3VwczogIG5ldHdvcmssIDQ5ODsgaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYywgMTI5XG5cbkZpeGVkIGVmZmVjdHM6XG4gICAgICAgICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciAgICAgICAgIGRmIHQgdmFsdWUgUHIoPnx0fCkgICAgXG4oSW50ZXJjZXB0KSAgICAgICAgICAgICAgMC4xNzA4NTUgICAwLjAwNjU3NiAzMDkuNjE1OTE3ICAyNS45ODMgICA8MmUtMTYgKioqXG5pc19wb2x5cGxvaWRfcG9seV9mcmFjICAtMC4wMTY3MDYgICAwLjAxMDkzOCA0OTMuOTg2NTcyICAtMS41MjcgICAgMC4xMjcgICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuQ29ycmVsYXRpb24gb2YgRml4ZWQgRWZmZWN0czpcbiAgICAgICAgICAgIChJbnRyKVxuaXNfcGx5cGxkX18gLTAuNzkwXG4ifQ== --&gt;
-</code></pre>
-<p>Linear mixed model fit by REML. t-tests use Satterthwaite’s method
-[‘lmerModLmerTest’] Formula: delta_transformed_.Shannon.diversity ~
-is_polyploid_poly_frac + (1 | network) + (1 | is_polyploid_missing_frac)
-Data: all_network_binary_glm_data_no_null</p>
-<p>REML criterion at convergence: -1290.6</p>
-<p>Scaled residuals: Min 1Q Median 3Q Max -1.02462 -0.23557 0.00766
-0.22628 1.01360</p>
-<p>Random effects: Groups Name Variance Std.Dev. network (Intercept)
-0.0034662 0.05887 is_polyploid_missing_frac (Intercept) 0.0006089
-0.02468 Residual 0.0004483 0.02117 Number of obs: 500, groups: network,
-498; is_polyploid_missing_frac, 129</p>
-<p>Fixed effects: Estimate Std. Error df t value Pr(&gt;|t|)<br />
-(Intercept) 0.170855 0.006576 309.615917 25.983 &lt;2e-16 ***
-is_polyploid_poly_frac -0.016706 0.010938 493.986572 -1.527 0.127<br />
-— Signif. codes: 0 ‘<em><strong>’ 0.001 ‘</strong>’ 0.01 ‘</em>’ 0.05
-‘.’ 0.1 ‘ ’ 1</p>
-<p>Correlation of Fixed Effects: (Intr) is_plypld__ -0.790</p>
-<pre><code>
+REML criterion at convergence: -1834.8
 
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-0.87060 -0.15856 -0.06481  0.09379  1.32819 
 
-&lt;!-- rnb-output-end --&gt;
+Random effects:
+ Groups                    Name        Variance  Std.Dev.
+ network                   (Intercept) 1.184e-03 0.034407
+ is_polyploid_missing_frac (Intercept) 2.958e-04 0.017199
+ Residual                              8.771e-05 0.009366
+Number of obs: 500, groups:  network, 498; is_polyploid_missing_frac, 129
 
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubWl4ZWQ0ID0gbG1lciggZGVsdGFfdHJhbnNmb3JtZWRfLnRvZ2V0aGVybmVzcy5MTH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfG5ldHdvcmspKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbClcbnByaW50KHN1bW1hcnkobWl4ZWQ0KSlcbmBgYFxuYGBgIn0= --&gt;
+Fixed effects:
+                        Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)            3.145e-02  3.902e-03 3.490e+02   8.059 1.23e-14 ***
+is_polyploid_poly_frac 5.749e-03  6.321e-03 4.906e+02   0.910    0.364    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-```r
-```r
-mixed4 = lmer( delta_transformed_.togetherness.LL~is_polyploid_poly_frac+(1|network)+(1|is_polyploid_missing_frac), data =all_network_binary_glm_data_no_null)
-print(summary(mixed4))</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MLiB0LXRlc3RzIHVzZSBTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIFsnbG1lck1vZExtZXJUZXN0J11cbkZvcm11bGE6IGRlbHRhX3RyYW5zZm9ybWVkXy50b2dldGhlcm5lc3MuTEwgfiBpc19wb2x5cGxvaWRfcG9seV9mcmFjICsgICAgICAoMSB8IG5ldHdvcmspICsgKDEgfCBpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjKVxuICAgRGF0YTogYWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGxcblxuUkVNTCBjcml0ZXJpb24gYXQgY29udmVyZ2VuY2U6IC0xODM0LjhcblxuU2NhbGVkIHJlc2lkdWFsczogXG4gICAgIE1pbiAgICAgICAxUSAgIE1lZGlhbiAgICAgICAzUSAgICAgIE1heCBcbi0wLjg3MDYwIC0wLjE1ODU2IC0wLjA2NDgxICAwLjA5Mzc5ICAxLjMyODE5IFxuXG5SYW5kb20gZWZmZWN0czpcbiBHcm91cHMgICAgICAgICAgICAgICAgICAgIE5hbWUgICAgICAgIFZhcmlhbmNlICBTdGQuRGV2LlxuIG5ldHdvcmsgICAgICAgICAgICAgICAgICAgKEludGVyY2VwdCkgMS4xODRlLTAzIDAuMDM0NDA3XG4gaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYyAoSW50ZXJjZXB0KSAyLjk1OGUtMDQgMC4wMTcxOTlcbiBSZXNpZHVhbCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDguNzcxZS0wNSAwLjAwOTM2NlxuTnVtYmVyIG9mIG9iczogNTAwLCBncm91cHM6ICBuZXR3b3JrLCA0OTg7IGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIDEyOVxuXG5GaXhlZCBlZmZlY3RzOlxuICAgICAgICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciAgICAgICAgZGYgdCB2YWx1ZSBQcig+fHR8KSAgICBcbihJbnRlcmNlcHQpICAgICAgICAgICAgMy4xNDVlLTAyICAzLjkwMmUtMDMgMy40OTBlKzAyICAgOC4wNTkgMS4yM2UtMTQgKioqXG5pc19wb2x5cGxvaWRfcG9seV9mcmFjIDUuNzQ5ZS0wMyAgNi4zMjFlLTAzIDQuOTA2ZSswMiAgIDAuOTEwICAgIDAuMzY0ICAgIFxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbkNvcnJlbGF0aW9uIG9mIEZpeGVkIEVmZmVjdHM6XG4gICAgICAgICAgICAoSW50cilcbmlzX3BseXBsZF9fIC0wLjc2NVxuIn0= --&gt;
-</code></pre>
-<p>Linear mixed model fit by REML. t-tests use Satterthwaite’s method
-[‘lmerModLmerTest’] Formula: delta_transformed_.togetherness.LL ~
-is_polyploid_poly_frac + (1 | network) + (1 | is_polyploid_missing_frac)
-Data: all_network_binary_glm_data_no_null</p>
-<p>REML criterion at convergence: -1834.8</p>
-<p>Scaled residuals: Min 1Q Median 3Q Max -0.87060 -0.15856 -0.06481
-0.09379 1.32819</p>
-<p>Random effects: Groups Name Variance Std.Dev. network (Intercept)
-1.184e-03 0.034407 is_polyploid_missing_frac (Intercept) 2.958e-04
-0.017199 Residual 8.771e-05 0.009366 Number of obs: 500, groups:
-network, 498; is_polyploid_missing_frac, 129</p>
-<p>Fixed effects: Estimate Std. Error df t value Pr(&gt;|t|)<br />
-(Intercept) 3.145e-02 3.902e-03 3.490e+02 8.059 1.23e-14 ***
-is_polyploid_poly_frac 5.749e-03 6.321e-03 4.906e+02 0.910 0.364<br />
-— Signif. codes: 0 ‘<em><strong>’ 0.001 ‘</strong>’ 0.01 ‘</em>’ 0.05
-‘.’ 0.1 ‘ ’ 1</p>
-<p>Correlation of Fixed Effects: (Intr) is_plypld__ -0.765 ```</p>
+Correlation of Fixed Effects:
+            (Intr)
+is_plypld__ -0.765</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2210,7 +2101,7 @@ run any R code chunks. Instead, the output of the chunk when it was last
 run in the editor is displayed.</p>
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpgYGB7cn0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShzdXJ2aXZhbCkNCmxpYnJhcnkoc3Vydm1pbmVyKQ0KbGlicmFyeShjbXByc2spDQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCmxpYnJhcnkoY2FyZXQpDQpsaWJyYXJ5KHN1cnZpdmFsKQ0KbGlicmFyeShzdXJ2bWluZXIpDQpsaWJyYXJ5KGx1YnJpZGF0ZSkNCmBgYA0KDQpUaGlzIGlzIGFuIFtSIE1hcmtkb3duXShodHRwOi8vcm1hcmtkb3duLnJzdHVkaW8uY29tKSBOb3RlYm9vay4gV2hlbiB5b3UgZXhlY3V0ZSBjb2RlIHdpdGhpbiB0aGUgbm90ZWJvb2ssIHRoZSByZXN1bHRzIGFwcGVhciBiZW5lYXRoIHRoZSBjb2RlLiANCg0KVHJ5IGV4ZWN1dGluZyB0aGlzIGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqUnVuKiBidXR0b24gd2l0aGluIHRoZSBjaHVuayBvciBieSBwbGFjaW5nIHlvdXIgY3Vyc29yIGluc2lkZSBpdCBhbmQgcHJlc3NpbmcgKkNtZCtTaGlmdCtFbnRlciouIA0KDQpOZXR3b3JrIGFuYWx5c2lzIGRhdGENCg0KYGBge3J9DQpiaW5hcnlfbmV0d29ya3NfZGF0YSA9IHJlYWRfY3N2KCcuLi8uLi8uLi9kYXRhL2ZlYXR1cmVzL25ldHdvcmtfZmVhdHVyZXMvYmluYXJ5L2ZlYXR1cmVzX3dpdGhfY2xhc3NpZmljYXRpb24uY3N2JykgJT4lIGZpbHRlciAoIW5ldHdvcmsgJWluJSBjKCc0Ni5jc3YnLCc0OC5jc3YnLCc1MC5jc3YnLCc1MS5jc3YnLCc1NC5jc3YnLCc1NS5jc3YnLCc1Ni5jc3YnLCc1Ny5jc3YnLCc2MS5jc3YnLCc2Mi5jc3YnLCc2My5jc3YnLCc2NC5jc3YnLCc2Ni5jc3YnLCc3MC5jc3YnLCc3MS5jc3YnLCc3Mi5jc3YnLCc3My5jc3YnKSApDQp3ZWlnaHRlZF9uZXR3b3Jrc19kYXRhID0gcmVhZF9jc3YoJy4uLy4uLy4uL2RhdGEvZmVhdHVyZXMvbmV0d29ya19mZWF0dXJlcy93ZWlnaHRlZC9mZWF0dXJlc193aXRoX2NsYXNzaWZpY2F0aW9uLmNzdicpICU+JSBmaWx0ZXIgKCFuZXR3b3JrICVpbiUgYygnMTA2LmNzdicsJzEwNy5jc3YnLCcxNTYuY3N2JywnMTU3LmNzdicsJzE1OC5jc3YnLCcxNTkuY3N2JykpDQpiaW5hcml6ZWRfbmV0d29ya3NfZGF0YSA9IHJlYWRfY3N2KCcuLi8uLi8uLi9kYXRhL2ZlYXR1cmVzL25ldHdvcmtfZmVhdHVyZXMvYmluYXJpemVkX3dlaWdodGVkL2ZlYXR1cmVzX3dpdGhfY2xhc3NpZmljYXRpb24uY3N2JykgICU+JSBmaWx0ZXIgKCFuZXR3b3JrICVpbiUgYygnMTA2LmNzdicsJzEwNy5jc3YnLCcxNTYuY3N2JywnMTU3LmNzdicsJzE1OC5jc3YnLCcxNTkuY3N2JykpDQoNCm5hbWVzKGJpbmFyeV9uZXR3b3Jrc19kYXRhKTwtbWFrZS5uYW1lcyhuYW1lcyhiaW5hcnlfbmV0d29ya3NfZGF0YSksdW5pcXVlID0gVFJVRSkNCm5hbWVzKHdlaWdodGVkX25ldHdvcmtzX2RhdGEgKTwtbWFrZS5uYW1lcyhuYW1lcyh3ZWlnaHRlZF9uZXR3b3Jrc19kYXRhICksdW5pcXVlID0gVFJVRSkNCm5hbWVzKGJpbmFyaXplZF9uZXR3b3Jrc19kYXRhKTwtbWFrZS5uYW1lcyhuYW1lcyhiaW5hcml6ZWRfbmV0d29ya3NfZGF0YSksdW5pcXVlID0gVFJVRSkNCg0KDQpgYGANCg0KDQoNCkdlbmVyYXRpbmcgR0xNIGRhdGENCg0KYGBge3J9DQp3ZWlnaHRlZF9uZXR3b3JrX2dsbV9kYXRhPC0gIHdlaWdodGVkX25ldHdvcmtzX2RhdGEgJT4lIHNlbGVjdChuZXR3b3JrLGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rLG51bV9wb2xsaW5hdG9yX3RheG9ub21pY19yYW5rcyxjb25uZWN0YW5jZSxOT0RGLEgyLGV4dGluY3Rpb24uc2xvcGUuTEwscm9idXN0bmVzcy5MTCxyb2J1c3RuZXNzX21lYW4sIGRlbHRhX3RyYW5zZm9ybWVkXy52dWxuZXJhYmlsaXR5LkxMLCB2dWxuZXJhYmlsaXR5LkxMLCBkZWx0YV90cmFuc2Zvcm1lZF8uU2hhbm5vbi5kaXZlcnNpdHksZGVsdGFfdHJhbnNmb3JtZWRfLnRvZ2V0aGVybmVzcy5MTCwgaXNfcG9seXBsb2lkX3BvbHlfZnJhYyxpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjLCBoaWdoZXN0X3BvbGxpbmF0b3JfcmFuaykgDQoNCmJpbmFyeV9uZXR3b3JrX2dsbV9kYXRhPC0gIGJpbmFyeV9uZXR3b3Jrc19kYXRhICU+JSBzZWxlY3QobmV0d29yayxoaWdoZXN0X3BvbGxpbmF0b3JfcmFuayxudW1fcG9sbGluYXRvcl90YXhvbm9taWNfcmFua3MsY29ubmVjdGFuY2UsTk9ERixIMixleHRpbmN0aW9uLnNsb3BlLkxMLHJvYnVzdG5lc3MuTEwscm9idXN0bmVzc19tZWFuLCBkZWx0YV90cmFuc2Zvcm1lZF8udnVsbmVyYWJpbGl0eS5MTCwgdnVsbmVyYWJpbGl0eS5MTCxkZWx0YV90cmFuc2Zvcm1lZF8uU2hhbm5vbi5kaXZlcnNpdHksZGVsdGFfdHJhbnNmb3JtZWRfLnRvZ2V0aGVybmVzcy5MTCxpc19wb2x5cGxvaWRfcG9seV9mcmFjLGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rKSANCg0KYmluYXJpemVkX25ldHdvcmtfZ2xtX2RhdGE8LSAgYmluYXJpemVkX25ldHdvcmtzX2RhdGEgJT4lIHNlbGVjdChuZXR3b3JrLGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rLG51bV9wb2xsaW5hdG9yX3RheG9ub21pY19yYW5rcyxjb25uZWN0YW5jZSxOT0RGLEgyLGV4dGluY3Rpb24uc2xvcGUuTEwscm9idXN0bmVzcy5MTCxyb2J1c3RuZXNzX21lYW4sIGRlbHRhX3RyYW5zZm9ybWVkXy52dWxuZXJhYmlsaXR5LkxMLCB2dWxuZXJhYmlsaXR5LkxMLGRlbHRhX3RyYW5zZm9ybWVkXy5TaGFubm9uLmRpdmVyc2l0eSxkZWx0YV90cmFuc2Zvcm1lZF8udG9nZXRoZXJuZXNzLkxMLGlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMsaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYywgaGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspIA0KDQoNCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YTwtIHVuaW9uKGJpbmFyeV9uZXR3b3JrX2dsbV9kYXRhLCBiaW5hcml6ZWRfbmV0d29ya19nbG1fZGF0YSkNCg0KYGBgDQoNCg0KQmFzaWMgdmlzdWFsaXphdGlvbg0KDQpgYGB7cn0NCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1jb25uZWN0YW5jZSkpKyBnZW9tX3BvaW50KCkNCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1OT0RGKSkrIGdlb21fcG9pbnQoKQ0KYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PUgyKSkrIGdlb21fcG9pbnQoKQ0KYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PWV4dGluY3Rpb24uc2xvcGUuTEwpKSsgZ2VvbV9wb2ludCgpDQphbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGEgJT4lIGdncGxvdChhZXMoeCA9aXNfcG9seXBsb2lkX3BvbHlfZnJhYyAsIHk9cm9idXN0bmVzcy5MTCkpKyBnZW9tX3BvaW50KCkNCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1yb2J1c3RuZXNzX21lYW4pKSsgZ2VvbV9wb2ludCgpDQphbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGEgJT4lIGdncGxvdChhZXMoeCA9aXNfcG9seXBsb2lkX3BvbHlfZnJhYyAsIHk9dnVsbmVyYWJpbGl0eS5MTCkpKyBnZW9tX3BvaW50KCkNCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1kZWx0YV90cmFuc2Zvcm1lZF8udnVsbmVyYWJpbGl0eS5MTCkpKyBnZW9tX3BvaW50KCkNCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1kZWx0YV90cmFuc2Zvcm1lZF8uU2hhbm5vbi5kaXZlcnNpdHkpKSsgZ2VvbV9wb2ludCgpDQphbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGEgJT4lIGdncGxvdChhZXMoeCA9aXNfcG9seXBsb2lkX3BvbHlfZnJhYyAsIHk9ZGVsdGFfdHJhbnNmb3JtZWRfLnRvZ2V0aGVybmVzcy5MTCkpKyBnZW9tX3BvaW50KCkNCg0KYGBgDQoNCg0KDQoNCmBgYHtyfQ0KI3dlaWdodGVkDQpsaWJyYXJ5KGxtZTQpDQpsaWJyYXJ5KGxtZXJUZXN0KQ0KDQphbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbDwtIGFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAgICU+JSByZW1vdmVfbWlzc2luZygpICMlPiUgZmlsdGVyIChwY3RfbWlzc2luZz4wLjYsIHBjdF9wb2xpPjAsIHBjdF9wb2xpPDEpDQoNCm1peGVkMSA9IGxtZXIoY29ubmVjdGFuY2UgfmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYykrKDF8aGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbCkNCnByaW50KHN1bW1hcnkobWl4ZWQxKSkNCg0KbWl4ZWQ0ID0gbG1lcihkZWx0YV90cmFuc2Zvcm1lZF8udG9nZXRoZXJuZXNzLkxMfmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYykrKDF8aGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbCkNCg0KbWl4ZWQyID0gbG1lcihleHRpbmN0aW9uLnNsb3BlLkxMIH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpKygxfGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rKSwgZGF0YSA9YWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGwpDQpwcmludChzdW1tYXJ5KG1peGVkMikpDQoNCg0KbWl4ZWQzID0gbG1lcihyb2J1c3RuZXNzLkxMIH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpKygxfGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rKSwgZGF0YSA9YWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGwpDQpwcmludChzdW1tYXJ5KG1peGVkMykpDQoNCm1peGVkNCA9IGxtZXIocm9idXN0bmVzc19tZWFufmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYykrKDF8aGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbCkNCnByaW50KHN1bW1hcnkobWl4ZWQ0KSkNCg0KbWl4ZWQ0ID0gbG1lcihkZWx0YV90cmFuc2Zvcm1lZF8udnVsbmVyYWJpbGl0eS5MTH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpKygxfGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rKSwgZGF0YSA9YWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGwpDQpwcmludChzdW1tYXJ5KG1peGVkNCkpDQoNCm1peGVkNCA9IGxtZXIoZGVsdGFfdHJhbnNmb3JtZWRfLlNoYW5ub24uZGl2ZXJzaXR5fmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYykrKDF8aGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbCkNCnByaW50KHN1bW1hcnkobWl4ZWQ0KSkNCg0KcHJpbnQoc3VtbWFyeShtaXhlZDQpKQ0KDQpgYGANCg0KQWRkIGEgbmV3IGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqSW5zZXJ0IENodW5rKiBidXR0b24gb24gdGhlIHRvb2xiYXIgb3IgYnkgcHJlc3NpbmcgKkNtZCtPcHRpb24rSSouDQoNCldoZW4geW91IHNhdmUgdGhlIG5vdGVib29rLCBhbiBIVE1MIGZpbGUgY29udGFpbmluZyB0aGUgY29kZSBhbmQgb3V0cHV0IHdpbGwgYmUgc2F2ZWQgYWxvbmdzaWRlIGl0IChjbGljayB0aGUgKlByZXZpZXcqIGJ1dHRvbiBvciBwcmVzcyAqQ21kK1NoaWZ0K0sqIHRvIHByZXZpZXcgdGhlIEhUTUwgZmlsZSkuIA0KDQpUaGUgcHJldmlldyBzaG93cyB5b3UgYSByZW5kZXJlZCBIVE1MIGNvcHkgb2YgdGhlIGNvbnRlbnRzIG9mIHRoZSBlZGl0b3IuIENvbnNlcXVlbnRseSwgdW5saWtlICpLbml0KiwgKlByZXZpZXcqIGRvZXMgbm90IHJ1biBhbnkgUiBjb2RlIGNodW5rcy4gSW5zdGVhZCwgdGhlIG91dHB1dCBvZiB0aGUgY2h1bmsgd2hlbiBpdCB3YXMgbGFzdCBydW4gaW4gdGhlIGVkaXRvciBpcyBkaXNwbGF5ZWQuDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpgYGB7cn0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShzdXJ2aXZhbCkNCmxpYnJhcnkoc3Vydm1pbmVyKQ0KbGlicmFyeShjbXByc2spDQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCmxpYnJhcnkoY2FyZXQpDQpsaWJyYXJ5KHN1cnZpdmFsKQ0KbGlicmFyeShzdXJ2bWluZXIpDQpsaWJyYXJ5KGx1YnJpZGF0ZSkNCmBgYA0KDQpUaGlzIGlzIGFuIFtSIE1hcmtkb3duXShodHRwOi8vcm1hcmtkb3duLnJzdHVkaW8uY29tKSBOb3RlYm9vay4gV2hlbiB5b3UgZXhlY3V0ZSBjb2RlIHdpdGhpbiB0aGUgbm90ZWJvb2ssIHRoZSByZXN1bHRzIGFwcGVhciBiZW5lYXRoIHRoZSBjb2RlLiANCg0KVHJ5IGV4ZWN1dGluZyB0aGlzIGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqUnVuKiBidXR0b24gd2l0aGluIHRoZSBjaHVuayBvciBieSBwbGFjaW5nIHlvdXIgY3Vyc29yIGluc2lkZSBpdCBhbmQgcHJlc3NpbmcgKkNtZCtTaGlmdCtFbnRlciouIA0KDQpOZXR3b3JrIGFuYWx5c2lzIGRhdGENCg0KYGBge3J9DQpiaW5hcnlfbmV0d29ya3NfZGF0YSA9IHJlYWRfY3N2KCdHOi9NeSBEcml2ZS9QaEQvUGxhbnRQb2xsaW5hdG9yTmV0d29ya3MvZmVhdHVyZXMvbmV0d29yay9iaW5hcnkvZmVhdHVyZXNfd2l0aF9jbGFzc2lmaWNhdGlvbi5jc3YnKSAlPiUgZmlsdGVyICghbmV0d29yayAlaW4lIGMoJzQ2LmNzdicsJzQ4LmNzdicsJzUwLmNzdicsJzUxLmNzdicsJzU0LmNzdicsJzU1LmNzdicsJzU2LmNzdicsJzU3LmNzdicsJzYxLmNzdicsJzYyLmNzdicsJzYzLmNzdicsJzY0LmNzdicsJzY2LmNzdicsJzcwLmNzdicsJzcxLmNzdicsJzcyLmNzdicsJzczLmNzdicpICkNCndlaWdodGVkX25ldHdvcmtzX2RhdGEgPSByZWFkX2NzdignRzovTXkgRHJpdmUvUGhEL1BsYW50UG9sbGluYXRvck5ldHdvcmtzL2ZlYXR1cmVzL25ldHdvcmsvd2VpZ2h0ZWQvZmVhdHVyZXNfd2l0aF9jbGFzc2lmaWNhdGlvbi5jc3YnKSAlPiUgZmlsdGVyICghbmV0d29yayAlaW4lIGMoJzEwNi5jc3YnLCcxMDcuY3N2JywnMTU2LmNzdicsJzE1Ny5jc3YnLCcxNTguY3N2JywnMTU5LmNzdicpKQ0KYmluYXJpemVkX25ldHdvcmtzX2RhdGEgPSByZWFkX2NzdignRzovTXkgRHJpdmUvUGhEL1BsYW50UG9sbGluYXRvck5ldHdvcmtzL2ZlYXR1cmVzL25ldHdvcmsvYmluYXJpemVkX3dlaWdodGVkL2ZlYXR1cmVzX3dpdGhfY2xhc3NpZmljYXRpb24uY3N2JykgICU+JSBmaWx0ZXIgKCFuZXR3b3JrICVpbiUgYygnMTA2LmNzdicsJzEwNy5jc3YnLCcxNTYuY3N2JywnMTU3LmNzdicsJzE1OC5jc3YnLCcxNTkuY3N2JykpDQoNCm5hbWVzKGJpbmFyeV9uZXR3b3Jrc19kYXRhKTwtbWFrZS5uYW1lcyhuYW1lcyhiaW5hcnlfbmV0d29ya3NfZGF0YSksdW5pcXVlID0gVFJVRSkNCm5hbWVzKHdlaWdodGVkX25ldHdvcmtzX2RhdGEgKTwtbWFrZS5uYW1lcyhuYW1lcyh3ZWlnaHRlZF9uZXR3b3Jrc19kYXRhICksdW5pcXVlID0gVFJVRSkNCm5hbWVzKGJpbmFyaXplZF9uZXR3b3Jrc19kYXRhKTwtbWFrZS5uYW1lcyhuYW1lcyhiaW5hcml6ZWRfbmV0d29ya3NfZGF0YSksdW5pcXVlID0gVFJVRSkNCg0KDQpgYGANCg0KDQoNCkdlbmVyYXRpbmcgR0xNIGRhdGENCg0KYGBge3J9DQp3ZWlnaHRlZF9uZXR3b3JrX2dsbV9kYXRhPC0gIHdlaWdodGVkX25ldHdvcmtzX2RhdGEgJT4lIHNlbGVjdChuZXR3b3JrLGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rLG51bV9wb2xsaW5hdG9yX3RheG9ub21pY19yYW5rcyxjb25uZWN0YW5jZSxOT0RGLEgyLGV4dGluY3Rpb24uc2xvcGUuTEwscm9idXN0bmVzcy5MTCxyb2J1c3RuZXNzX21lYW4sIGRlbHRhX3RyYW5zZm9ybWVkXy52dWxuZXJhYmlsaXR5LkxMLCB2dWxuZXJhYmlsaXR5LkxMLCBkZWx0YV90cmFuc2Zvcm1lZF8uU2hhbm5vbi5kaXZlcnNpdHksZGVsdGFfdHJhbnNmb3JtZWRfLnRvZ2V0aGVybmVzcy5MTCwgaXNfcG9seXBsb2lkX3BvbHlfZnJhYyxpc19wb2x5cGxvaWRfbWlzc2luZ19mcmFjLCBoaWdoZXN0X3BvbGxpbmF0b3JfcmFuaykgDQoNCmJpbmFyeV9uZXR3b3JrX2dsbV9kYXRhPC0gIGJpbmFyeV9uZXR3b3Jrc19kYXRhICU+JSBzZWxlY3QobmV0d29yayxoaWdoZXN0X3BvbGxpbmF0b3JfcmFuayxudW1fcG9sbGluYXRvcl90YXhvbm9taWNfcmFua3MsY29ubmVjdGFuY2UsTk9ERixIMixleHRpbmN0aW9uLnNsb3BlLkxMLHJvYnVzdG5lc3MuTEwscm9idXN0bmVzc19tZWFuLCBkZWx0YV90cmFuc2Zvcm1lZF8udnVsbmVyYWJpbGl0eS5MTCwgdnVsbmVyYWJpbGl0eS5MTCxkZWx0YV90cmFuc2Zvcm1lZF8uU2hhbm5vbi5kaXZlcnNpdHksZGVsdGFfdHJhbnNmb3JtZWRfLnRvZ2V0aGVybmVzcy5MTCxpc19wb2x5cGxvaWRfcG9seV9mcmFjLGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMsIGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rKSANCg0KYmluYXJpemVkX25ldHdvcmtfZ2xtX2RhdGE8LSAgYmluYXJpemVkX25ldHdvcmtzX2RhdGEgJT4lIHNlbGVjdChuZXR3b3JrLGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rLG51bV9wb2xsaW5hdG9yX3RheG9ub21pY19yYW5rcyxjb25uZWN0YW5jZSxOT0RGLEgyLGV4dGluY3Rpb24uc2xvcGUuTEwscm9idXN0bmVzcy5MTCxyb2J1c3RuZXNzX21lYW4sIGRlbHRhX3RyYW5zZm9ybWVkXy52dWxuZXJhYmlsaXR5LkxMLCB2dWxuZXJhYmlsaXR5LkxMLGRlbHRhX3RyYW5zZm9ybWVkXy5TaGFubm9uLmRpdmVyc2l0eSxkZWx0YV90cmFuc2Zvcm1lZF8udG9nZXRoZXJuZXNzLkxMLGlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMsaXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYywgaGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspIA0KDQoNCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YTwtIHVuaW9uKGJpbmFyeV9uZXR3b3JrX2dsbV9kYXRhLCBiaW5hcml6ZWRfbmV0d29ya19nbG1fZGF0YSkNCg0KYGBgDQoNCg0KQmFzaWMgdmlzdWFsaXphdGlvbg0KDQpgYGB7cn0NCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1jb25uZWN0YW5jZSkpKyBnZW9tX3BvaW50KCkNCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1OT0RGKSkrIGdlb21fcG9pbnQoKQ0KYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PUgyKSkrIGdlb21fcG9pbnQoKQ0KYWxsX2JpbmFyeV9uZXR3b3JrX2dsbV9kYXRhICU+JSBnZ3Bsb3QoYWVzKHggPWlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMgLCB5PWV4dGluY3Rpb24uc2xvcGUuTEwpKSsgZ2VvbV9wb2ludCgpDQphbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGEgJT4lIGdncGxvdChhZXMoeCA9aXNfcG9seXBsb2lkX3BvbHlfZnJhYyAsIHk9cm9idXN0bmVzcy5MTCkpKyBnZW9tX3BvaW50KCkNCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1yb2J1c3RuZXNzX21lYW4pKSsgZ2VvbV9wb2ludCgpDQphbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGEgJT4lIGdncGxvdChhZXMoeCA9aXNfcG9seXBsb2lkX3BvbHlfZnJhYyAsIHk9dnVsbmVyYWJpbGl0eS5MTCkpKyBnZW9tX3BvaW50KCkNCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1kZWx0YV90cmFuc2Zvcm1lZF8udnVsbmVyYWJpbGl0eS5MTCkpKyBnZW9tX3BvaW50KCkNCmFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAlPiUgZ2dwbG90KGFlcyh4ID1pc19wb2x5cGxvaWRfcG9seV9mcmFjICwgeT1kZWx0YV90cmFuc2Zvcm1lZF8uU2hhbm5vbi5kaXZlcnNpdHkpKSsgZ2VvbV9wb2ludCgpDQphbGxfYmluYXJ5X25ldHdvcmtfZ2xtX2RhdGEgJT4lIGdncGxvdChhZXMoeCA9aXNfcG9seXBsb2lkX3BvbHlfZnJhYyAsIHk9ZGVsdGFfdHJhbnNmb3JtZWRfLnRvZ2V0aGVybmVzcy5MTCkpKyBnZW9tX3BvaW50KCkNCg0KYGBgDQoNCg0KDQoNCmBgYHtyfQ0KI3dlaWdodGVkDQpsaWJyYXJ5KGxtZTQpDQpsaWJyYXJ5KGxtZXJUZXN0KQ0KDQphbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbDwtIGFsbF9iaW5hcnlfbmV0d29ya19nbG1fZGF0YSAgICU+JSByZW1vdmVfbWlzc2luZygpICMlPiUgZmlsdGVyIChwY3RfbWlzc2luZz4wLjYsIHBjdF9wb2xpPjAsIHBjdF9wb2xpPDEpDQoNCm1peGVkMSA9IGxtZXIoY29ubmVjdGFuY2UgfmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYykrKDF8aGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbCkNCnByaW50KHN1bW1hcnkobWl4ZWQxKSkNCg0KbWl4ZWQ0ID0gbG1lcihkZWx0YV90cmFuc2Zvcm1lZF8udG9nZXRoZXJuZXNzLkxMfmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYykrKDF8aGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbCkNCg0KbWl4ZWQyID0gbG1lcihleHRpbmN0aW9uLnNsb3BlLkxMIH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpKygxfGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rKSwgZGF0YSA9YWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGwpDQpwcmludChzdW1tYXJ5KG1peGVkMikpDQoNCg0KbWl4ZWQzID0gbG1lcihyb2J1c3RuZXNzLkxMIH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpKygxfGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rKSwgZGF0YSA9YWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGwpDQpwcmludChzdW1tYXJ5KG1peGVkMykpDQoNCm1peGVkNCA9IGxtZXIocm9idXN0bmVzc19tZWFufmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYykrKDF8aGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbCkNCnByaW50KHN1bW1hcnkobWl4ZWQ0KSkNCg0KbWl4ZWQ0ID0gbG1lcihkZWx0YV90cmFuc2Zvcm1lZF8udnVsbmVyYWJpbGl0eS5MTH5pc19wb2x5cGxvaWRfcG9seV9mcmFjKygxfGlzX3BvbHlwbG9pZF9taXNzaW5nX2ZyYWMpKygxfGhpZ2hlc3RfcG9sbGluYXRvcl9yYW5rKSwgZGF0YSA9YWxsX25ldHdvcmtfYmluYXJ5X2dsbV9kYXRhX25vX251bGwpDQpwcmludChzdW1tYXJ5KG1peGVkNCkpDQoNCm1peGVkNCA9IGxtZXIoZGVsdGFfdHJhbnNmb3JtZWRfLlNoYW5ub24uZGl2ZXJzaXR5fmlzX3BvbHlwbG9pZF9wb2x5X2ZyYWMrKDF8aXNfcG9seXBsb2lkX21pc3NpbmdfZnJhYykrKDF8aGlnaGVzdF9wb2xsaW5hdG9yX3JhbmspLCBkYXRhID1hbGxfbmV0d29ya19iaW5hcnlfZ2xtX2RhdGFfbm9fbnVsbCkNCnByaW50KHN1bW1hcnkobWl4ZWQ0KSkNCg0KcHJpbnQoc3VtbWFyeShtaXhlZDQpKQ0KDQpgYGANCg0KQWRkIGEgbmV3IGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqSW5zZXJ0IENodW5rKiBidXR0b24gb24gdGhlIHRvb2xiYXIgb3IgYnkgcHJlc3NpbmcgKkNtZCtPcHRpb24rSSouDQoNCldoZW4geW91IHNhdmUgdGhlIG5vdGVib29rLCBhbiBIVE1MIGZpbGUgY29udGFpbmluZyB0aGUgY29kZSBhbmQgb3V0cHV0IHdpbGwgYmUgc2F2ZWQgYWxvbmdzaWRlIGl0IChjbGljayB0aGUgKlByZXZpZXcqIGJ1dHRvbiBvciBwcmVzcyAqQ21kK1NoaWZ0K0sqIHRvIHByZXZpZXcgdGhlIEhUTUwgZmlsZSkuIA0KDQpUaGUgcHJldmlldyBzaG93cyB5b3UgYSByZW5kZXJlZCBIVE1MIGNvcHkgb2YgdGhlIGNvbnRlbnRzIG9mIHRoZSBlZGl0b3IuIENvbnNlcXVlbnRseSwgdW5saWtlICpLbml0KiwgKlByZXZpZXcqIGRvZXMgbm90IHJ1biBhbnkgUiBjb2RlIGNodW5rcy4gSW5zdGVhZCwgdGhlIG91dHB1dCBvZiB0aGUgY2h1bmsgd2hlbiBpdCB3YXMgbGFzdCBydW4gaW4gdGhlIGVkaXRvciBpcyBkaXNwbGF5ZWQuDQoNCg==</div>
 
 
 

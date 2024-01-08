@@ -23,7 +23,7 @@ class Simulator:
                  rewiring_flag: bool = True,
                  rewiring_probability: float = 0):
         classification_data = pd.read_csv(classification_path)
-        ploidy_level_col = "is_polyploid_by_resolved"
+        ploidy_level_col = "is_polyploid"
         if "Plant" in classification_data.columns:
             classification_data["original_name"] = classification_data.Plant.str.lower()
         else:
