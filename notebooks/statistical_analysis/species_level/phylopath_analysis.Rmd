@@ -1,0 +1,158 @@
+```{r}
+library(ape)
+library(phylopath)
+library(glue)
+library(tidyr)
+library(dplyr)
+library(phytools)
+```
+
+
+```{r}
+## executation settings
+filter_by_pev_flw_shape = TRUE
+flw_trait_level = "head" #_AST_{flw_trait_level}_level
+do_weighted = FALSE
+weighted_str = "unweighted" 
+if (do_weighted)
+{
+    weighted_str = "weighted" 
+}
+
+add_plv = TRUE
+plv_str = 
+if (add_plv)
+{
+    plv_str = " + (1|has_ploidy_variability)"
+}
+
+limit_by_tree = TRUE
+
+ploidy_predictor = "is_polyploid"
+response = "d"
+base_variables = c('EcoRegion_name',
+                   "flw_color", glue("flw_shape_AST_{flw_trait_level}_level"),  glue("n_flw_infl_AST_{flw_trait_level}_level"), 
+                   glue("flw_symmetry_AST_{flw_trait_level}_level"), glue("flw_len_mean_AST_{flw_trait_level}_level"),
+                   "Growth_form", ploidy_predictor, "has_ploidy_variability",
+                   "network_index", "network_size", "highest_pollinator_rank_index", response)
+
+# data paths
+data_path = glue("../../../data/statistical_analysis/species_level/processed_features_with_ploidy_classification_on_{weighted_str}_networks.csv")
+tree_path = glue("../../../data/statistical_analysis/species_level/species_tree_on_{weighted_str}_networks.nwk")
+```
+
+```{r}
+data <- read.csv(data_path, stringsAsFactors = FALSE)#, na.strings=c("NA", "N/A", ))
+data[data == ""] = NA
+unrooted_tree <- read.tree(tree_path)
+
+# scale network size variable to avoid convergence issue
+net_max = max(data$network_size)
+net_min = min(data$network_size) 
+data$network_size = (net_max-data$network_size)/(net_max-net_min)
+
+data$mating_system[data$mating_system == "partially_SC"] <- "SC"
+data$mating_system = as.factor(data$mating_system)
+data$is_sc = ifelse(data$mating_system == "SC", 1, 0)
+
+data$has_ploidy_variability = ifelse(data$has_ploidy_variability == "True", 1, 0)
+data$network_index = as.factor(data$network_index)
+
+
+# trasform flower traits to binary features
+data$is_woody <- ifelse(data$Growth_form == "woody", 1, 0)
+data$is_flw_rest = ifelse(with(data, get(glue("flw_shape_AST_{flw_trait_level}_level"))) == "restrictive", 1, 0)
+data$prev_is_flw_rest = ifelse(data$prev_flw_shape == "restrictive", 1, 0)
+data$is_inflor_multiple = ifelse(with(data, get(glue("n_flw_infl_AST_{flw_trait_level}_level"))) == "multiple", 1, 0)
+data$is_flw_red = ifelse(data$flw_color == "red", 1, 0)
+data$is_flw_zygomorphic = ifelse(with(data, get(glue("flw_symmetry_AST_{flw_trait_level}_level"))) == "zygomorphic", 1, 0)
+
+# apply log trasformation on mean flw size to force gaussian distribution
+data$trans_flw_len = log(with(data, get(glue("flw_len_mean_AST_{flw_trait_level}_level"))) + 1)
+
+# trasform the response variable to be normally distributed using logit trasformation with small shift of values so that we don't have inf values
+# transform the respone variable
+if (response == "d")
+{
+    data[, glue("trans_", response)] = log(data[, response]+0.0001 / (1.0001 - (data[, response])))
+} else {
+    
+}
+    data[, glue("trans_", response)] = log(data[, response]+1)
+
+# use the trasformation from Anna's study to force gaussian distribution: scale up by 1 unit and then log transform
+data$species_richness = as.integer(data$species_richness)
+data$trans_sr = log(data$species_richness + 1)
+
+# facxtorize ecoregion
+data$EcoRegion_name = as.factor(data$EcoRegion_name)
+
+if (limit_by_tree)
+{
+    data = data[data$sample_id %in% unrooted_tree$tip, ]
+}
+data$sample_id <- factor(data$sample_id)
+data[["sample_id_numeric"]] <- as.numeric(data$sample_id)
+
+tras_response = glue("trans_", response)
+if (filter_by_pev_flw_shape)
+    {
+    base_variables = c(base_variables, c("prev_flw_shape", "prev_is_flw_rest"))
+    }
+cols_to_keep = c(base_variables, 
+                 c("sample_id", "sample_id_numeric", "Plant", "is_sc", "mating_system",
+                   "is_woody", "is_flw_rest", "is_inflor_multiple", "is_flw_red", "is_flw_zygomorphic", "trans_flw_len", tras_response))
+# cols_to_keep = cols_to_keep[!cols_to_keep == 'mating_system']
+data = data[, cols_to_keep]
+data = drop_na(data, any_of(base_variables))
+print(paste("# samples for analysis = ", nrow(data)))
+
+# adjust tree
+tree <- drop.tip(unrooted_tree,unrooted_tree$tip.label[na.omit(-match(data$sample_id, unrooted_tree$tip.label))])
+tree <- multi2di(tree)
+tree <- makeNodeLabel(tree, method = "number", prefix = "Node")
+print(paste("# tips in tree = ", length(tree$tip)))
+
+data$sample_id <- factor(data$sample_id)
+data[["sample_id_numeric"]] <- as.numeric(data$sample_id)
+rownames(data) <- data$sample_id
+
+
+```
+
+```{r}
+# can't be used with random effects :( )
+flw_shape_formula = as.formula(glue("is_flw_rest ~ ", ploidy_predictor))
+pl_formula = as.formula(glue(ploidy_predictor, " ~ is_woody"))
+poliindex_formula = as.formula(glue("trans_", response, " ~ ", ploidy_predictor, " + is_woody + is_flw_rest"))
+models <- define_model_set(model = c(flw_shape_formula, pl_formula, poliindex_formula))
+plot(models$model)
+
+```
+
+
+```{r}
+result <- phylo_path(models, data = data, tree = tree, model = 'lambda')
+best_model <- best(result)
+plot(best_model, text_size = 6,
+box_x = 12,
+box_y = 12,
+edge_width = 4,
+curvature = 0.02,
+)
+```
+
+
+```{r}
+coef_plot(best_model)
+```
+
+```{r}
+result$d_sep$model
+```
+
+
+```{r}
+summary(result)
+```
+
